@@ -18,6 +18,10 @@ const { validateEnrollment, validateContact } = require('./validators');
 const { RateLimiter } = require('./rateLimiter');
 const storage = require('./storage');
 const { startServer } = require('../../server');
+const enrollmentHandler = require('../../api/enrollment');
+const contactHandler = require('../../api/contact');
+const healthHandler = require('../../api/health');
+const formService = require('../../public/assets/js/form-service');
 
 const TEST_PORT = 3456;
 let passedCount = 0;
@@ -524,6 +528,319 @@ async function runAllTests() {
     const res = await makeHttpRequest({ path: '/api/unknown', method: 'GET' });
     assert.strictEqual(res.status, 404);
     assert.strictEqual(res.body.code, 'NOT_FOUND');
+  });
+
+  // =========================================================================
+  // 6. SERVERLESS FUNCTION HANDLERS (api/enrollment.js, api/contact.js, api/health.js)
+  // =========================================================================
+  console.log('\n[Suite 6] Vercel Serverless Function Handlers');
+
+  function mockReqRes(options = {}) {
+    const { method = 'POST', headers = {}, body = null } = options;
+    const req = {
+      method,
+      headers: { ...headers },
+      body,
+      socket: { remoteAddress: '127.0.0.1' },
+      on: (event, cb) => {
+        if (event === 'end') cb();
+      }
+    };
+    let statusCode = 200;
+    const respHeaders = {};
+    let respBody = null;
+
+    const res = {
+      setHeader(k, v) {
+        respHeaders[k.toLowerCase()] = v;
+      },
+      getHeader(k) {
+        return respHeaders[k.toLowerCase()];
+      },
+      writeHead(code, h) {
+        statusCode = code;
+        if (h) Object.assign(respHeaders, h);
+      },
+      status(code) {
+        statusCode = code;
+        return this;
+      },
+      json(d) {
+        respBody = d;
+        return this;
+      },
+      end(d) {
+        if (d && !respBody) {
+          try {
+            respBody = JSON.parse(d);
+          } catch (_) {
+            respBody = d;
+          }
+        }
+        return this;
+      },
+      getStatusCode() { return statusCode; },
+      getBody() { return respBody; },
+      getHeaders() { return respHeaders; }
+    };
+
+    return { req, res };
+  }
+
+  await asyncTest('api/health: GET returns 200 with ok status', async () => {
+    const { req, res } = mockReqRes({ method: 'GET' });
+    await healthHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 200);
+    assert.strictEqual(res.getBody().status, 'ok');
+    assert.strictEqual(res.getBody().service, 'Sunflower Preschool API');
+  });
+
+  await asyncTest('api/health: OPTIONS returns 204 preflight', async () => {
+    const { req, res } = mockReqRes({ method: 'OPTIONS' });
+    await healthHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 204);
+  });
+
+  await asyncTest('api/health: POST is rejected with 405 METHOD_NOT_ALLOWED', async () => {
+    const { req, res } = mockReqRes({ method: 'POST' });
+    await healthHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 405);
+    assert.strictEqual(res.getBody().code, 'METHOD_NOT_ALLOWED');
+  });
+
+  await asyncTest('api/enrollment: OPTIONS returns 204 preflight', async () => {
+    const { req, res } = mockReqRes({ method: 'OPTIONS' });
+    await enrollmentHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 204);
+  });
+
+  await asyncTest('api/enrollment: GET is rejected with 405 METHOD_NOT_ALLOWED', async () => {
+    const { req, res } = mockReqRes({ method: 'GET' });
+    await enrollmentHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 405);
+    assert.strictEqual(res.getBody().code, 'METHOD_NOT_ALLOWED');
+  });
+
+  await asyncTest('api/enrollment: POST succeeds with 201 for valid submission', async () => {
+    const valid = {
+      parentName: 'Sarah Jenkins',
+      email: 'sarah.jenkins@example.com',
+      phone: '555-234-5678',
+      childFirstName: 'Leo',
+      program: 'preschool',
+      childAgeGroup: '3-5-years',
+      preferredStart: 'Fall 2026',
+      schedulePreference: 'full-time',
+      message: 'Looking forward to touring your nature program.',
+      privacyConsent: true
+    };
+    const { req, res } = mockReqRes({
+      method: 'POST',
+      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+      body: valid
+    });
+    await enrollmentHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 201);
+    assert.strictEqual(res.getBody().success, true);
+    assert.ok(res.getBody().id);
+    assert.ok(res.getBody().submittedAt);
+  });
+
+  await asyncTest('api/enrollment: POST blocks medical details with 400 SENSITIVE_DATA_DETECTED', async () => {
+    const medical = {
+      parentName: 'Sarah Jenkins',
+      email: 'sarah.jenkins@example.com',
+      phone: '555-234-5678',
+      childFirstName: 'Leo',
+      program: 'preschool',
+      childAgeGroup: '3-5-years',
+      message: 'Leo has severe asthma and an inhaler.',
+      privacyConsent: true
+    };
+    const { req, res } = mockReqRes({
+      method: 'POST',
+      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+      body: medical
+    });
+    await enrollmentHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 400);
+    assert.strictEqual(res.getBody().code, 'SENSITIVE_DATA_DETECTED');
+  });
+
+  await asyncTest('api/enrollment: POST blocks full birthdate with 400 SENSITIVE_DATA_DETECTED', async () => {
+    const dob = {
+      parentName: 'Sarah Jenkins',
+      email: 'sarah.jenkins@example.com',
+      phone: '555-234-5678',
+      childFirstName: 'Leo',
+      program: 'preschool',
+      childAgeGroup: '3-5-years',
+      preferredStart: '2022-04-18',
+      privacyConsent: true
+    };
+    const { req, res } = mockReqRes({
+      method: 'POST',
+      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+      body: dob
+    });
+    await enrollmentHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 400);
+    assert.strictEqual(res.getBody().code, 'SENSITIVE_DATA_DETECTED');
+  });
+
+  await asyncTest('api/enrollment: POST blocks honeypot spam with 400 SPAM_DETECTED', async () => {
+    const spam = {
+      parentName: 'Spam Bot',
+      email: 'spam@bot.com',
+      phone: '555-000-1111',
+      childFirstName: 'Bot',
+      program: 'preschool',
+      childAgeGroup: '3-5-years',
+      website: 'https://spamsite.xyz',
+      privacyConsent: true
+    };
+    const { req, res } = mockReqRes({
+      method: 'POST',
+      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+      body: spam
+    });
+    await enrollmentHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 400);
+    assert.strictEqual(res.getBody().code, 'SPAM_DETECTED');
+  });
+
+  await asyncTest('api/contact: OPTIONS returns 204 preflight', async () => {
+    const { req, res } = mockReqRes({ method: 'OPTIONS' });
+    await contactHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 204);
+  });
+
+  await asyncTest('api/contact: GET is rejected with 405 METHOD_NOT_ALLOWED', async () => {
+    const { req, res } = mockReqRes({ method: 'GET' });
+    await contactHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 405);
+    assert.strictEqual(res.getBody().code, 'METHOD_NOT_ALLOWED');
+  });
+
+  await asyncTest('api/contact: POST succeeds with 201 for valid inquiry', async () => {
+    const validContact = {
+      name: 'James Rodriguez',
+      email: 'james.r@example.com',
+      phone: '555-987-6543',
+      topic: 'schedule-tour',
+      message: 'We would love to visit the campus next Tuesday morning.',
+      privacyConsent: true
+    };
+    const { req, res } = mockReqRes({
+      method: 'POST',
+      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+      body: validContact
+    });
+    await contactHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 201);
+    assert.strictEqual(res.getBody().success, true);
+    assert.ok(res.getBody().id);
+    assert.ok(res.getBody().submittedAt);
+  });
+
+  await asyncTest('api/contact: POST rejects missing required fields with 400 VALIDATION_ERROR', async () => {
+    const invalidContact = {
+      name: '',
+      email: 'not-an-email',
+      topic: 'invalid-topic',
+      privacyConsent: false
+    };
+    const { req, res } = mockReqRes({
+      method: 'POST',
+      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+      body: invalidContact
+    });
+    await contactHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 400);
+    assert.strictEqual(res.getBody().code, 'VALIDATION_ERROR');
+  });
+
+  // =========================================================================
+  // 7. FORM SERVICE & STATIC HOSTING FALLBACK
+  // =========================================================================
+  console.log('\n[Suite 7] Browser Form Service & Static Hosting Fallback');
+
+  await asyncTest('form-service: validateEnrollment blocks sensitive medical data', () => {
+    const res = formService.validateEnrollment({
+      parentName: 'Test Parent',
+      email: 'test@example.com',
+      phone: '555-123-4567',
+      childFirstName: 'Child',
+      program: 'preschool',
+      childAgeGroup: '3-5-years',
+      message: 'My child has a diagnosed peanut allergy.',
+      privacyConsent: true
+    });
+    assert.strictEqual(res.isValid, false);
+    assert.strictEqual(res.code, 'SENSITIVE_DATA_DETECTED');
+  });
+
+  await asyncTest('form-service: validateEnrollment blocks full birthdates', () => {
+    const res = formService.validateEnrollment({
+      parentName: 'Test Parent',
+      email: 'test@example.com',
+      phone: '555-123-4567',
+      childFirstName: 'Child',
+      program: 'preschool',
+      childAgeGroup: '3-5-years',
+      preferredStart: '2023-08-15',
+      privacyConsent: true
+    });
+    assert.strictEqual(res.isValid, false);
+    assert.strictEqual(res.code, 'SENSITIVE_DATA_DETECTED');
+  });
+
+  await asyncTest('form-service: submitEnrollment returns simulated 201 on static hosting / offline', async () => {
+    const valid = {
+      parentName: 'Test Parent',
+      email: 'test@example.com',
+      phone: '555-123-4567',
+      childFirstName: 'Child',
+      program: 'preschool',
+      childAgeGroup: '3-5-years',
+      preferredStart: 'Fall 2026',
+      message: 'Inquiring about classroom ratio.',
+      privacyConsent: true
+    };
+    const res = await formService.submitEnrollment(valid);
+    assert.strictEqual(res.ok, true);
+    assert.strictEqual(res.status, 201);
+    assert.ok(res.data.success);
+    assert.ok(res.data.id);
+    assert.ok(res.data.submittedAt);
+  });
+
+  await asyncTest('form-service: submitEnrollment returns 400 on invalid payload even in static/offline mode', async () => {
+    const invalid = {
+      parentName: '',
+      email: 'not-valid',
+      privacyConsent: false
+    };
+    const res = await formService.submitEnrollment(invalid);
+    assert.strictEqual(res.ok, false);
+    assert.strictEqual(res.status, 400);
+    assert.strictEqual(res.data.code, 'VALIDATION_ERROR');
+  });
+
+  await asyncTest('form-service: submitContact returns simulated 201 on static hosting / offline', async () => {
+    const valid = {
+      name: 'Valid Parent',
+      email: 'valid@example.com',
+      phone: '555-456-7890',
+      topic: 'general-inquiry',
+      message: 'We are very interested in learning about tuition options.',
+      privacyConsent: true
+    };
+    const res = await formService.submitContact(valid);
+    assert.strictEqual(res.ok, true);
+    assert.strictEqual(res.status, 201);
+    assert.ok(res.data.success);
+    assert.ok(res.data.id);
   });
 
   // Gracefully close server and clear test data

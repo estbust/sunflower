@@ -3,7 +3,7 @@
 **Specification Version**: 1.0.0  
 **Phase**: Phase 1 (Backend, Logic & Persistence)  
 **Base URL**: `http://localhost:3000` (configurable via `process.env.PORT`)  
-**Architecture**: Native zero-dependency Node.js HTTP Server (`server.js`)  
+**Architecture**: Multi-Platform (Native Node.js `server.js` + Vercel Serverless Functions in `api/` + GitHub Pages static fallback)  
 
 ---
 
@@ -329,13 +329,15 @@ Run the following commands from the project root (`/home/estbust/proyectos-antig
 ```bash
 npm run test:backend
 ```
-Executes 30 automated unit and integration tests covering:
-- Enrollment and Contact validation
+Executes 48 automated unit and integration tests covering:
+- Enrollment and Contact validation schemas
 - Rejection of medical keywords (allergies, medications, asthma, autism, IEP, epipen)
 - Rejection of calendar birthdates (`YYYY-MM-DD`, `MM/DD/YYYY`, `Month Day, Year`)
 - Rejection of sensitive PII (SSN, credit card, passport #)
-- Rate limiting flood abuse
+- Rate limiting flood abuse protection
 - Live HTTP REST endpoints (`/api/health`, `/api/enrollment`, `/api/contact`)
+- Vercel Serverless Function handlers (`api/enrollment.js`, `api/contact.js`, `api/health.js`)
+- Browser form service (`form-service.js`) with smart static hosting / offline simulated confirmations
 
 ### 2. Execute Build & Asset Verification
 ```bash

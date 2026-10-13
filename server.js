@@ -244,9 +244,11 @@ async function handleRequest(req, res) {
 
       sendJson(res, 201, {
         success: true,
-        message: 'Enrollment inquiry submitted successfully',
+        id: savedRecord.id,
         inquiryId: savedRecord.id,
-        timestamp: savedRecord.createdAt
+        submittedAt: savedRecord.createdAt,
+        timestamp: savedRecord.createdAt,
+        message: 'Enrollment inquiry submitted successfully'
       });
       return;
     } catch (err) {
@@ -304,9 +306,11 @@ async function handleRequest(req, res) {
 
       sendJson(res, 201, {
         success: true,
-        message: 'Contact inquiry submitted successfully',
+        id: savedRecord.id,
         inquiryId: savedRecord.id,
-        timestamp: savedRecord.createdAt
+        submittedAt: savedRecord.createdAt,
+        timestamp: savedRecord.createdAt,
+        message: 'Contact inquiry submitted successfully'
       });
       return;
     } catch (err) {

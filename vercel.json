@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "rewrites": [
+    { "source": "/api/enrollment", "destination": "/api/enrollment.js" },
+    { "source": "/api/contact", "destination": "/api/contact.js" },
+    { "source": "/api/health", "destination": "/api/health.js" }
+  ]
+}

@@ -7,21 +7,88 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { detectSensitiveData } = require('./validators');
 
 const DATA_DIR = path.join(__dirname, 'data');
 const SUBMISSIONS_FILE = path.join(DATA_DIR, 'submissions.json');
+const TMP_SUBMISSIONS_FILE = path.join(os.tmpdir() || '/tmp', 'sunflower-submissions.json');
+
+let activeStoragePath = null;
+let useMemoryStorage = false;
+let inMemoryStore = { enrollments: [], contacts: [] };
+
+/**
+ * Resolves the writable storage target file path or falls back to memory.
+ */
+function resolveStorageFile() {
+  if (useMemoryStorage) return null;
+  if (activeStoragePath) return activeStoragePath;
+
+  // 1. Try local data dir
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    const probe = path.join(DATA_DIR, `.write-probe-${Date.now()}`);
+    fs.writeFileSync(probe, 'ok', 'utf-8');
+    fs.unlinkSync(probe);
+
+    activeStoragePath = SUBMISSIONS_FILE;
+    return activeStoragePath;
+  } catch (localErr) {
+    // Local directory is read-only (e.g. Vercel serverless /var/task)
+  }
+
+  // 2. Try /tmp directory
+  try {
+    const tmpDir = os.tmpdir() || '/tmp';
+    if (!fs.existsSync(tmpDir)) {
+      fs.mkdirSync(tmpDir, { recursive: true });
+    }
+    const probe = path.join(tmpDir, `.write-probe-${Date.now()}`);
+    fs.writeFileSync(probe, 'ok', 'utf-8');
+    fs.unlinkSync(probe);
+
+    activeStoragePath = TMP_SUBMISSIONS_FILE;
+    return activeStoragePath;
+  } catch (tmpErr) {
+    // /tmp is also not writable
+  }
+
+  // 3. Fallback to in-memory store
+  useMemoryStorage = true;
+  return null;
+}
 
 /**
  * Ensures data directory and submissions file exist with proper initial structure.
  */
 function ensureStorage() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(SUBMISSIONS_FILE)) {
-    const initial = { enrollments: [], contacts: [] };
-    fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(initial, null, 2), 'utf-8');
+  const targetFile = resolveStorageFile();
+  if (!targetFile || useMemoryStorage) return;
+
+  try {
+    const targetDir = path.dirname(targetFile);
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true });
+    }
+    if (!fs.existsSync(targetFile)) {
+      const initial = { enrollments: [], contacts: [] };
+      fs.writeFileSync(targetFile, JSON.stringify(initial, null, 2), 'utf-8');
+    }
+  } catch (err) {
+    if (targetFile !== TMP_SUBMISSIONS_FILE) {
+      activeStoragePath = TMP_SUBMISSIONS_FILE;
+      try {
+        if (!fs.existsSync(TMP_SUBMISSIONS_FILE)) {
+          const initial = { enrollments: [], contacts: [] };
+          fs.writeFileSync(TMP_SUBMISSIONS_FILE, JSON.stringify(initial, null, 2), 'utf-8');
+        }
+        return;
+      } catch (_) {}
+    }
+    useMemoryStorage = true;
   }
 }
 
@@ -31,17 +98,29 @@ function ensureStorage() {
  */
 function readData() {
   ensureStorage();
+  const targetFile = resolveStorageFile();
+  if (!targetFile || useMemoryStorage) {
+    return {
+      enrollments: Array.isArray(inMemoryStore.enrollments) ? [...inMemoryStore.enrollments] : [],
+      contacts: Array.isArray(inMemoryStore.contacts) ? [...inMemoryStore.contacts] : []
+    };
+  }
+
   try {
-    const raw = fs.readFileSync(SUBMISSIONS_FILE, 'utf-8');
+    const raw = fs.readFileSync(targetFile, 'utf-8');
     const parsed = JSON.parse(raw);
     return {
       enrollments: Array.isArray(parsed.enrollments) ? parsed.enrollments : [],
       contacts: Array.isArray(parsed.contacts) ? parsed.contacts : []
     };
   } catch (err) {
-    console.error('Warning: Failed to read submissions.json, initializing fresh state:', err.message);
     const initial = { enrollments: [], contacts: [] };
-    fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(initial, null, 2), 'utf-8');
+    try {
+      fs.writeFileSync(targetFile, JSON.stringify(initial, null, 2), 'utf-8');
+    } catch (_) {
+      useMemoryStorage = true;
+      inMemoryStore = initial;
+    }
     return initial;
   }
 }
@@ -52,9 +131,35 @@ function readData() {
  */
 function writeData(data) {
   ensureStorage();
-  const tempPath = `${SUBMISSIONS_FILE}.tmp`;
-  fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf-8');
-  fs.renameSync(tempPath, SUBMISSIONS_FILE);
+  const targetFile = resolveStorageFile();
+  if (!targetFile || useMemoryStorage) {
+    inMemoryStore = {
+      enrollments: Array.isArray(data.enrollments) ? data.enrollments : [],
+      contacts: Array.isArray(data.contacts) ? data.contacts : []
+    };
+    return;
+  }
+
+  try {
+    const tempPath = `${targetFile}.tmp`;
+    fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf-8');
+    fs.renameSync(tempPath, targetFile);
+  } catch (err) {
+    if (targetFile !== TMP_SUBMISSIONS_FILE) {
+      try {
+        activeStoragePath = TMP_SUBMISSIONS_FILE;
+        const tempPath = `${TMP_SUBMISSIONS_FILE}.tmp`;
+        fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf-8');
+        fs.renameSync(tempPath, TMP_SUBMISSIONS_FILE);
+        return;
+      } catch (_) {}
+    }
+    useMemoryStorage = true;
+    inMemoryStore = {
+      enrollments: Array.isArray(data.enrollments) ? data.enrollments : [],
+      contacts: Array.isArray(data.contacts) ? data.contacts : []
+    };
+  }
 }
 
 /**
@@ -155,6 +260,7 @@ function getAllSubmissions() {
  * Clears submissions (used for test isolation).
  */
 function clearSubmissions() {
+  inMemoryStore = { enrollments: [], contacts: [] };
   writeData({ enrollments: [], contacts: [] });
 }
 
