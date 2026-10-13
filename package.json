@@ -1,0 +1,20 @@
+{
+  "name": "sunflower-preschool",
+  "version": "1.0.0",
+  "description": "Sunflower Preschool - Official Website and Inquiry Management API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test:backend": "node src/backend/test-backend.js",
+    "build": "node scripts/build.js"
+  },
+  "keywords": [
+    "preschool",
+    "childcare",
+    "early-childhood",
+    "inquiry-api"
+  ],
+  "author": "Sunflower Preschool Development Team",
+  "license": "ISC"
+}

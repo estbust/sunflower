@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programs Overview | Sunflower Preschool</title>
+  <meta name="description" content="Explore our continuum of early childhood programs: Toddler Care (18-36 months), Preschool (3-5 years), and School-Age Care (5-10 years) at Sunflower Preschool.">
+  <link rel="canonical" href="http://localhost:3000/programs/">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Programs Overview | Sunflower Preschool">
+  <meta property="og:description" content="Age-appropriate, play-based learning environments supporting childhood development from 18 months through 10 years.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://localhost:3000/programs/">
+  <meta property="og:image" content="/assets/img/Sunflower%20Preschool%20vertical%20logo.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/img/ISotipo.png">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/styles.css?v=9.0">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=9.0">
+</head>
+<body>
+  <!-- Accessible Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Header Navbar (Consistent across all 8 pages) -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="brand-link" aria-label="Sunflower Preschool Home">
+        <img src="/assets/img/Horizontal%20Sunflower%20Preschool%20logo.png" alt="Sunflower Preschool" width="300" height="88" class="brand-logo-header">
+      </a>
+
+      <!-- Primary Navigation -->
+      <nav aria-label="Primary Navigation" class="primary-nav" id="primary-nav-menu">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+          <li class="nav-item nav-dropdown">
+            <a href="/programs/" class="nav-link" aria-current="page">Programs</a>
+            <ul class="dropdown-menu">
+              <li><a href="/programs/" class="dropdown-link" aria-current="page">All Programs Overview</a></li>
+              <li><a href="/programs/toddler-care/" class="dropdown-link">Toddler Care</a></li>
+              <li><a href="/programs/preschool/" class="dropdown-link">Preschool</a></li>
+              <li><a href="/programs/school-age-care/" class="dropdown-link">Before &amp; After School Care</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a href="/enrollment/" class="nav-link">Enrollment</a></li>
+          <li class="nav-item"><a href="/about/" class="nav-link">About Us</a></li>
+          <li class="nav-item"><a href="/contact/" class="nav-link">Contact</a></li>
+        </ul>
+        <div class="nav-drawer-actions">
+          <a href="/enrollment/" class="btn-pill-coral">Request Information</a>
+          <a href="tel:+19072773005" class="btn-pill-call">
+            <svg class="pill-call-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5665D8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span class="pill-call-text">
+              <span class="pill-call-label">Call Us</span>
+              <span class="pill-call-number">(907) 277-3005</span>
+            </span>
+          </a>
+        </div>
+      </nav>
+
+      <!-- Header Action Pill Buttons -->
+      <div class="header-actions">
+        <a href="/enrollment/" class="btn-pill-coral">Request Information</a>
+        <a href="tel:+19072773005" class="btn-pill-call">
+          <svg class="pill-call-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5665D8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span class="pill-call-text">
+            <span class="pill-call-label">Call Us</span>
+            <span class="pill-call-number">(907) 277-3005</span>
+          </span>
+        </a>
+      </div>
+
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav-menu" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-icon" aria-hidden="true"></span>
+        <span>Menu</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Landmark -->
+  <main id="main-content">
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="breadcrumbs">
+        <ol class="breadcrumb-list">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item"><span aria-current="page">Programs</span></li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header" aria-labelledby="programs-h1">
+      <div class="container page-header-inner">
+        <span class="badge badge-yellow">Developmental Pathways</span>
+        <h1 id="programs-h1" class="heading-with-sparkle">
+          <span>Early Learning &amp; Care Programs</span>
+          <svg class="sun-sparkle-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2V5M12 19V22M2 12H5M19 12H22M4.93 4.93L7.05 7.05M16.95 16.95L19.07 19.07M4.93 19.07L7.05 16.95M16.95 7.05L19.07 4.93" stroke="#FFCC21" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="3.5" fill="#FFCC21"/>
+          </svg>
+        </h1>
+        <p class="page-lead">
+          Our programs are thoughtfully designed to meet children at their distinct developmental stages, encouraging curiosity, confidence, and community through play-based pedagogy.
+        </p>
+      </div>
+    </section>
+
+    <!-- Smooth Inline SVG Wave Divider (White to Cream) -->
+    <div class="section-wave-divider" aria-hidden="true">
+      <svg width="1440" height="48" style="width: 100%; height: 48px; display: block;" viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none">
+        <path d="M0,0 C320,40 540,8 780,28 C1020,48 1260,12 1440,32 L1440,48 L0,48 Z" fill="#FFFBEB"/>
+      </svg>
+    </div>
+
+    <!-- 3-Column Program Cards (Cream #FFFBEB Background) -->
+    <section class="section section-cream" aria-labelledby="program-tracks-heading">
+      <div class="container">
+        <header class="section-header">
+          <span class="badge badge-coral">Three Dedicated Cohorts</span>
+          <h2 id="program-tracks-heading" class="heading-with-sparkle" style="justify-content: center; margin-top: 0.5rem;">
+            <span>A Continuous Journey from Toddlerhood to School Age</span>
+            <svg class="sun-sparkle-svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="5" fill="#FFCC21"/>
+              <path d="M12 2V5M12 19V22M2 12H5M19 12H22" stroke="#FFCC21" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </h2>
+          <p>
+            Each cohort offers tailored classroom spaces, educator ratios, and daily rhythms designed specifically for the emotional and physical needs of that age group.
+          </p>
+        </header>
+
+        <div class="program-cards-grid">
+          <!-- Program Card 1: Toddler Care -->
+          <article class="program-card-overhaul">
+            <div class="program-card-media">
+              <svg width="380" height="220" style="width: 100%; height: 200px; display: block;" viewBox="0 0 380 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Toddler care sensory play scene">
+                <rect width="380" height="220" fill="#FFF8F5"/>
+                <circle cx="190" cy="110" r="90" fill="#FFEFEA" opacity="0.7"/>
+                <ellipse cx="140" cy="165" rx="45" ry="12" fill="#E2E8F0"/>
+                <ellipse cx="140" cy="155" rx="38" ry="10" fill="#5665D8"/>
+                <ellipse cx="140" cy="140" rx="32" ry="9" fill="#15AF71"/>
+                <ellipse cx="140" cy="125" rx="26" ry="8" fill="#FFCC21"/>
+                <ellipse cx="140" cy="110" rx="20" ry="7" fill="#FF6845"/>
+                <circle cx="140" cy="95" r="10" fill="#FFCC21"/>
+                <circle cx="250" cy="130" r="32" fill="#D4A373"/>
+                <circle cx="230" cy="102" r="12" fill="#D4A373"/>
+                <circle cx="270" cy="102" r="12" fill="#D4A373"/>
+                <circle cx="250" cy="138" r="15" fill="#E6CCB2"/>
+                <circle cx="242" cy="125" r="3.5" fill="#4A3525"/>
+                <circle cx="258" cy="125" r="3.5" fill="#4A3525"/>
+                <ellipse cx="250" cy="133" rx="4" ry="3" fill="#4A3525"/>
+                <circle cx="80" cy="65" r="12" stroke="#BAC2FA" stroke-width="2" fill="#EEF0FB" opacity="0.6"/>
+                <circle cx="110" cy="45" r="7" stroke="#BAC2FA" stroke-width="1.5" fill="#EEF0FB" opacity="0.6"/>
+                <circle cx="300" cy="60" r="14" stroke="#FFD8CE" stroke-width="2" fill="#FFF1ED" opacity="0.6"/>
+              </svg>
+              <!-- Floating Coral Badge with White Heart SVG -->
+              <div class="program-floating-badge badge-coral-circle" aria-label="Toddler care badge">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="program-card-body">
+              <span class="program-card-cohort">Cohort: 18–36 Months</span>
+              <h3 class="program-card-title">Toddler Care</h3>
+              <p class="program-card-desc">
+                A warm, sensory-rich haven where toddlers build trust, practice early autonomy, and explore the joy of language through songs, stories, and guided play.
+              </p>
+              <ul class="program-card-features">
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Responsive primary caregiving</span></li>
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Sensory discovery and tactile materials</span></li>
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Gross motor balance &amp; play</span></li>
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Emergent speech &amp; social transition</span></li>
+              </ul>
+              <a href="/programs/toddler-care/" class="btn-pill-learn">
+                <span>Explore Toddler Care</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Program Card 2: Preschool -->
+          <article class="program-card-overhaul">
+            <div class="program-card-media">
+              <svg width="380" height="220" style="width: 100%; height: 200px; display: block;" viewBox="0 0 380 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Preschool nature discovery scene">
+                <rect width="380" height="220" fill="#F4FAF6"/>
+                <circle cx="190" cy="110" r="90" fill="#E8F8F0" opacity="0.8"/>
+                <path d="M120 170 L130 130 L170 130 L180 170 Z" fill="#D48B54" stroke="#B87333" stroke-width="2"/>
+                <rect x="122" y="125" width="56" height="8" rx="3" fill="#B87333"/>
+                <path d="M150 125 Q150 95 155 75" stroke="#15AF71" stroke-width="4" stroke-linecap="round"/>
+                <path d="M152 100 C135 90 130 105 138 112 C146 116 151 106 152 100" fill="#15AF71"/>
+                <path d="M154 85 C170 75 175 90 167 97 C159 101 154 91 154 85" fill="#15AF71"/>
+                <circle cx="235" cy="115" r="34" fill="#FFFFFF" stroke="#15AF71" stroke-width="5"/>
+                <circle cx="235" cy="115" r="28" fill="#E8F8F0" opacity="0.6"/>
+                <path d="M230 105 C222 105 220 115 228 122 C236 126 242 118 238 110" fill="#15AF71"/>
+                <line x1="260" y1="140" x2="295" y2="175" stroke="#181B2C" stroke-width="8" stroke-linecap="round"/>
+                <ellipse cx="80" cy="130" rx="22" ry="16" fill="#FFFFFF" stroke="#D8DAE5" stroke-width="2"/>
+                <circle cx="72" cy="126" r="3.5" fill="#FF6845"/>
+                <circle cx="84" cy="124" r="3.5" fill="#FFCC21"/>
+                <circle cx="82" cy="136" r="3.5" fill="#5665D8"/>
+              </svg>
+              <!-- Floating Green Badge with White Sprout SVG -->
+              <div class="program-floating-badge badge-green-circle" aria-label="Preschool program badge">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M7 20h10"/>
+                  <path d="M10 20c0-6 4-10 10-10"/>
+                  <path d="M14 20c0-8-5-14-12-14 0 7 5 12 12 14z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="program-card-body">
+              <span class="program-card-cohort">Cohort: 3–5 Years</span>
+              <h3 class="program-card-title">Preschool Program</h3>
+              <p class="program-card-desc">
+                An engaging preschool experience fostering scientific inquiry, early literacy, expressive studio arts, and collaborative peer problem-solving.
+              </p>
+              <ul class="program-card-features">
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Project-based inquiries &amp; questions</span></li>
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Pre-literacy &amp; story circles</span></li>
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Early math patterns &amp; counting</span></li>
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Outdoor garden &amp; ecosystem discovery</span></li>
+              </ul>
+              <a href="/programs/preschool/" class="btn-pill-learn">
+                <span>Explore Preschool</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Program Card 3: School-Age Care -->
+          <article class="program-card-overhaul">
+            <div class="program-card-media">
+              <svg width="380" height="220" style="width: 100%; height: 200px; display: block;" viewBox="0 0 380 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="School-age care STEAM maker projects scene">
+                <rect width="380" height="220" fill="#F4F5FD"/>
+                <circle cx="190" cy="110" r="90" fill="#EEF0FB" opacity="0.8"/>
+                <circle cx="150" cy="100" r="28" stroke="#5665D8" stroke-width="5" stroke-dasharray="10 4"/>
+                <circle cx="150" cy="100" r="12" fill="#5665D8"/>
+                <circle cx="205" cy="130" r="22" stroke="#FFCC21" stroke-width="4.5" stroke-dasharray="8 3"/>
+                <circle cx="205" cy="130" r="9" fill="#FFCC21"/>
+                <path d="M260 165 L275 110 L285 110 L300 165 Z" fill="#FFFFFF" stroke="#5665D8" stroke-width="3"/>
+                <path d="M268 140 Q280 135 292 140 L297 160 L263 160 Z" fill="#15AF71" opacity="0.6"/>
+                <rect x="80" y="125" width="46" height="52" rx="4" fill="#FFFFFF" stroke="#181B2C" stroke-width="2.5"/>
+                <line x1="88" y1="138" x2="118" y2="138" stroke="#D8DAE5" stroke-width="2"/>
+                <line x1="88" y1="148" x2="118" y2="148" stroke="#D8DAE5" stroke-width="2"/>
+                <line x1="88" y1="158" x2="110" y2="158" stroke="#D8DAE5" stroke-width="2"/>
+                <line x1="120" y1="110" x2="135" y2="130" stroke="#FF6845" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+              <!-- Floating Blue-Violet Badge with White Kids/Group SVG -->
+              <div class="program-floating-badge badge-violet-circle" aria-label="School-age care badge">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+            </div>
+            <div class="program-card-body">
+              <span class="program-card-cohort">Cohort: 5–10 Years</span>
+              <h3 class="program-card-title">School-Age Care</h3>
+              <p class="program-card-desc">
+                Enriching after-school and seasonal care designed for elementary learners to unwind, explore STEM hobbies, finish homework, and enjoy active games.
+              </p>
+              <ul class="program-card-features">
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Homework support &amp; quiet study</span></li>
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Makerspace construction &amp; robotics</span></li>
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Outdoor recreation &amp; team sports</span></li>
+                <li class="program-card-feature-item"><span class="program-feature-dot"></span><span>Leadership &amp; peer collaboration</span></li>
+              </ul>
+              <a href="/programs/school-age-care/" class="btn-pill-learn">
+                <span>Explore School-Age Care</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Smooth Inline SVG Wave Divider (Cream to White) -->
+    <div class="section-wave-divider" aria-hidden="true">
+      <svg width="1440" height="48" style="width: 100%; height: 48px; display: block;" viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none">
+        <path d="M0,0 C360,40 600,10 900,35 C1200,60 1340,15 1440,30 L1440,48 L0,48 Z" fill="#FFFFFF"/>
+      </svg>
+    </div>
+
+    <!-- Interactive Daily Rhythm / Schedule Explorer (White Background) -->
+    <section class="section section-white" aria-labelledby="schedule-explorer-heading">
+      <div class="container">
+        <header class="section-header">
+          <span class="badge badge-blue">Interactive Preview</span>
+          <h2 id="schedule-explorer-heading" class="heading-with-sparkle" style="justify-content: center; margin-top: 0.5rem;">
+            <span>Explore a Typical Daily Rhythm</span>
+            <svg class="sun-sparkle-svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="5" fill="#FFCC21"/>
+              <path d="M12 2V5M12 19V22M2 12H5M19 12H22" stroke="#FFCC21" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </h2>
+          <p>
+            Predictable yet flexible daily rhythms give children a strong sense of security while leaving ample time for spontaneous, child-guided discovery.
+          </p>
+        </header>
+
+        <div class="routine-tabs-container">
+          <ul class="tab-list" role="tablist" aria-label="Daily Routine by Cohort">
+            <li role="presentation">
+              <button type="button" class="tab-btn" role="tab" id="tab-toddler" aria-selected="true" aria-controls="panel-toddler" tabindex="0">
+                Toddler Care Routine (18–36 mos)
+              </button>
+            </li>
+            <li role="presentation">
+              <button type="button" class="tab-btn" role="tab" id="tab-preschool" aria-selected="false" aria-controls="panel-preschool" tabindex="-1">
+                Preschool Routine (3–5 yrs)
+              </button>
+            </li>
+            <li role="presentation">
+              <button type="button" class="tab-btn" role="tab" id="tab-schoolage" aria-selected="false" aria-controls="panel-schoolage" tabindex="-1">
+                School-Age Care Routine (5–10 yrs)
+              </button>
+            </li>
+          </ul>
+
+          <!-- Tab Panel 1: Toddlers -->
+          <div class="tab-panel active" role="tabpanel" id="panel-toddler" aria-labelledby="tab-toddler">
+            <h3>Toddler Care Rhythm</h3>
+            <p>A gentle day shaped around responsive care, quiet transitions, and unhurried sensory exploration.</p>
+            <div class="schedule-timeline">
+              <div class="schedule-row">
+                <span class="schedule-time">8:00 AM – 9:00 AM</span>
+                <div class="schedule-desc">
+                  <strong>Warm Welcome &amp; Open Sensory Play</strong>
+                  <p>Gentle drop-off greeting, self-chosen exploration of soft blocks, texture boards, and books.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">9:00 AM – 9:45 AM</span>
+                <div class="schedule-desc">
+                  <strong>Circle Greeting &amp; Toddler Story Song</strong>
+                  <p>Fingerplays, nursery songs, puppet stories, and nutritious morning nourishment.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">9:45 AM – 11:00 AM</span>
+                <div class="schedule-desc">
+                  <strong>Outdoor Toddler Garden Exploration</strong>
+                  <p>Sandbox play, grassy hill rolling, sensory herb tasting, and balance games in fresh air.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">11:00 AM – 12:00 PM</span>
+                <div class="schedule-desc">
+                  <strong>Creative Art &amp; Family-Style Lunch</strong>
+                  <p>Finger painting, water play, followed by a calm family-style lunchtime together.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">12:00 PM – 2:30 PM</span>
+                <div class="schedule-desc">
+                  <strong>Rest &amp; Recharging Nap Time</strong>
+                  <p>Soft lullaby music, individual low cots, and peaceful rest suited to individual toddler rhythms.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">2:30 PM – 5:00 PM</span>
+                <div class="schedule-desc">
+                  <strong>Afternoon Snack &amp; Small Group Play</strong>
+                  <p>Manipulatives, puzzles, outdoor meadow play, and gentle family reunification.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Panel 2: Preschool -->
+          <div class="tab-panel" role="tabpanel" id="panel-preschool" aria-labelledby="tab-preschool" hidden>
+            <h3>Preschool Learning Rhythm</h3>
+            <p>An inquiry-rich rhythm balancing collaborative group discussions, project centers, and active outdoor nature play.</p>
+            <div class="schedule-timeline">
+              <div class="schedule-row">
+                <span class="schedule-time">8:00 AM – 9:00 AM</span>
+                <div class="schedule-desc">
+                  <strong>Morning Invitations to Learn</strong>
+                  <p>Self-selected discovery in classroom interest centers: dramatic play, building, or drawing.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">9:00 AM – 9:45 AM</span>
+                <div class="schedule-desc">
+                  <strong>Community Morning Meeting &amp; Planning</strong>
+                  <p>Calendar inquiry, storytelling, collaborative project discussions, and wholesome snack.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">9:45 AM – 11:15 AM</span>
+                <div class="schedule-desc">
+                  <strong>Inquiry Centers &amp; STEAM Investigations</strong>
+                  <p>Small-group exploration of science concepts, early math manipulatives, and studio art projects.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">11:15 AM – 12:15 PM</span>
+                <div class="schedule-desc">
+                  <strong>Outdoor Playground &amp; Nature Study</strong>
+                  <p>Climbing, collaborative construction, bug and plant observations in our dedicated garden.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">12:15 PM – 2:15 PM</span>
+                <div class="schedule-desc">
+                  <strong>Community Lunch &amp; Rest / Quiet Reading</strong>
+                  <p>Shared lunch table etiquette, followed by quiet rest or restorative book reading.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">2:15 PM – 5:00 PM</span>
+                <div class="schedule-desc">
+                  <strong>Literacy Circles &amp; Creative Workshops</strong>
+                  <p>Phonemic fun, creative theater, afternoon snack, and outdoor cooperative games.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Panel 3: School-Age -->
+          <div class="tab-panel" role="tabpanel" id="panel-schoolage" aria-labelledby="tab-schoolage" hidden>
+            <h3>School-Age Care Rhythm</h3>
+            <p>A supportive afternoon continuum for elementary students balancing school relaxation, homework, and hands-on makerspace projects.</p>
+            <div class="schedule-timeline">
+              <div class="schedule-row">
+                <span class="schedule-time">2:45 PM – 3:30 PM</span>
+                <div class="schedule-desc">
+                  <strong>Arrival, Check-in &amp; Energizing Snack</strong>
+                  <p>Transition from the school day with wholesome snacks and friendly peer check-ins.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">3:30 PM – 4:15 PM</span>
+                <div class="schedule-desc">
+                  <strong>Homework Support &amp; Quiet Reading</strong>
+                  <p>Dedicated educator guidance for homework tasks, reading practice, or quiet independent research.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">4:15 PM – 5:00 PM</span>
+                <div class="schedule-desc">
+                  <strong>STEAM Maker Lab &amp; Creative Arts</strong>
+                  <p>Hands-on engineering challenges, robotics kits, woodworking crafts, and creative studio art.</p>
+                </div>
+              </div>
+              <div class="schedule-row">
+                <span class="schedule-time">5:00 PM – 5:30 PM</span>
+                <div class="schedule-desc">
+                  <strong>Outdoor Sports &amp; Cooperative Team Play</strong>
+                  <p>Field games, relay challenges, group recreation, and evening departure preparation.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="disclaimer-box" style="margin-top: 2rem;">
+          <p>
+            <strong>Program Inquiries:</strong> Submitting an inquiry begins a conversation with our admissions team to explore program fit and availability. It does not guarantee admission or reserve an open space in any cohort.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pre-Footer CTA Banner -->
+    <section class="container" style="padding-bottom: 2rem;" aria-label="Admissions Call to Action">
+      <div class="pre-footer-banner">
+        <div class="pre-footer-left">
+          <img src="/assets/img/ISotipo.png" onerror="this.onerror=null;this.src='../assets/img/ISotipo.png';" alt="Sunflower Preschool Isotipo" width="120" height="120" class="prefooter-isotipo-img">
+          <div class="pre-footer-content">
+            <h2>Ready to Discover Sunflower Preschool?</h2>
+            <p>Connect with our Anchorage team to explore our classrooms, ask questions, and take the first step toward enrollment.</p>
+          </div>
+        </div>
+        <div class="pre-footer-actions">
+          <a href="tel:+19072773005" class="btn-pill-white">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5665D8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>Call Us (907) 277-3005</span>
+          </a>
+          <a href="/enrollment/" class="btn-pill-coral" style="font-size: 1.05rem; padding: 0.85rem 1.6rem;">
+            <span>Request Information</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Alaskan Illustrated Footer (#FFFBEB warm cream background) -->
+  <footer role="contentinfo" class="site-footer-alaskan">
+    <div class="container">
+      <div class="alaskan-footer-grid">
+        <!-- Col 1: Original Logo & Mission -->
+        <div class="alaskan-footer-col">
+          <div class="footer-logo-card-alaskan">
+            <img src="/assets/img/Horizontal%20Sunflower%20Preschool%20logo.png" alt="Sunflower Preschool" width="260" height="76" class="brand-logo-footer">
+          </div>
+          <p class="footer-brand-desc">
+            Nurturing joyful discovery, compassionate friendships, and a lifelong love of learning for children in Anchorage, Alaska.
+          </p>
+          <p style="font-size: 0.875rem; color: var(--color-ink-muted); margin: 0;">
+            &copy; 2026 Sunflower Preschool. All rights reserved.
+          </p>
+        </div>
+
+        <!-- Col 2: Anchorage NAP Details -->
+        <div class="alaskan-footer-col">
+          <h3>Visit &amp; Connect</h3>
+          <ul class="alaskan-nap-list">
+            <li class="alaskan-nap-item">
+              <svg class="alaskan-nap-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF6845" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span><strong>Sunflower Preschool</strong><br>2500 Boniface Parkway<br>Anchorage, AK 99504</span>
+            </li>
+            <li class="alaskan-nap-item">
+              <svg class="alaskan-nap-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5665D8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span><a href="tel:+19072773005">(907) 277-3005</a></span>
+            </li>
+            <li class="alaskan-nap-item">
+              <svg class="alaskan-nap-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15AF71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span><a href="mailto:info@sunflowerpreschoolak.com">info@sunflowerpreschoolak.com</a></span>
+            </li>
+            <li class="alaskan-nap-item" style="font-size: 0.875rem;">
+              <span style="color: var(--color-ink-muted);">Monday &ndash; Friday: 7:30 AM &ndash; 5:30 PM</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Quick Links (2-Column Subgrid) -->
+        <div class="alaskan-footer-col">
+          <h3>Quick Links</h3>
+          <div class="footer-quicklinks-grid">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/programs/">Programs</a></li>
+              <li><a href="/enrollment/">Enrollment</a></li>
+            </ul>
+            <ul>
+              <li><a href="/about/">About Us</a></li>
+              <li><a href="/contact/">Contact</a></li>
+              <li><a href="/enrollment/#privacy-heading">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Col 4: Alaskan Mountain & Sun Illustration + Tagline -->
+        <div class="alaskan-footer-col alaskan-art-wrapper">
+          <svg class="alaskan-mountain-svg" width="220" height="120" style="max-width: 220px; width: 220px; height: auto; display: block;" viewBox="0 0 240 130" fill="none" aria-hidden="true">
+            <rect width="240" height="130" rx="14" fill="#EDF3FB"/>
+            <circle cx="160" cy="55" r="28" fill="#FFCC21"/>
+            <path d="M160 16 V23 M160 87 V94 M125 55 H132 M188 55 H195 M135 30 L140 35 M180 75 L185 80 M135 80 L140 75 M180 35 L185 30" stroke="#FFCC21" stroke-width="2.5" stroke-linecap="round"/>
+            <polygon points="10,130 65,58 115,130" fill="#CBD5E1"/>
+            <polygon points="60,63 65,58 75,70 70,68 66,74" fill="#FFFFFF"/>
+            <polygon points="75,130 145,45 205,130" fill="#94A3B8"/>
+            <polygon points="138,53 145,45 158,60 152,58 147,64" fill="#FFFFFF"/>
+            <polygon points="150,130 205,65 245,130" fill="#64748B"/>
+            <polygon points="198,72 205,65 216,78 211,76 207,81" fill="#FFFFFF"/>
+            <g fill="#15AF71">
+              <polygon points="35,130 25,130 30,105"/>
+              <polygon points="30,103 22,115 38,115"/>
+              <polygon points="30,95 24,107 36,107"/>
+              <polygon points="30,88 26,98 34,98"/>
+              <polygon points="52,130 44,130 48,112"/>
+              <polygon points="48,108 42,118 54,118"/>
+              <polygon points="48,100 43,110 53,110"/>
+              <polygon points="110,130 102,130 106,108"/>
+              <polygon points="106,105 98,118 114,118"/>
+              <polygon points="106,96 100,109 112,109"/>
+              <polygon points="215,130 207,130 211,110"/>
+              <polygon points="211,107 204,119 218,119"/>
+              <polygon points="211,99 206,110 216,110"/>
+            </g>
+            <path d="M0 122 Q60 116 120 120 T240 118 L240 130 L0 130 Z" fill="#E2E8F0"/>
+          </svg>
+          <p class="alaskan-tagline">&ldquo;Every Little Sunflower Matters.&rdquo;</p>
+        </div>
+      </div>
+
+      <div class="alaskan-footer-bottom">
+        <p>Anchorage, Alaska &bull; 2500 Boniface Parkway &bull; (907) 277-3005</p>
+        <p><strong>Child Privacy Commitment:</strong> Sunflower Preschool does not collect medical details, clinical diagnoses, or full calendar birthdates online.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/assets/js/form-service.js?v=9.0"></script>
+  <script src="/assets/js/main.js?v=9.0"></script>
+</body>
+</html>
