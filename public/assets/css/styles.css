@@ -279,8 +279,18 @@ header.site-header,
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: #FFFFFF;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(24, 27, 44, 0.05);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+header.site-header.header-scrolled,
+.site-header.header-scrolled {
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 30px -10px rgba(24, 27, 44, 0.10);
+  border-bottom-color: rgba(24, 27, 44, 0.08);
 }
 
 .header-inner {
@@ -451,13 +461,26 @@ header.site-header,
   cursor: pointer;
   white-space: nowrap;
   box-shadow: 0 4px 14px rgba(255, 104, 69, 0.28);
-  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease;
 }
 
 .btn-pill-coral:hover {
-  background-color: #ff522b;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(255, 104, 69, 0.38);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(255, 104, 69, 0.38);
+  background-color: #FA5832;
+}
+
+.btn-pill-coral .btn-arrow,
+.btn-pill-coral span.arrow,
+.btn-pill-coral svg.arrow-icon {
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-pill-coral:hover .btn-arrow,
+.btn-pill-coral:hover span.arrow,
+.btn-pill-coral:hover svg.arrow-icon {
+  transform: translateX(5px);
 }
 
 /* 2. Secondary phone button */
@@ -875,7 +898,11 @@ header.site-header,
 /* Standard Page Header */
 .page-header {
   padding: 2.5rem 0 2rem;
-  background-color: var(--color-white);
+  position: relative;
+  background-color: #FFFFFF;
+  background-image:
+    radial-gradient(circle at 8% 20%, rgba(255, 204, 33, 0.10) 0%, transparent 35%),
+    radial-gradient(circle at 92% 80%, rgba(86, 101, 216, 0.07) 0%, transparent 40%);
   border-bottom: 2px solid var(--color-border-subtle);
 }
 
@@ -1429,8 +1456,12 @@ header.site-header,
   background-color: #FFFFFF;
 }
 
+.programs-preview-section,
 .section-cream {
-  background-color: var(--color-cream);
+  background-color: #FFFDF4;
+  background-image:
+    radial-gradient(circle at 85% 15%, rgba(255, 104, 69, 0.07) 0%, transparent 45%),
+    radial-gradient(circle at 10% 80%, rgba(255, 204, 33, 0.09) 0%, transparent 40%);
 }
 
 .section-ivory {
@@ -1488,9 +1519,13 @@ header.site-header,
    -------------------------------------------------------------------------- */
 .hero-section-overhaul {
   padding: 0;
-  background-color: #FFFFFF;
   position: relative;
   overflow: hidden;
+  background-color: #FFFFFF;
+  background-image: 
+    radial-gradient(circle at 12% 18%, rgba(255, 204, 33, 0.12) 0%, transparent 42%),
+    radial-gradient(circle at 88% 75%, rgba(86, 101, 216, 0.08) 0%, transparent 48%),
+    radial-gradient(circle at 50% 95%, rgba(21, 175, 113, 0.06) 0%, transparent 50%);
 }
 
 .hero-grid-asym {
@@ -1592,20 +1627,55 @@ header.site-header,
 }
 
 .hero-photo-container {
-  max-height: 420px;
+  max-height: 480px;
   max-width: 480px;
   border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(24, 27, 44, 0.12);
+  box-shadow: 0 20px 40px rgba(24, 27, 44, 0.12);
   background: var(--color-ivory);
   border: 4px solid #FFFFFF;
   position: relative;
 }
 
-.hero-photo-container svg {
-  display: block;
+.hero-classroom-img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-photo-badge-accent {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 18px;
+  padding: 8px;
+  box-shadow: 0 10px 24px rgba(24, 27, 44, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  border: 2px solid #FFFFFF;
+}
+
+.hero-floating-isotipo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  display: block;
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
 }
 
 .hero-accent-card-stacked {
@@ -1628,6 +1698,7 @@ header.site-header,
   color: var(--color-ink);
   text-align: center;
   line-height: 1.25;
+  animation: gentleFloat 4.5s ease-in-out infinite;
 }
 
 .hero-accent-word {
@@ -1652,6 +1723,7 @@ header.site-header,
   margin: 0 auto;
 }
 
+.program-card,
 .program-card-overhaul {
   background-color: #FFFFFF;
   border-radius: 20px;
@@ -1660,28 +1732,53 @@ header.site-header,
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease;
+  will-change: transform, box-shadow;
 }
 
+.program-card:hover,
 .program-card-overhaul:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 40px rgba(24, 27, 44, 0.12);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(24, 27, 44, 0.12);
 }
 
+.program-card-image,
 .program-card-media {
   position: relative;
   height: 220px;
-  background-color: var(--color-ivory);
   overflow: hidden;
   border-radius: 20px 20px 0 0;
+  background: #F1F5F9;
 }
 
-.program-card-media svg {
+.program-card-image img,
+.program-card-media img {
   width: 100%;
   height: 100%;
-  display: block;
   object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+.program-card:hover .program-card-image img,
+.program-card:hover .program-card-media img,
+.program-card-overhaul:hover .program-card-image img,
+.program-card-overhaul:hover .program-card-media img {
+  transform: scale(1.05);
+}
+
+.program-card:hover .program-floating-badge,
+.program-card-overhaul:hover .program-floating-badge {
+  transform: scale(1.12) rotate(4deg);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.program-card.card-toddler:hover,
+.program-card-overhaul.card-toddler:hover { border-color: rgba(255, 104, 69, 0.4); }
+.program-card.card-preschool:hover,
+.program-card-overhaul.card-preschool:hover { border-color: rgba(21, 175, 113, 0.4); }
+.program-card.card-schoolage:hover,
+.program-card-overhaul.card-schoolage:hover { border-color: rgba(86, 101, 216, 0.4); }
 
 .program-floating-badge {
   position: absolute;
@@ -1698,16 +1795,19 @@ header.site-header,
   z-index: 4;
 }
 
+.badge-coral,
 .badge-coral-circle {
   background-color: var(--color-coral);
   color: #FFFFFF;
 }
 
+.badge-green,
 .badge-green-circle {
   background-color: var(--color-green);
   color: #FFFFFF;
 }
 
+.badge-blue,
 .badge-violet-circle {
   background-color: var(--color-blue-violet);
   color: #FFFFFF;
@@ -2007,12 +2107,12 @@ header.site-header,
   border: 1px solid rgba(24, 27, 44, 0.1);
   box-shadow: 0 4px 12px rgba(24, 27, 44, 0.03);
   overflow: hidden;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .faq-card:hover {
-  border-color: rgba(86, 101, 216, 0.4);
-  box-shadow: 0 6px 18px rgba(24, 27, 44, 0.06);
+  border-color: rgba(86, 101, 216, 0.3);
+  box-shadow: 0 6px 20px rgba(24, 27, 44, 0.06);
 }
 
 .faq-trigger {
@@ -2033,36 +2133,54 @@ header.site-header,
   line-height: 1.35;
 }
 
-.faq-toggle-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background-color: #EEF0FB;
-  color: var(--color-blue-violet);
-  display: flex;
+.faq-toggle-icon,
+.faq-icon-circle {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.35rem;
-  font-weight: 800;
-  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  color: #5665D8;
+  font-size: 1.25rem;
+  font-weight: 700;
   line-height: 1;
-  transition: transform var(--transition-fast), background-color var(--transition-fast);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease, color 0.3s ease;
+  flex-shrink: 0;
 }
 
-.faq-trigger[aria-expanded="true"] .faq-toggle-icon {
-  background-color: var(--color-blue-violet);
-  color: #FFFFFF;
+.faq-trigger[aria-expanded="true"] .faq-toggle-icon,
+.faq-trigger[aria-expanded="true"] .faq-icon-circle {
   transform: rotate(45deg);
+  background-color: #5665D8;
+  color: #FFFFFF;
 }
 
-.faq-panel {
-  padding: 0 1.5rem 1.25rem;
+.faq-panel,
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, padding 0.3s ease;
+  opacity: 0;
+  padding: 0 1.5rem;
   font-size: 0.98rem;
   line-height: 1.6;
   color: var(--color-ink-secondary);
 }
 
-.faq-panel[hidden] {
+.faq-trigger[aria-expanded="true"] + .faq-panel,
+.faq-trigger[aria-expanded="true"] + .faq-answer,
+.faq-panel.is-open,
+.faq-answer.is-open {
+  max-height: 320px;
+  opacity: 1;
+  padding: 0 1.5rem 1.25rem;
+  padding-top: 12px;
+}
+
+.faq-panel[hidden],
+.faq-answer[hidden] {
   display: none;
 }
 
@@ -2106,6 +2224,7 @@ header.site-header,
   flex-shrink: 0;
   display: block;
   filter: drop-shadow(0 6px 14px rgba(24, 27, 44, 0.18));
+  animation: gentleFloat 5s ease-in-out infinite;
 }
 
 .pre-footer-content h2 {
@@ -2669,7 +2788,38 @@ footer a,
 }
 
 /* --------------------------------------------------------------------------
-   19. Print Styles
+   19. Staggered Scroll-Reveal Animations (IntersectionObserver)
+   -------------------------------------------------------------------------- */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger-1 { transition-delay: 80ms; }
+.reveal-stagger-2 { transition-delay: 160ms; }
+.reveal-stagger-3 { transition-delay: 240ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .hero-accent-card-stacked,
+  .prefooter-isotipo-img {
+    animation: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   20. Print Styles
    -------------------------------------------------------------------------- */
 @media print {
   .site-header,

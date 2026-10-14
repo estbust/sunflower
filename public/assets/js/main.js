@@ -384,7 +384,68 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 6. FAQ Accordion Interaction
+  // 6. Sticky Header Elevation on Scroll
+  // ---------------------------------------------------------------------------
+  function initStickyHeader() {
+    var header = document.querySelector('header.site-header');
+    if (!header) return;
+
+    var ticking = false;
+    function updateHeaderScrolled() {
+      if (window.scrollY > 20) {
+        header.classList.add('header-scrolled');
+      } else {
+        header.classList.remove('header-scrolled');
+      }
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeaderScrolled);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Initial check on load
+    updateHeaderScrolled();
+  }
+
+  // ---------------------------------------------------------------------------
+  // 7. Staggered Scroll-Reveal Animations (IntersectionObserver)
+  // ---------------------------------------------------------------------------
+  function initScrollReveal() {
+    var revealElements = document.querySelectorAll('.reveal-on-scroll');
+    if (!revealElements.length) return;
+
+    var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!('IntersectionObserver' in window) || prefersReducedMotion) {
+      revealElements.forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '0px 0px -40px 0px',
+      threshold: 0.1
+    });
+
+    revealElements.forEach(function (el) {
+      observer.observe(el);
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // 8. FAQ Accordion Interaction
   // ---------------------------------------------------------------------------
   function initFaqAccordion() {
     var triggers = document.querySelectorAll('.faq-trigger');
@@ -394,14 +455,22 @@
         var panelId = trigger.getAttribute('aria-controls');
         var panel = document.getElementById(panelId);
 
-        trigger.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+        var nextState = !isExpanded;
+        trigger.setAttribute('aria-expanded', nextState ? 'true' : 'false');
         if (panel) {
-          if (isExpanded) {
-            panel.setAttribute('hidden', '');
-            panel.classList.remove('open');
-          } else {
+          if (nextState) {
             panel.removeAttribute('hidden');
-            panel.classList.add('open');
+            // Force browser layout calculation to ensure smooth expansion transition
+            void panel.offsetHeight;
+            panel.classList.add('is-open');
+          } else {
+            panel.classList.remove('is-open');
+            // Retain display block during the 350ms transition before applying [hidden]
+            setTimeout(function () {
+              if (trigger.getAttribute('aria-expanded') === 'false') {
+                panel.setAttribute('hidden', '');
+              }
+            }, 350);
           }
         }
       });
@@ -409,10 +478,12 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 7. DOM Initialization
+  // 9. DOM Initialization
   // ---------------------------------------------------------------------------
   document.addEventListener('DOMContentLoaded', function () {
     initNavigation();
+    initStickyHeader();
+    initScrollReveal();
     initRoutineTabs();
     initEnrollmentForm();
     initContactForm();
