@@ -16,5 +16,8 @@
     "inquiry-api"
   ],
   "author": "Sunflower Preschool Development Team",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "sharp": "file:../praxis-landing-2/node_modules/sharp"
+  }
 }
