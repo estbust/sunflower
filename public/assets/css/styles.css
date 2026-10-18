@@ -2821,6 +2821,74 @@ footer a,
 }
 
 /* --------------------------------------------------------------------------
+   Auto-scrolling Photo Marquee Carousel
+   -------------------------------------------------------------------------- */
+.section-carousel {
+  background-color: #FFFFFF;
+}
+
+.photo-marquee-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 16px 0;
+  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.photo-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: photoMarqueeScroll 40s linear infinite;
+  will-change: transform;
+}
+
+.photo-marquee-container:hover .photo-marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-photo {
+  height: 260px;
+  width: auto;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(24, 27, 44, 0.08);
+  margin: 0 12px;
+  flex-shrink: 0;
+  display: block;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+}
+
+.marquee-photo:hover {
+  transform: scale(1.03);
+  box-shadow: 0 14px 32px rgba(24, 27, 44, 0.16);
+}
+
+@keyframes photoMarqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-marquee-track {
+    animation: none !important;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .marquee-photo {
+    height: 200px;
+    margin: 0 8px;
+    border-radius: 16px;
+  }
+}
+
+/* --------------------------------------------------------------------------
    20. Print Styles
    -------------------------------------------------------------------------- */
 @media print {
