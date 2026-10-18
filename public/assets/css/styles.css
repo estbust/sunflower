@@ -2995,6 +2995,59 @@ footer a,
   }
 }
 
+/* Photo Gallery Mosaic (About Us) */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  auto-rows: 250px;
+  margin-top: 2rem;
+}
+
+.gallery-item {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -10px rgba(24, 27, 44, 0.08);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+  cursor: pointer;
+  position: relative;
+  background-color: #F8FAFC;
+}
+
+.gallery-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px -15px rgba(24, 27, 44, 0.15);
+}
+
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gallery-item:hover .gallery-img {
+  transform: scale(1.05);
+}
+
+@media (min-width: 769px) {
+  .col-span-2 {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    auto-rows: 220px;
+    gap: 16px;
+  }
+  .col-span-2 {
+    grid-column: span 1;
+  }
+}
+
 /* --------------------------------------------------------------------------
    20. Print Styles
    -------------------------------------------------------------------------- */
