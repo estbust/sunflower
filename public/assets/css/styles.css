@@ -3048,6 +3048,42 @@ footer a,
   }
 }
 
+/* Promotional Video Section */
+.promo-video-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -10px rgba(24, 27, 44, 0.12);
+  border: 6px solid #FFFFFF;
+  background: #000000;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+}
+
+.promo-video-wrapper:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -12px rgba(24, 27, 44, 0.18);
+}
+
+.promo-video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+@media (max-width: 640px) {
+  .promo-video-wrapper {
+    border-width: 4px;
+    border-radius: 20px;
+  }
+  .promo-video {
+    border-radius: 16px;
+  }
+}
+
 /* --------------------------------------------------------------------------
    20. Print Styles
    -------------------------------------------------------------------------- */
