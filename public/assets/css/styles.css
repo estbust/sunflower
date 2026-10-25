@@ -2839,7 +2839,7 @@ footer a,
 .photo-marquee-track {
   display: flex;
   width: max-content;
-  animation: photoMarqueeScroll 40s linear infinite;
+  animation: photoMarqueeScroll 80s linear infinite;
   will-change: transform;
 }
 
