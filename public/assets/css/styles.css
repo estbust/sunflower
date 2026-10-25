@@ -1746,9 +1746,10 @@ header.site-header.header-scrolled,
 .program-card-media {
   position: relative;
   height: 220px;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 20px 20px 0 0;
   background: #F1F5F9;
+  z-index: 2;
 }
 
 .program-card-image img,
@@ -1758,6 +1759,7 @@ header.site-header.header-scrolled,
   height: 100%;
   object-fit: cover;
   display: block;
+  clip-path: inset(0 0 0 0 round 20px 20px 0 0);
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1794,7 +1796,7 @@ header.site-header.header-scrolled,
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 4;
+  z-index: 10;
 }
 
 .badge-coral,
@@ -1816,6 +1818,8 @@ header.site-header.header-scrolled,
 }
 
 .program-card-body {
+  position: relative;
+  z-index: 1;
   background: #FFFFFF;
   border-radius: 0 0 20px 20px;
   box-shadow: 0 10px 30px rgba(24, 27, 44, 0.07);
