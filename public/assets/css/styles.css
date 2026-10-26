@@ -2725,6 +2725,14 @@ footer a,
     width: 100%;
   }
 
+  /* Suppress manual line breaks in Tablet (v17.10) */
+  .hero-title br,
+  .hero-content h1 br,
+  .hero-h1-twotone br,
+  .h1-title-wrapper br {
+    display: none !important;
+  }
+
   .page-header {
     padding: 28px 0 24px;
   }
@@ -2773,11 +2781,39 @@ footer a,
   }
 }
 
-/* Tablet Hero H1 Wrapping Optimization (768px - 1024px, v17.9) */
+/* Tablet Hero H1 Wrapping Optimization (768px - 1024px, v17.10) */
 @media (min-width: 768px) and (max-width: 1024px) {
+  /* 1. Suprimir saltos de línea (ocultar etiquetas <br> en tablet) */
+  .hero-title br,
+  .hero-content h1 br,
+  .hero-h1-twotone br,
+  .h1-title-wrapper br {
+    display: none !important;
+  }
+
+  /* 2. Anular restricciones Flex / Grid en Tablet */
   .hero-left-col,
-  .h1-title-wrapper,
-  .hero-h1-twotone,
+  .hero-content,
+  .h1-title-wrapper {
+    max-width: none !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+  }
+
+  /* 3. Resolver el salto de línea después de 'Care' en Tablet */
+  .hero-h1-twotone .h1-line-green,
+  .hero-h1-twotone .h1-accent-violet {
+    display: inline !important;
+  }
+  .hero-h1-twotone .h1-line-green {
+    margin-right: 0.25em;
+  }
+  .hero-h1-twotone {
+    font-size: clamp(1.85rem, 3.2vw, 2.75rem) !important;
+    white-space: normal;
+    max-width: 100% !important;
+  }
+
   .hero-title,
   .hero-content h1,
   .page-header h1 {
@@ -2954,6 +2990,21 @@ footer a,
 
   .hero-heart-accent {
     display: none;
+  }
+
+  /* Mobile Hero H1 Harmony: stack two-tone spans with block display and prevent overflow */
+  .hero-h1-twotone {
+    font-size: clamp(1.85rem, 5.5vw, 2.4rem);
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+    max-width: 100% !important;
+  }
+
+  .hero-h1-twotone .h1-line-green,
+  .hero-h1-twotone .h1-accent-violet {
+    display: block !important;
+    margin-right: 0;
   }
 }
 
