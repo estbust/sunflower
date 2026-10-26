@@ -95,7 +95,7 @@
   padding: 0;
 }
 
-html, body {
+html, body, .page-wrapper {
   overflow-x: hidden;
   max-width: 100%;
 }
@@ -227,9 +227,12 @@ p a:hover, .prose a:hover, .text-link:hover {
   color: #3b48b3;
 }
 
+img, video, canvas, iframe, embed, object {
+  max-width: 100%;
+}
+
 img {
   display: block;
-  max-width: 100%;
   height: auto;
 }
 
@@ -2744,9 +2747,76 @@ footer a,
 
 /* Intermediate Mobile/Tablet Refinements (<= 768px) */
 @media (max-width: 768px) {
+  html, body, .page-wrapper {
+    overflow-x: hidden !important;
+    max-width: 100%;
+  }
+
+  .container,
+  .enrollment-container,
+  .contact-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .split-section-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .contact-info-col,
+  .form-card,
+  .form-card-overhaul,
+  .anchorage-map-card,
+  .anchorage-map-canvas,
+  .map-container,
+  .contact-badge-card,
+  .privacy-notice-box {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .anchorage-map-canvas iframe,
+  .map-container iframe,
+  iframe {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: block;
+  }
+
+  .contact-badge-card {
+    padding: 1.15rem 1rem;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .contact-badge-content,
+  .contact-badge-value {
+    min-width: 0;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
   .form-card,
   .form-card-overhaul {
-    padding: 1.75rem 1.25rem;
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .privacy-notice-box {
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.75rem;
+    box-sizing: border-box;
   }
 
   .schedule-row {
@@ -2757,6 +2827,21 @@ footer a,
 
 /* Mobile Screen Layout & 1-Column Stacking (<= 640px, e.g. 430px iPhone) */
 @media (max-width: 640px) {
+  html, body, .page-wrapper {
+    overflow-x: hidden !important;
+    max-width: 100%;
+  }
+
+  .container,
+  .enrollment-container,
+  .contact-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   .brand-logo-header,
   .brand-link img,
   .brand-logo img {
@@ -2777,6 +2862,13 @@ footer a,
   .form-grid {
     grid-template-columns: 1fr;
     gap: 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .split-section-grid {
+    overflow: hidden;
   }
 
   .alaskan-footer-grid {
