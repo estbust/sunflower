@@ -2674,6 +2674,20 @@ footer a,
   .h1-title-wrapper {
     margin-top: 0 !important;
     padding-top: 0 !important;
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  .h1-title-wrapper {
+    display: block;
+  }
+
+  .hero-h1-twotone,
+  .hero-title,
+  .hero-content h1,
+  .page-header h1 {
+    max-width: 100% !important;
+    width: 100%;
   }
 }
 
@@ -2695,6 +2709,20 @@ footer a,
   .h1-title-wrapper {
     margin-top: 0 !important;
     padding-top: 0 !important;
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  .h1-title-wrapper {
+    display: block;
+  }
+
+  .hero-h1-twotone,
+  .hero-title,
+  .hero-content h1,
+  .page-header h1 {
+    max-width: 100% !important;
+    width: 100%;
   }
 
   .page-header {
@@ -2742,6 +2770,28 @@ footer a,
     align-items: flex-start;
     padding: 2.5rem 2rem;
     gap: 2rem;
+  }
+}
+
+/* Tablet Hero H1 Wrapping Optimization (768px - 1024px, v17.9) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hero-left-col,
+  .h1-title-wrapper,
+  .hero-h1-twotone,
+  .hero-title,
+  .hero-content h1,
+  .page-header h1 {
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  .h1-title-wrapper {
+    display: block;
+  }
+
+  .hero-lead-text {
+    max-width: 800px;
+    width: 100%;
   }
 }
 
