@@ -396,7 +396,7 @@ header.site-header.header-scrolled,
 .dropdown-menu {
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   left: 0;
   min-width: 260px;
   background-color: var(--color-white);
@@ -411,10 +411,10 @@ header.site-header.header-scrolled,
 .dropdown-menu::before {
   content: "";
   position: absolute;
-  top: -12px;
+  top: -16px;
   left: 0;
   right: 0;
-  height: 12px;
+  height: 16px;
   display: block;
 }
 
