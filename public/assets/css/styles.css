@@ -1927,6 +1927,114 @@ header.site-header.header-scrolled,
 }
 
 /* --------------------------------------------------------------------------
+   13b. What Sets Us Apart (Advantages Strip)
+   -------------------------------------------------------------------------- */
+.advantages-strip {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px dashed rgba(24, 27, 44, 0.12);
+  width: 100%;
+}
+
+.advantages-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.advantages-header .badge {
+  margin-bottom: 0.75rem;
+}
+
+.advantages-main-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.8vw, 1.85rem);
+  font-weight: 800;
+  color: var(--color-ink);
+  margin: 0;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.advantages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.advantage-card {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(24, 27, 44, 0.08);
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 4px 16px rgba(24, 27, 44, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.advantage-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(24, 27, 44, 0.08);
+  border-color: rgba(24, 27, 44, 0.15);
+}
+
+.advantage-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.advantage-card:hover .advantage-icon-badge {
+  transform: scale(1.08);
+}
+
+.badge-icon-yellow {
+  background-color: #FFF9E6;
+  border: 1px solid #FFE680;
+}
+
+.badge-icon-green {
+  background-color: #E8FBF2;
+  border: 1px solid #A3F1CB;
+}
+
+.badge-icon-blue {
+  background-color: #EEF2FF;
+  border: 1px solid #C7D2FE;
+}
+
+.advantage-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0 0 0.65rem 0;
+  line-height: 1.3;
+}
+
+.advantage-desc {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--color-ink-muted, #484E6D);
+  margin: 0;
+  flex: 1;
+}
+
+/* --------------------------------------------------------------------------
    14. Contact & Enrollment Split Section
    -------------------------------------------------------------------------- */
 .split-section-grid {
@@ -2913,6 +3021,20 @@ footer a,
   .schedule-row {
     grid-template-columns: 1fr;
     gap: 0.5rem;
+  }
+
+  .advantages-strip {
+    margin-top: 2.25rem;
+    padding-top: 1.75rem;
+  }
+
+  .advantages-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .advantage-card {
+    padding: 1.35rem 1.25rem;
   }
 }
 
