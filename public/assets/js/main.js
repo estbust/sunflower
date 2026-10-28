@@ -168,6 +168,31 @@
     });
   }
 
+  function bindInputErrorClearing(form) {
+    if (!form || form.dataset.boundErrorClearing) return;
+    form.dataset.boundErrorClearing = 'true';
+
+    var clearTargetError = function (e) {
+      var target = e.target;
+      if (!target) return;
+      if (target.getAttribute('aria-invalid') === 'true') {
+        target.removeAttribute('aria-invalid');
+        var fieldName = target.name || target.id;
+        if (fieldName) {
+          var errorContainer = form.querySelector('#err-' + fieldName) ||
+                               form.querySelector('#err-' + fieldName.replace(/([A-Z])/g, '-$1').toLowerCase());
+          if (errorContainer) {
+            errorContainer.classList.remove('visible');
+            errorContainer.textContent = '';
+          }
+        }
+      }
+    };
+
+    form.addEventListener('input', clearTargetError);
+    form.addEventListener('change', clearTargetError);
+  }
+
   function renderSummaryAlert(alertBanner, type, title, message, errorList) {
     if (!alertBanner) return;
 
@@ -212,6 +237,8 @@
     var alertBanner = document.getElementById('form-alert');
     var submitBtn = form.querySelector('button[type="submit"]');
 
+    bindInputErrorClearing(form);
+
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
       clearFormErrors(form, alertBanner);
@@ -242,7 +269,7 @@
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.dataset.originalText = submitBtn.textContent;
+        submitBtn.dataset.originalText = (submitBtn.textContent || '').trim();
         submitBtn.textContent = 'Submitting Inquiry...';
       }
 
@@ -252,45 +279,51 @@
         if (result.success) {
           // Success Response
           var successMsg = result.message || 'Your enrollment inquiry has been received.';
-          var inquiryId = result.inquiryId ? ' Reference ID: ' + result.inquiryId : '';
+          var refId = result.inquiryId || (result.data && result.data.inquiryId) || result.id || (result.data && result.data.id) || '';
 
           var confirmationHtml =
             '<h3>🌻 Inquiry Received Successfully!</h3>' +
             '<p>' + escapeHtml(successMsg) + '</p>' +
             '<p>Our admissions coordinator will review your inquiry and follow up within 1 to 2 business days to discuss program fit, schedule a personalized campus tour, and answer your questions.</p>' +
-            (result.inquiryId ? '<p class="inquiry-id-badge">Inquiry ID: ' + escapeHtml(result.inquiryId) + '</p>' : '') +
+            (refId ? '<p class="inquiry-id-badge"><strong>Reference ID:</strong> ' + escapeHtml(refId) + '</p>' : '') +
             '<div class="disclaimer-box" style="margin-top: 1rem;"><p><strong>Friendly Reminder:</strong> Submitting an inquiry initiates a conversation with our admissions team to explore program fit and availability. It does not guarantee admission or reserve an open space.</p></div>';
 
           alertBanner.className = 'alert-banner visible alert-banner-success';
           alertBanner.innerHTML = confirmationHtml;
           alertBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          alertBanner.focus();
 
           form.reset();
         } else {
           // Failure Response (Sensitive Data, Validation, Spam, or Rate Limit)
           var title = 'Submission Review Required';
+          var explanatoryMsg = result.message || 'Please correct the highlighted fields and resubmit.';
+
           if (result.code === 'SENSITIVE_DATA_DETECTED') {
             title = '⚠️ Sensitive Information Detected';
+            explanatoryMsg = 'Sunflower Preschool is strictly committed to protecting children\'s privacy. Medical conditions, allergies, medications, and full calendar birthdates cannot be submitted through online inquiry forms. Your entered information has been preserved below so you can adjust it.';
           } else if (result.code === 'SPAM_DETECTED') {
             title = '⚠️ Submission Blocked';
+            explanatoryMsg = 'Your inquiry was flagged by our automated security filter. Please remove external links or automated input and try again.';
           } else if (result.code === 'RATE_LIMIT_EXCEEDED') {
-            title = '⚠️ Too Many Requests';
+            title = '⚠️ Submission Limit Reached';
+            explanatoryMsg = 'Too many submissions have been received from this connection. Please wait a few moments before trying again.';
           }
 
-          renderSummaryAlert(alertBanner, 'error', title, result.message, result.errors);
+          renderSummaryAlert(alertBanner, 'error', title, explanatoryMsg, result.errors);
           renderFieldErrors(form, result.errors);
         }
       } catch (err) {
         renderSummaryAlert(
           alertBanner,
           'error',
-          'Network Error',
-          'An unexpected error occurred while transmitting your inquiry. Please try again shortly.'
+          'Network Transmission Error',
+          'We were unable to connect to our servers to transmit your inquiry. Please check your internet connection and try again. Your information has been preserved below so you do not have to re-enter it.'
         );
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.textContent = submitBtn.dataset.originalText || 'Submit Inquiry';
+          submitBtn.textContent = submitBtn.dataset.originalText || 'Submit Enrollment Inquiry';
         }
       }
     });
@@ -305,6 +338,8 @@
 
     var alertBanner = document.getElementById('form-alert');
     var submitBtn = form.querySelector('button[type="submit"]');
+
+    bindInputErrorClearing(form);
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -332,7 +367,7 @@
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.dataset.originalText = submitBtn.textContent;
+        submitBtn.dataset.originalText = (submitBtn.textContent || '').trim();
         submitBtn.textContent = 'Sending Message...';
       }
 
@@ -341,38 +376,45 @@
 
         if (result.success) {
           var successMsg = result.message || 'Thank you for reaching out to Sunflower Preschool!';
+          var refId = result.inquiryId || (result.data && result.data.inquiryId) || result.id || (result.data && result.data.id) || '';
 
           var confirmationHtml =
             '<h3>🌻 Message Sent Successfully!</h3>' +
             '<p>' + escapeHtml(successMsg) + '</p>' +
-            '<p>We look forward to connecting with your family. Our team typically responds within 1 to 2 business days.</p>' +
-            (result.inquiryId ? '<p class="inquiry-id-badge">Inquiry ID: ' + escapeHtml(result.inquiryId) + '</p>' : '') +
+            '<p>We look forward to connecting with your family. Our team typically responds within 1 to 2 business days to answer questions and coordinate tour times.</p>' +
+            (refId ? '<p class="inquiry-id-badge"><strong>Reference ID:</strong> ' + escapeHtml(refId) + '</p>' : '') +
             '<div class="disclaimer-box" style="margin-top: 1rem;"><p><strong>Friendly Reminder:</strong> Scheduling a tour or submitting an inquiry initiates a conversation with our team to discuss program fit and availability. It does not guarantee admission or reserve an open space.</p></div>';
 
           alertBanner.className = 'alert-banner visible alert-banner-success';
           alertBanner.innerHTML = confirmationHtml;
           alertBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          alertBanner.focus();
 
           form.reset();
         } else {
           var title = 'Submission Review Required';
+          var explanatoryMsg = result.message || 'Please correct the highlighted fields and resubmit.';
+
           if (result.code === 'SENSITIVE_DATA_DETECTED') {
             title = '⚠️ Sensitive Information Detected';
+            explanatoryMsg = 'Sunflower Preschool is strictly committed to protecting children\'s privacy. Medical conditions, allergies, medications, and full calendar birthdates cannot be submitted through online inquiry forms. Your entered information has been preserved below so you can adjust it.';
           } else if (result.code === 'SPAM_DETECTED') {
             title = '⚠️ Submission Blocked';
+            explanatoryMsg = 'Your message was flagged by our automated security filter. Please remove external links or automated input and try again.';
           } else if (result.code === 'RATE_LIMIT_EXCEEDED') {
-            title = '⚠️ Too Many Requests';
+            title = '⚠️ Submission Limit Reached';
+            explanatoryMsg = 'Too many submissions have been received from this connection. Please wait a few moments before trying again.';
           }
 
-          renderSummaryAlert(alertBanner, 'error', title, result.message, result.errors);
+          renderSummaryAlert(alertBanner, 'error', title, explanatoryMsg, result.errors);
           renderFieldErrors(form, result.errors);
         }
       } catch (err) {
         renderSummaryAlert(
           alertBanner,
           'error',
-          'Network Error',
-          'An unexpected error occurred while sending your message. Please try again shortly.'
+          'Network Transmission Error',
+          'We were unable to connect to our servers to transmit your message. Please check your internet connection and try again. Your information has been preserved below so you do not have to re-enter it.'
         );
       } finally {
         if (submitBtn) {
