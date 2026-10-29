@@ -322,7 +322,10 @@ const ENROLLMENT_ALLOWED_FIELDS = new Set([
   'message',
   'privacyConsent',
   'website',
-  'honeypot'
+  'honeypot',
+  'cf-turnstile-response',
+  'turnstileResponse',
+  'turnstile_token'
 ]);
 
 const CONTACT_ALLOWED_FIELDS = new Set([
@@ -333,7 +336,10 @@ const CONTACT_ALLOWED_FIELDS = new Set([
   'message',
   'privacyConsent',
   'website',
-  'honeypot'
+  'honeypot',
+  'cf-turnstile-response',
+  'turnstileResponse',
+  'turnstile_token'
 ]);
 
 // Enum value sets

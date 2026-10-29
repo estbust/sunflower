@@ -105,11 +105,13 @@
 
   var ENROLLMENT_ALLOWED = [
     'parentName', 'email', 'phone', 'childFirstName', 'program', 'childAgeGroup',
-    'preferredStart', 'schedulePreference', 'message', 'privacyConsent', 'website', 'honeypot'
+    'preferredStart', 'schedulePreference', 'message', 'privacyConsent', 'website', 'honeypot',
+    'cf-turnstile-response', 'turnstileResponse', 'turnstile_token'
   ];
 
   var CONTACT_ALLOWED = [
-    'name', 'email', 'phone', 'topic', 'message', 'privacyConsent', 'website', 'honeypot'
+    'name', 'email', 'phone', 'topic', 'message', 'privacyConsent', 'website', 'honeypot',
+    'cf-turnstile-response', 'turnstileResponse', 'turnstile_token'
   ];
 
   var EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -456,7 +458,7 @@
     return lines.join('\n');
   }
 
-  async function sendToHubSpot(type, payload) {
+  async function sendToHubSpot(type, payload, turnstileToken) {
     try {
       var pageUri = typeof window !== 'undefined' && window.location && window.location.href
         ? window.location.href
@@ -488,6 +490,11 @@
         if (payload.topic) fields.push({ name: 'topic', value: payload.topic });
       }
 
+      var token = turnstileToken || (payload && (payload['cf-turnstile-response'] || payload.turnstileResponse || payload.turnstile_token));
+      if (token) {
+        fields.push({ name: 'turnstile_token', value: token });
+      }
+
       var hsBody = {
         fields: fields,
         context: {
@@ -517,7 +524,7 @@
     }
   }
 
-  async function sendToWeb3Forms(type, payload) {
+  async function sendToWeb3Forms(type, payload, turnstileToken) {
     try {
       var isEnrollment = type === 'enrollment';
       var nameVal = isEnrollment ? payload.parentName : payload.name;
@@ -547,6 +554,12 @@
         bodyData.schedule_preference = payload.schedulePreference || '';
       } else {
         bodyData.topic = payload.topic || '';
+      }
+
+      var token = turnstileToken || (payload && (payload['cf-turnstile-response'] || payload.turnstileResponse || payload.turnstile_token));
+      if (token) {
+        bodyData['cf-turnstile-response'] = token;
+        bodyData.turnstile_token = token;
       }
 
       var response = await fetch(WEB3FORMS_CONFIG.endpoint, {
@@ -645,6 +658,14 @@
     };
   }
 
+  function extractTurnstileToken(payload) {
+    return (payload && payload['cf-turnstile-response']) ||
+      (payload && payload.turnstileResponse) ||
+      (typeof document !== 'undefined' && document.querySelector ? (document.querySelector('[name="cf-turnstile-response"]') || {}).value : '') ||
+      (typeof window !== 'undefined' && window.turnstile && typeof window.turnstile.getResponse === 'function' ? window.turnstile.getResponse() : '') ||
+      '';
+  }
+
   /**
    * Submits Enrollment inquiry to HubSpot CRM & Web3Forms with automatic client validation and robust fallback.
    * @param {Object} payload
@@ -676,7 +697,32 @@
       return createSimulatedConfirmation('enrollment');
     }
 
-    // 3. Browser runtime: Dispatch to HubSpot CRM and Web3Forms in parallel
+    // 3. Extract Turnstile token
+    var turnstileResponse = extractTurnstileToken(payload);
+
+    // 4. Browser verification check
+    if (!turnstileResponse) {
+      return {
+        ok: false,
+        status: 400,
+        code: 'TURNSTILE_REQUIRED',
+        message: 'Please complete the Cloudflare security verification check before submitting.',
+        errors: {
+          turnstile: 'Please complete the security challenge to verify that you are human.'
+        },
+        data: {
+          success: false,
+          code: 'TURNSTILE_REQUIRED',
+          message: 'Please complete the Cloudflare security verification check before submitting.',
+          errors: {
+            turnstile: 'Please complete the security challenge to verify that you are human.'
+          }
+        },
+        success: false
+      };
+    }
+
+    // 5. Browser runtime: Dispatch to HubSpot CRM and Web3Forms in parallel
     var inquiryId = 'enr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
     var submittedAt = new Date().toISOString();
 
@@ -685,17 +731,21 @@
       if (typeof window !== 'undefined' && window.location) {
         var host = window.location.hostname || '';
         if (host === 'localhost' || host === '127.0.0.1') {
+          var localPayload = Object.assign({}, payload, {
+            'cf-turnstile-response': turnstileResponse,
+            turnstile_token: turnstileResponse
+          });
           fetch('/api/enrollment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(localPayload)
           }).catch(function () {});
         }
       }
 
       var results = await Promise.allSettled([
-        sendToHubSpot('enrollment', payload),
-        sendToWeb3Forms('enrollment', payload)
+        sendToHubSpot('enrollment', payload, turnstileResponse),
+        sendToWeb3Forms('enrollment', payload, turnstileResponse)
       ]);
 
       var hsRes = results[0];
@@ -744,7 +794,32 @@
       return createSimulatedConfirmation('contact');
     }
 
-    // 3. Browser runtime: Dispatch to HubSpot CRM and Web3Forms in parallel
+    // 3. Extract Turnstile token
+    var turnstileResponse = extractTurnstileToken(payload);
+
+    // 4. Browser verification check
+    if (!turnstileResponse) {
+      return {
+        ok: false,
+        status: 400,
+        code: 'TURNSTILE_REQUIRED',
+        message: 'Please complete the Cloudflare security verification check before submitting.',
+        errors: {
+          turnstile: 'Please complete the security challenge to verify that you are human.'
+        },
+        data: {
+          success: false,
+          code: 'TURNSTILE_REQUIRED',
+          message: 'Please complete the Cloudflare security verification check before submitting.',
+          errors: {
+            turnstile: 'Please complete the security challenge to verify that you are human.'
+          }
+        },
+        success: false
+      };
+    }
+
+    // 5. Browser runtime: Dispatch to HubSpot CRM and Web3Forms in parallel
     var inquiryId = 'cnt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
     var submittedAt = new Date().toISOString();
 
@@ -753,17 +828,21 @@
       if (typeof window !== 'undefined' && window.location) {
         var host = window.location.hostname || '';
         if (host === 'localhost' || host === '127.0.0.1') {
+          var localPayload = Object.assign({}, payload, {
+            'cf-turnstile-response': turnstileResponse,
+            turnstile_token: turnstileResponse
+          });
           fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(localPayload)
           }).catch(function () {});
         }
       }
 
       var results = await Promise.allSettled([
-        sendToHubSpot('contact', payload),
-        sendToWeb3Forms('contact', payload)
+        sendToHubSpot('contact', payload, turnstileResponse),
+        sendToWeb3Forms('contact', payload, turnstileResponse)
       ]);
 
       var hsRes = results[0];
@@ -788,6 +867,7 @@
     validateContact: validateContact,
     detectSensitive: detectSensitive,
     detectSpam: detectSpam,
+    extractTurnstileToken: extractTurnstileToken,
     sendToHubSpot: sendToHubSpot,
     sendToWeb3Forms: sendToWeb3Forms,
     buildEnrollmentSummary: buildEnrollmentSummary,

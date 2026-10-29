@@ -253,6 +253,27 @@
         return;
       }
 
+      if (submitBtn && !submitBtn.dataset.originalText) {
+        submitBtn.dataset.originalText = (submitBtn.textContent || '').trim();
+      }
+
+      var formData = new FormData(form);
+      var turnstileResponse = formData.get('cf-turnstile-response');
+
+      if (!turnstileResponse) {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitBtn.dataset.originalText || 'Submit Enrollment Inquiry';
+        }
+        renderSummaryAlert(
+          alertBanner,
+          'error',
+          'Verification Required',
+          'Please complete the security verification challenge before submitting your inquiry.'
+        );
+        return;
+      }
+
       var payload = {
         parentName: (form.querySelector('#parentName') || {}).value || '',
         email: (form.querySelector('#email') || {}).value || '',
@@ -264,12 +285,13 @@
         schedulePreference: (form.querySelector('#schedulePreference') || {}).value || '',
         message: (form.querySelector('#message') || {}).value || '',
         privacyConsent: (form.querySelector('#privacyConsent') || {}).checked === true,
-        website: (form.querySelector('#website') || {}).value || ''
+        website: (form.querySelector('#website') || {}).value || '',
+        'cf-turnstile-response': turnstileResponse,
+        turnstileResponse: turnstileResponse
       };
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.dataset.originalText = (submitBtn.textContent || '').trim();
         submitBtn.textContent = 'Submitting Inquiry...';
       }
 
@@ -294,8 +316,13 @@
           alertBanner.focus();
 
           form.reset();
+          if (window.turnstile && typeof window.turnstile.reset === 'function') {
+            try {
+              window.turnstile.reset();
+            } catch (ignore) {}
+          }
         } else {
-          // Failure Response (Sensitive Data, Validation, Spam, or Rate Limit)
+          // Failure Response (Sensitive Data, Validation, Spam, Rate Limit, or Turnstile Required)
           var title = 'Submission Review Required';
           var explanatoryMsg = result.message || 'Please correct the highlighted fields and resubmit.';
 
@@ -308,10 +335,19 @@
           } else if (result.code === 'RATE_LIMIT_EXCEEDED') {
             title = '⚠️ Submission Limit Reached';
             explanatoryMsg = 'Too many submissions have been received from this connection. Please wait a few moments before trying again.';
+          } else if (result.code === 'TURNSTILE_REQUIRED') {
+            title = '⚠️ Verification Required';
+            explanatoryMsg = 'Please complete the security verification challenge before submitting your inquiry.';
           }
 
           renderSummaryAlert(alertBanner, 'error', title, explanatoryMsg, result.errors);
           renderFieldErrors(form, result.errors);
+
+          if (window.turnstile && typeof window.turnstile.reset === 'function') {
+            try {
+              window.turnstile.reset();
+            } catch (ignore) {}
+          }
         }
       } catch (err) {
         renderSummaryAlert(
@@ -320,6 +356,11 @@
           'Network Transmission Error',
           'We were unable to connect to our servers to transmit your inquiry. Please check your internet connection and try again. Your information has been preserved below so you do not have to re-enter it.'
         );
+        if (window.turnstile && typeof window.turnstile.reset === 'function') {
+          try {
+            window.turnstile.reset();
+          } catch (ignore) {}
+        }
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
@@ -355,6 +396,27 @@
         return;
       }
 
+      if (submitBtn && !submitBtn.dataset.originalText) {
+        submitBtn.dataset.originalText = (submitBtn.textContent || '').trim();
+      }
+
+      var formData = new FormData(form);
+      var turnstileResponse = formData.get('cf-turnstile-response');
+
+      if (!turnstileResponse) {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitBtn.dataset.originalText || 'Send Message';
+        }
+        renderSummaryAlert(
+          alertBanner,
+          'error',
+          'Verification Required',
+          'Please complete the security verification challenge before submitting your inquiry.'
+        );
+        return;
+      }
+
       var payload = {
         name: (form.querySelector('#name') || {}).value || '',
         email: (form.querySelector('#email') || {}).value || '',
@@ -362,12 +424,13 @@
         topic: (form.querySelector('#topic') || {}).value || '',
         message: (form.querySelector('#message') || {}).value || '',
         privacyConsent: (form.querySelector('#privacyConsent') || {}).checked === true,
-        website: (form.querySelector('#website') || {}).value || ''
+        website: (form.querySelector('#website') || {}).value || '',
+        'cf-turnstile-response': turnstileResponse,
+        turnstileResponse: turnstileResponse
       };
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.dataset.originalText = (submitBtn.textContent || '').trim();
         submitBtn.textContent = 'Sending Message...';
       }
 
@@ -391,6 +454,11 @@
           alertBanner.focus();
 
           form.reset();
+          if (window.turnstile && typeof window.turnstile.reset === 'function') {
+            try {
+              window.turnstile.reset();
+            } catch (ignore) {}
+          }
         } else {
           var title = 'Submission Review Required';
           var explanatoryMsg = result.message || 'Please correct the highlighted fields and resubmit.';
@@ -404,10 +472,19 @@
           } else if (result.code === 'RATE_LIMIT_EXCEEDED') {
             title = '⚠️ Submission Limit Reached';
             explanatoryMsg = 'Too many submissions have been received from this connection. Please wait a few moments before trying again.';
+          } else if (result.code === 'TURNSTILE_REQUIRED') {
+            title = '⚠️ Verification Required';
+            explanatoryMsg = 'Please complete the security verification challenge before submitting your inquiry.';
           }
 
           renderSummaryAlert(alertBanner, 'error', title, explanatoryMsg, result.errors);
           renderFieldErrors(form, result.errors);
+
+          if (window.turnstile && typeof window.turnstile.reset === 'function') {
+            try {
+              window.turnstile.reset();
+            } catch (ignore) {}
+          }
         }
       } catch (err) {
         renderSummaryAlert(
@@ -416,6 +493,11 @@
           'Network Transmission Error',
           'We were unable to connect to our servers to transmit your message. Please check your internet connection and try again. Your information has been preserved below so you do not have to re-enter it.'
         );
+        if (window.turnstile && typeof window.turnstile.reset === 'function') {
+          try {
+            window.turnstile.reset();
+          } catch (ignore) {}
+        }
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;

@@ -22,7 +22,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../assets/css/styles.css?v=17.15">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=17.17">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
   <!-- Accessible Skip Link -->
@@ -493,6 +494,11 @@
                   <span id="err-privacyConsent" class="field-error-msg" role="alert"></span>
                 </div>
 
+                <!-- Cloudflare Turnstile Security Verification -->
+                <div class="form-group form-group-full" style="margin-top: 1rem; display: flex; justify-content: center;">
+                  <div class="cf-turnstile" data-sitekey="0x4AAAAAAFqlmR6OulVe2SXu" data-theme="light"></div>
+                </div>
+
                 <!-- Full-Width Coral Submit Pill Button -->
                 <div class="form-group form-group-full" style="margin-top: 1rem;">
                   <button type="submit" class="btn-submit-coral">
@@ -688,7 +694,7 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="../assets/js/form-service.js?v=17.15"></script>
-  <script src="../assets/js/main.js?v=17.15"></script>
+  <script src="../assets/js/form-service.js?v=17.17"></script>
+  <script src="../assets/js/main.js?v=17.17"></script>
 </body>
 </html>
