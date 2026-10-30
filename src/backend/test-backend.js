@@ -250,6 +250,12 @@ async function runAllTests() {
     assert.strictEqual(res.isValid, false);
     assert.strictEqual(res.code, 'VALIDATION_ERROR');
     assert.ok(res.errors.some(e => e.field === 'email'));
+
+    // Verify institutional domain @gci.net is fully supported
+    const gciPayload = { ...validEnrollment, email: 'sunflowerpreschool@gci.net' };
+    const gciRes = validateEnrollment(gciPayload);
+    assert.strictEqual(gciRes.isValid, true);
+    assert.strictEqual(gciRes.sanitized.email, 'sunflowerpreschool@gci.net');
   });
 
   test('Rejects invalid program enum', () => {
@@ -288,6 +294,12 @@ async function runAllTests() {
     assert.strictEqual(resSnake.sanitized.topic, 'schedule-tour');
     assert.strictEqual(resSnake.sanitized.privacyConsent, true);
     assert.strictEqual(resSnake.sanitized.privacy_consent, true);
+
+    // Verify institutional @gci.net contact email
+    const gciContact = { ...validContact, email: 'sunflowerpreschool@gci.net' };
+    const resGciContact = validateContact(gciContact);
+    assert.strictEqual(resGciContact.isValid, true);
+    assert.strictEqual(resGciContact.sanitized.email, 'sunflowerpreschool@gci.net');
   });
 
   test('Valid contact inquiry with Careers / Job Application topic succeeds', () => {
@@ -877,7 +889,7 @@ async function runAllTests() {
   await asyncTest('form-service: submitEnrollment returns simulated 201 on static hosting / offline', async () => {
     const valid = {
       parentName: 'Test Parent',
-      email: 'test@example.com',
+      email: 'sunflowerpreschool@gci.net',
       phone: '555-123-4567',
       childFirstName: 'Child',
       program: 'preschool',
