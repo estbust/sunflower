@@ -1346,6 +1346,15 @@ header.site-header.header-scrolled,
   width: 100%;
 }
 
+.privacy-consent-wrapper {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+}
+
 .form-checkbox {
   flex-shrink: 0;
   width: 22px;
