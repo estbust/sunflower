@@ -105,12 +105,12 @@
 
   var ENROLLMENT_ALLOWED = [
     'parentName', 'email', 'phone', 'childFirstName', 'program', 'childAgeGroup',
-    'preferredStart', 'schedulePreference', 'message', 'privacyConsent', 'website', 'honeypot',
+    'preferredStart', 'schedulePreference', 'message', 'privacyConsent', 'privacy_consent', 'website', 'honeypot',
     'cf-turnstile-response', 'turnstileResponse', 'turnstile_token'
   ];
 
   var CONTACT_ALLOWED = [
-    'name', 'email', 'phone', 'topic', 'message', 'privacyConsent', 'website', 'honeypot',
+    'name', 'email', 'phone', 'topic', 'message', 'privacyConsent', 'privacy_consent', 'website', 'honeypot',
     'cf-turnstile-response', 'turnstileResponse', 'turnstile_token'
   ];
 
@@ -301,7 +301,7 @@
       }
     }
 
-    var consent = payload.privacyConsent === true || payload.privacyConsent === 'true';
+    var consent = payload.privacyConsent === true || payload.privacyConsent === 'true' || payload.privacy_consent === true || payload.privacy_consent === 'true';
     if (!consent) {
       errors.push({ field: 'privacyConsent', reason: 'Privacy consent is required.' });
     }
@@ -380,7 +380,7 @@
       errors.push({ field: 'message', reason: 'Message is required (10 to 800 characters).' });
     }
 
-    var consent = payload.privacyConsent === true || payload.privacyConsent === 'true';
+    var consent = payload.privacyConsent === true || payload.privacyConsent === 'true' || payload.privacy_consent === true || payload.privacy_consent === 'true';
     if (!consent) {
       errors.push({ field: 'privacyConsent', reason: 'Privacy consent is required.' });
     }
@@ -427,6 +427,8 @@
   }
 
   function buildEnrollmentSummary(payload) {
+    payload = payload || {};
+    var consent = payload.privacyConsent === true || payload.privacyConsent === 'true' || payload.privacy_consent === true || payload.privacy_consent === 'true';
     var lines = [
       '=== NEW ENROLLMENT INQUIRY ===',
       'Parent/Guardian: ' + (payload.parentName || 'N/A'),
@@ -437,6 +439,7 @@
       'Age Group: ' + (payload.childAgeGroup || 'N/A'),
       'Preferred Start: ' + (payload.preferredStart || 'Not specified'),
       'Schedule Preference: ' + (payload.schedulePreference || 'Not specified'),
+      'Privacy Consent: ' + (consent ? 'Confirmed' : 'Not confirmed'),
       '',
       'Parent Notes / Message:',
       payload.message ? payload.message : '(No additional notes provided)'
@@ -445,12 +448,15 @@
   }
 
   function buildContactSummary(payload) {
+    payload = payload || {};
+    var consent = payload.privacyConsent === true || payload.privacyConsent === 'true' || payload.privacy_consent === true || payload.privacy_consent === 'true';
     var lines = [
       '=== NEW CONTACT INQUIRY ===',
       'Name: ' + (payload.name || 'N/A'),
       'Email: ' + (payload.email || 'N/A'),
       'Phone: ' + (payload.phone || 'Not provided'),
       'Topic: ' + (payload.topic || 'General Inquiry'),
+      'Privacy Consent: ' + (consent ? 'Confirmed' : 'Not confirmed'),
       '',
       'Message:',
       payload.message ? payload.message : '(No message provided)'

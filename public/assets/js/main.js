@@ -153,6 +153,13 @@
                   form.querySelector('#' + fieldName) ||
                   form.querySelector('#' + fieldName.replace(/([A-Z])/g, '-$1').toLowerCase());
 
+      if (!input && (fieldName === 'privacyConsent' || fieldName === 'privacy_consent')) {
+        input = form.querySelector('#privacy_consent') ||
+                form.querySelector('#privacyConsent') ||
+                form.querySelector('[name="privacy_consent"]') ||
+                form.querySelector('[name="privacyConsent"]');
+      }
+
       if (input) {
         input.setAttribute('aria-invalid', 'true');
       }
@@ -160,6 +167,11 @@
       // Find dedicated field error container
       var errorContainer = form.querySelector('#err-' + fieldName) ||
                            form.querySelector('#err-' + fieldName.replace(/([A-Z])/g, '-$1').toLowerCase());
+
+      if (!errorContainer && (fieldName === 'privacyConsent' || fieldName === 'privacy_consent')) {
+        errorContainer = form.querySelector('#err-privacy_consent') ||
+                         form.querySelector('#err-privacyConsent');
+      }
 
       if (errorContainer) {
         errorContainer.textContent = reason;
@@ -175,15 +187,28 @@
     var clearTargetError = function (e) {
       var target = e.target;
       if (!target) return;
-      if (target.getAttribute('aria-invalid') === 'true') {
+      if (target.getAttribute('aria-invalid') === 'true' || target.type === 'checkbox') {
         target.removeAttribute('aria-invalid');
         var fieldName = target.name || target.id;
         if (fieldName) {
           var errorContainer = form.querySelector('#err-' + fieldName) ||
                                form.querySelector('#err-' + fieldName.replace(/([A-Z])/g, '-$1').toLowerCase());
+          if (!errorContainer && (fieldName === 'privacy_consent' || fieldName === 'privacyConsent')) {
+            errorContainer = form.querySelector('#err-privacy_consent') ||
+                             form.querySelector('#err-privacyConsent');
+          }
           if (errorContainer) {
             errorContainer.classList.remove('visible');
             errorContainer.textContent = '';
+          }
+          if (fieldName === 'privacy_consent' || fieldName === 'privacyConsent') {
+            var altErr = form.querySelector('#err-privacy_consent') || form.querySelector('#err-privacyConsent');
+            if (altErr) {
+              altErr.classList.remove('visible');
+              altErr.textContent = '';
+            }
+            var altInput = form.querySelector('#privacy_consent') || form.querySelector('#privacyConsent');
+            if (altInput) altInput.removeAttribute('aria-invalid');
           }
         }
       }
@@ -284,7 +309,8 @@
         preferredStart: (form.querySelector('#preferredStart') || {}).value || '',
         schedulePreference: (form.querySelector('#schedulePreference') || {}).value || '',
         message: (form.querySelector('#message') || {}).value || '',
-        privacyConsent: (form.querySelector('#privacyConsent') || {}).checked === true,
+        privacyConsent: (form.querySelector('#privacy_consent') || form.querySelector('#privacyConsent') || form.querySelector('[name="privacy_consent"]') || form.querySelector('[name="privacyConsent"]') || {}).checked === true,
+        privacy_consent: (form.querySelector('#privacy_consent') || form.querySelector('#privacyConsent') || form.querySelector('[name="privacy_consent"]') || form.querySelector('[name="privacyConsent"]') || {}).checked === true,
         website: (form.querySelector('#website') || {}).value || '',
         'cf-turnstile-response': turnstileResponse,
         turnstileResponse: turnstileResponse
@@ -423,7 +449,8 @@
         phone: (form.querySelector('#phone') || {}).value || '',
         topic: (form.querySelector('#topic') || {}).value || '',
         message: (form.querySelector('#message') || {}).value || '',
-        privacyConsent: (form.querySelector('#privacyConsent') || {}).checked === true,
+        privacyConsent: (form.querySelector('#privacy_consent') || form.querySelector('#privacyConsent') || form.querySelector('[name="privacy_consent"]') || form.querySelector('[name="privacyConsent"]') || {}).checked === true,
+        privacy_consent: (form.querySelector('#privacy_consent') || form.querySelector('#privacyConsent') || form.querySelector('[name="privacy_consent"]') || form.querySelector('[name="privacyConsent"]') || {}).checked === true,
         website: (form.querySelector('#website') || {}).value || '',
         'cf-turnstile-response': turnstileResponse,
         turnstileResponse: turnstileResponse

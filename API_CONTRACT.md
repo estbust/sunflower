@@ -96,7 +96,7 @@ Content-Type: application/json
 | `preferredStart` | String | No | Max 60 chars (NO full birthdates) | e.g. `"Fall 2026"`, `"Next Month"` |
 | `schedulePreference` | String | No | Enum: `"full-time"`, `"part-time"`, `"after-school"`, `""` | Desired weekly schedule |
 | `message` | String | No | Max 600 chars (passes privacy scan) | General questions or notes |
-| `privacyConsent` | Boolean | **Yes** | Must be strictly `true` | Confirms understanding of privacy rules |
+| `privacyConsent` / `privacy_consent` | Boolean | **Yes** | Must be strictly `true` | Confirms understanding of privacy rules (supports both camelCase and snake_case) |
 | `website` | String | No | Must be empty string `""` or omitted | Anti-bot honeypot field |
 
 #### Example Valid Request
@@ -170,7 +170,7 @@ Submit a general inquiry or schedule a guided campus tour.
 | `phone` | String | No | 7–20 digits/chars if provided | Contact telephone number |
 | `topic` | String | **Yes** | Enum: `"general-inquiry"`, `"programs-curriculum"`, `"schedule-tour"`, `"enrollment-question"` | Topic category |
 | `message` | String | **Yes** | 10–800 chars (passes privacy scan) | Message inquiry details |
-| `privacyConsent` | Boolean | **Yes** | Must be strictly `true` | Privacy policy confirmation |
+| `privacyConsent` / `privacy_consent` | Boolean | **Yes** | Must be strictly `true` | Privacy policy confirmation (supports both camelCase and snake_case) |
 | `website` | String | No | Must be empty string `""` or omitted | Anti-bot honeypot field |
 
 #### Example Valid Request

@@ -117,6 +117,16 @@ async function runAllTests() {
     assert.strictEqual(res.isValid, true);
     assert.strictEqual(res.sanitized.childFirstName, 'Mia');
     assert.strictEqual(res.sanitized.program, 'preschool');
+
+    // Verify snake_case privacy_consent compatibility
+    const snakeEnrollment = { ...validEnrollment };
+    delete snakeEnrollment.privacyConsent;
+    snakeEnrollment.privacy_consent = true;
+    const resSnake = validateEnrollment(snakeEnrollment);
+    assert.strictEqual(resSnake.isValid, true);
+    assert.strictEqual(resSnake.sanitized.childFirstName, 'Mia');
+    assert.strictEqual(resSnake.sanitized.privacyConsent, true);
+    assert.strictEqual(resSnake.sanitized.privacy_consent, true);
   });
 
   test('Rejects medical details in forbidden field (allergies)', () => {
@@ -268,6 +278,16 @@ async function runAllTests() {
     const res = validateContact(validContact);
     assert.strictEqual(res.isValid, true);
     assert.strictEqual(res.sanitized.topic, 'schedule-tour');
+
+    // Verify snake_case privacy_consent compatibility
+    const snakeContact = { ...validContact };
+    delete snakeContact.privacyConsent;
+    snakeContact.privacy_consent = true;
+    const resSnake = validateContact(snakeContact);
+    assert.strictEqual(resSnake.isValid, true);
+    assert.strictEqual(resSnake.sanitized.topic, 'schedule-tour');
+    assert.strictEqual(resSnake.sanitized.privacyConsent, true);
+    assert.strictEqual(resSnake.sanitized.privacy_consent, true);
   });
 
   test('Rejects contact message containing medical keywords', () => {
@@ -841,6 +861,17 @@ async function runAllTests() {
     assert.strictEqual(res.status, 201);
     assert.ok(res.data.success);
     assert.ok(res.data.id);
+
+    // Verify form-service validation and submission with snake_case privacy_consent
+    const snakeValid = { ...valid };
+    delete snakeValid.privacyConsent;
+    snakeValid.privacy_consent = true;
+    const clientValRes = formService.validateContact(snakeValid);
+    assert.strictEqual(clientValRes.isValid, true);
+
+    const clientSubmitRes = await formService.submitContact(snakeValid);
+    assert.strictEqual(clientSubmitRes.ok, true);
+    assert.strictEqual(clientSubmitRes.status, 201);
   });
 
   // Gracefully close server and clear test data

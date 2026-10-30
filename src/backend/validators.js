@@ -321,6 +321,7 @@ const ENROLLMENT_ALLOWED_FIELDS = new Set([
   'schedulePreference',
   'message',
   'privacyConsent',
+  'privacy_consent',
   'website',
   'honeypot',
   'cf-turnstile-response',
@@ -335,6 +336,7 @@ const CONTACT_ALLOWED_FIELDS = new Set([
   'topic',
   'message',
   'privacyConsent',
+  'privacy_consent',
   'website',
   'honeypot',
   'cf-turnstile-response',
@@ -474,9 +476,9 @@ function validateEnrollment(payload) {
     }
   }
 
-  // privacyConsent: required, strictly true
-  const privacyConsent = payload.privacyConsent === true || payload.privacyConsent === 'true';
-  if (!privacyConsent) {
+  // privacyConsent / privacy_consent: required, strictly true
+  const consent = payload.privacyConsent === true || payload.privacyConsent === 'true' || payload.privacy_consent === true || payload.privacy_consent === 'true';
+  if (!consent) {
     errors.push({
       field: 'privacyConsent',
       reason: 'You must confirm that you will not submit sensitive medical or birthdate details and acknowledge inquiry policies.'
@@ -504,7 +506,8 @@ function validateEnrollment(payload) {
       preferredStart: preferredStart || null,
       schedulePreference: schedulePreference || null,
       message: message || '',
-      privacyConsent: true
+      privacyConsent: true,
+      privacy_consent: true
     }
   };
 }
@@ -601,9 +604,9 @@ function validateContact(payload) {
     errors.push({ field: 'message', reason: 'Message is required (10 to 800 characters).' });
   }
 
-  // privacyConsent: required, strictly true
-  const privacyConsent = payload.privacyConsent === true || payload.privacyConsent === 'true';
-  if (!privacyConsent) {
+  // privacyConsent / privacy_consent: required, strictly true
+  const consent = payload.privacyConsent === true || payload.privacyConsent === 'true' || payload.privacy_consent === true || payload.privacy_consent === 'true';
+  if (!consent) {
     errors.push({
       field: 'privacyConsent',
       reason: 'You must confirm that you will not submit sensitive medical or personal details.'
@@ -627,7 +630,8 @@ function validateContact(payload) {
       phone: phone || null,
       topic,
       message,
-      privacyConsent: true
+      privacyConsent: true,
+      privacy_consent: true
     }
   };
 }
