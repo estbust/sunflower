@@ -290,6 +290,24 @@ async function runAllTests() {
     assert.strictEqual(resSnake.sanitized.privacy_consent, true);
   });
 
+  test('Valid contact inquiry with Careers / Job Application topic succeeds', () => {
+    const careerPayload = {
+      ...validContact,
+      topic: 'Careers / Job Application',
+      message: 'I am applying for the early childhood lead teacher position.'
+    };
+    const res = validateContact(careerPayload);
+    assert.strictEqual(res.isValid, true);
+    assert.strictEqual(res.sanitized.topic, 'Careers / Job Application');
+
+    // Also test safe alias variants
+    for (const altTopic of ['careers-job-application', 'careers']) {
+      const altRes = validateContact({ ...careerPayload, topic: altTopic });
+      assert.strictEqual(altRes.isValid, true);
+      assert.strictEqual(altRes.sanitized.topic, altTopic);
+    }
+  });
+
   test('Rejects contact message containing medical keywords', () => {
     const payload = { ...validContact, message: 'My son has epilepsy and takes medication' };
     const res = validateContact(payload);
@@ -513,6 +531,26 @@ async function runAllTests() {
       phone: '555-888-7766',
       topic: 'programs-curriculum',
       message: 'Hello, I would love to learn more about the Montessori and nature play aspects.',
+      privacyConsent: true
+    };
+    const res = await makeHttpRequest({
+      path: '/api/contact',
+      method: 'POST',
+      headers: { 'X-Test-Bypass-Rate-Limit': 'sunflower-test' },
+      body: payload
+    });
+    assert.strictEqual(res.status, 201);
+    assert.strictEqual(res.body.success, true);
+    assert.ok(res.body.inquiryId.startsWith('cnt_'));
+  });
+
+  await asyncTest('POST /api/contact succeeds with 201 for Careers / Job Application topic', async () => {
+    const payload = {
+      name: 'Elena Rostova',
+      email: 'elena.career@example.com',
+      phone: '555-333-2211',
+      topic: 'Careers / Job Application',
+      message: 'Submitting my application for the early childhood education position.',
       privacyConsent: true
     };
     const res = await makeHttpRequest({
@@ -763,6 +801,27 @@ async function runAllTests() {
     assert.ok(res.getBody().submittedAt);
   });
 
+  await asyncTest('api/contact: POST succeeds with 201 for Careers / Job Application topic', async () => {
+    const careerContact = {
+      name: 'Maria Gomez',
+      email: 'maria.gomez@example.com',
+      phone: '555-432-1098',
+      topic: 'Careers / Job Application',
+      message: 'Submitting resume and application for early childhood educator.',
+      privacyConsent: true
+    };
+    const { req, res } = mockReqRes({
+      method: 'POST',
+      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+      body: careerContact
+    });
+    await contactHandler(req, res);
+    assert.strictEqual(res.getStatusCode(), 201);
+    assert.strictEqual(res.getBody().success, true);
+    assert.ok(res.getBody().id);
+    assert.ok(res.getBody().submittedAt);
+  });
+
   await asyncTest('api/contact: POST rejects missing required fields with 400 VALIDATION_ERROR', async () => {
     const invalidContact = {
       name: '',
@@ -872,6 +931,25 @@ async function runAllTests() {
     const clientSubmitRes = await formService.submitContact(snakeValid);
     assert.strictEqual(clientSubmitRes.ok, true);
     assert.strictEqual(clientSubmitRes.status, 201);
+  });
+
+  await asyncTest('form-service: submitContact succeeds with Careers / Job Application topic', async () => {
+    const validCareer = {
+      name: 'Applicant Candidate',
+      email: 'candidate@example.com',
+      phone: '555-654-3210',
+      topic: 'Careers / Job Application',
+      message: 'Experienced educator applying for early childhood teaching positions.',
+      privacyConsent: true
+    };
+    const valRes = formService.validateContact(validCareer);
+    assert.strictEqual(valRes.isValid, true);
+
+    const submitRes = await formService.submitContact(validCareer);
+    assert.strictEqual(submitRes.ok, true);
+    assert.strictEqual(submitRes.status, 201);
+    assert.ok(submitRes.data.success);
+    assert.ok(submitRes.data.id);
   });
 
   // Gracefully close server and clear test data

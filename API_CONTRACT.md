@@ -168,7 +168,7 @@ Submit a general inquiry or schedule a guided campus tour.
 | `name` | String | **Yes** | 2–100 chars, trimmed | Inquirer's full name |
 | `email` | String | **Yes** | Valid RFC email | Contact email |
 | `phone` | String | No | 7–20 digits/chars if provided | Contact telephone number |
-| `topic` | String | **Yes** | Enum: `"general-inquiry"`, `"programs-curriculum"`, `"schedule-tour"`, `"enrollment-question"` | Topic category |
+| `topic` | String | **Yes** | Enum: `"general-inquiry"`, `"programs-curriculum"`, `"schedule-tour"`, `"enrollment-question"`, `"Careers / Job Application"` (also accepts `"careers-job-application"`, `"careers"`) | Topic category |
 | `message` | String | **Yes** | 10–800 chars (passes privacy scan) | Message inquiry details |
 | `privacyConsent` / `privacy_consent` | Boolean | **Yes** | Must be strictly `true` | Privacy policy confirmation (supports both camelCase and snake_case) |
 | `website` | String | No | Must be empty string `""` or omitted | Anti-bot honeypot field |

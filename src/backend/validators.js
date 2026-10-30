@@ -352,7 +352,10 @@ const VALID_CONTACT_TOPICS = new Set([
   'general-inquiry',
   'programs-curriculum',
   'schedule-tour',
-  'enrollment-question'
+  'enrollment-question',
+  'Careers / Job Application',
+  'careers-job-application',
+  'careers'
 ]);
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

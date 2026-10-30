@@ -370,7 +370,15 @@
       }
     }
 
-    var validTopics = ['general-inquiry', 'programs-curriculum', 'schedule-tour', 'enrollment-question'];
+    var validTopics = [
+      'general-inquiry',
+      'programs-curriculum',
+      'schedule-tour',
+      'enrollment-question',
+      'Careers / Job Application',
+      'careers-job-application',
+      'careers'
+    ];
     if (validTopics.indexOf(payload.topic) === -1) {
       errors.push({ field: 'topic', reason: 'Please select a valid inquiry topic.' });
     }
