@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../assets/css/styles.css?v=17.18">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=17.20">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
@@ -316,13 +316,13 @@
                 </div>
 
                 <!-- Privacy Consent Checkbox -->
-                <div class="form-group checkbox-group" style="display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.5rem;">
-                  <input type="checkbox" id="privacy_consent" name="privacy_consent" required style="margin-top: 0.25rem; width: 1.25rem; height: 1.25rem; cursor: pointer;" aria-describedby="err-privacy_consent">
-                  <label for="privacy_consent" style="cursor: pointer; line-height: 1.5;">
+                <div class="form-group form-group-full checkbox-group" style="display: flex !important; flex-direction: row !important; align-items: flex-start !important; gap: 0.75rem !important; width: 100% !important; margin-bottom: 1.5rem !important;">
+                  <input type="checkbox" id="privacy_consent" name="privacy_consent" required style="flex-shrink: 0 !important; margin-top: 0.25rem !important; width: 1.25rem !important; height: 1.25rem !important; cursor: pointer !important;" aria-describedby="err-privacy_consent">
+                  <label for="privacy_consent" style="flex: 1 !important; display: block !important; margin: 0 !important; text-align: left !important; line-height: 1.5 !important; cursor: pointer !important;">
                     <strong>Privacy Agreement:</strong> I confirm that I have not included sensitive health details, calendar birthdates, or private identifiers. I understand that submitting this message or tour request initiates an exploratory conversation and does <em>not</em> guarantee admission or reserve an open space. <span class="required-mark" aria-hidden="true">*</span>
                   </label>
                 </div>
-                <span id="err-privacy_consent" class="field-error-msg" role="alert"></span>
+                <span id="err-privacy_consent" class="field-error-msg" role="alert" style="grid-column: 1 / -1;"></span>
 
                 <!-- Cloudflare Turnstile Security Verification -->
                 <div class="form-group form-group-full" style="margin-top: 1rem; display: flex; justify-content: center;">
@@ -527,7 +527,7 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="../assets/js/form-service.js?v=17.18"></script>
-  <script src="../assets/js/main.js?v=17.18"></script>
+  <script src="../assets/js/form-service.js?v=17.20"></script>
+  <script src="../assets/js/main.js?v=17.20"></script>
 </body>
 </html>

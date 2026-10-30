@@ -1338,9 +1338,12 @@ header.site-header.header-scrolled,
 /* Checkbox & Radios */
 .checkbox-group {
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
   gap: 0.75rem;
   margin-top: 0.5rem;
+  grid-column: 1 / -1;
+  width: 100%;
 }
 
 .form-checkbox {
