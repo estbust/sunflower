@@ -3164,6 +3164,7 @@ footer a,
 
   /* Grids collapse to single-column stack on mobile */
   .program-cards-grid,
+  .leadership-grid,
   .grid-3,
   .grid-4,
   .grid-2,
@@ -3530,8 +3531,206 @@ footer a,
 }
 
 /* --------------------------------------------------------------------------
+   19.1 Meet Our Leadership Component (v17.29)
+   -------------------------------------------------------------------------- */
+.leadership-section {
+  padding-top: 3.5rem;
+  padding-bottom: 4.5rem;
+}
+
+.leadership-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+.leadership-card {
+  background-color: #FFFDF9;
+  border-radius: var(--radius-lg, 20px);
+  border: 1px solid rgba(255, 204, 33, 0.35);
+  box-shadow: 0 10px 30px rgba(24, 27, 44, 0.07);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.leadership-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(24, 27, 44, 0.12);
+}
+
+.leadership-card-paola {
+  border-top: 8px solid var(--color-yellow);
+}
+
+.leadership-card-meagan {
+  border-top: 8px solid var(--color-coral);
+}
+
+.leadership-card-media {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  background-color: #F8F9FA;
+  overflow: hidden;
+}
+
+.leadership-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 0.45s ease;
+}
+
+.leadership-card:hover .leadership-img {
+  transform: scale(1.03);
+}
+
+.leadership-img-paola {
+  object-fit: cover;
+  object-position: center 50%;
+}
+
+.leadership-img-meagan {
+  object-fit: cover;
+  object-position: center 18%;
+}
+
+.leadership-role-tag {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  z-index: 2;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+}
+
+.leadership-card-content {
+  padding: 2rem 2.25rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.leadership-header-block {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed rgba(24, 27, 44, 0.12);
+}
+
+.leadership-name {
+  font-family: var(--font-display, 'Fredoka', cursive, sans-serif);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--color-ink, #181B2C);
+  line-height: 1.25;
+  margin-bottom: 0.35rem;
+}
+
+.leadership-title-inline {
+  font-family: var(--font-heading, 'Nunito', sans-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-coral, #FF6845);
+}
+
+.leadership-card-meagan .leadership-title-inline {
+  color: var(--color-blue-violet, #5665D8);
+}
+
+.leadership-role-subtitle {
+  font-family: var(--font-heading, 'Nunito', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-ink-muted, #484E6D);
+}
+
+.leadership-bio {
+  color: var(--color-ink-secondary, #2D324A);
+  font-size: 1.025rem;
+  line-height: 1.7;
+  flex: 1;
+}
+
+.leadership-bio p {
+  margin-bottom: 0.95rem;
+}
+
+.leadership-bio p:last-child {
+  margin-bottom: 0;
+}
+
+.leadership-highlights {
+  margin-top: 1.5rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(24, 27, 44, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.leadership-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-heading, 'Nunito', sans-serif);
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--color-ink-secondary, #2D324A);
+  background-color: #FFFFFF;
+  border: 1px solid rgba(24, 27, 44, 0.1);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill, 9999px);
+  box-shadow: 0 1px 3px rgba(24, 27, 44, 0.04);
+}
+
+@media (max-width: 900px) {
+  .leadership-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .leadership-card-media {
+    height: 320px;
+  }
+  .leadership-card-content {
+    padding: 1.75rem 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .leadership-section {
+    padding-top: 2.5rem;
+    padding-bottom: 3.5rem;
+  }
+  .leadership-card-media {
+    height: 280px;
+  }
+  .leadership-card-content {
+    padding: 1.5rem 1.25rem;
+  }
+  .leadership-name {
+    font-size: 1.45rem;
+  }
+  .leadership-bio {
+    font-size: 0.975rem;
+  }
+  .leadership-chip {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .leadership-card-media {
+    height: 240px;
+  }
+}
+
+/* --------------------------------------------------------------------------
    20. Print Styles
    -------------------------------------------------------------------------- */
+
 @media print {
   .site-header,
   .site-footer,
