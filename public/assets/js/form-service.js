@@ -502,11 +502,12 @@
         bodyData.topic = payload.topic || '';
       }
 
-      var token = turnstileToken || (payload && (payload['cf-turnstile-response'] || payload.turnstileResponse || payload.turnstile_token));
-      if (token) {
-        bodyData['cf-turnstile-response'] = token;
-        bodyData.turnstile_token = token;
-      }
+      // Web3Forms free tier rejects custom captcha/Turnstile tokens with:
+      // "You are trying to use a Pro feature, Please Upgrade to use Turnstile Captcha."
+      // Cloudflare Turnstile is verified client-side; strip all captcha tokens before sending to Web3Forms.
+      delete bodyData['cf-turnstile-response'];
+      delete bodyData.turnstile_token;
+      delete bodyData['g-recaptcha-response'];
 
       var response = await fetch(WEB3FORMS_CONFIG.endpoint, {
         method: 'POST',
