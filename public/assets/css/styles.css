@@ -2851,6 +2851,49 @@ footer a,
   color: var(--color-blue-violet);
 }
 
+/* Social Links Group in Footer (v17.41) */
+.alaskan-social-links-group {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.alaskan-social-link,
+.alaskan-social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #181B2C !important;
+  text-decoration: none !important;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.alaskan-social-link:hover,
+.alaskan-social-btn:hover {
+  color: var(--color-blue-violet) !important;
+  text-decoration: underline !important;
+  transform: translateY(-1px);
+}
+
+.alaskan-social-link .alaskan-nap-icon,
+.alaskan-social-btn .alaskan-nap-icon,
+.alaskan-social-link svg,
+.alaskan-social-btn svg {
+  margin: 0;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.alaskan-social-link:hover .alaskan-nap-icon,
+.alaskan-social-btn:hover .alaskan-nap-icon,
+.alaskan-social-link:hover svg,
+.alaskan-social-btn:hover svg {
+  transform: scale(1.08);
+}
+
 /* Quick Links 2-Column Subgrid */
 .footer-quicklinks-grid {
   display: grid;
@@ -4193,5 +4236,3 @@ footer a,
     border: 1px solid #000 !important;
   }
 }
-
-
