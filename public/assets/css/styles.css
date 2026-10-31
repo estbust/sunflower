@@ -4089,6 +4089,7 @@ footer a,
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.25rem;
   margin-top: 1.5rem;
+  align-items: stretch;
 }
 
 .legal-contact-card {
@@ -4099,6 +4100,8 @@ footer a,
   display: flex;
   gap: 1rem;
   align-items: flex-start;
+  height: 100%;
+  box-sizing: border-box;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
@@ -4117,6 +4120,11 @@ footer a,
   flex-shrink: 0;
 }
 
+.legal-contact-details {
+  flex: 1;
+  min-width: 0;
+}
+
 .legal-contact-details h3 {
   font-size: 1.05rem;
   margin-bottom: 0.25rem;
@@ -4128,12 +4136,18 @@ footer a,
   color: var(--color-ink-secondary);
   margin-bottom: 0;
   line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .legal-contact-details a {
   color: var(--color-blue-violet);
   text-decoration: underline;
   font-weight: 600;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: inline-block;
+  max-width: 100%;
 }
 
 @media (max-width: 768px) {
