@@ -234,11 +234,10 @@ Located at: [`public/assets/js/form-service.js`](file:///home/estbust/proyectos-
 
 The client script exposes a universal API on `window.SunflowerAPI` that:
 - Executes strict client-side validation immediately before dispatch (blocking medical details, full birthdates, and sensitive PII).
-- Integrates directly with **HubSpot CRM Forms v3** (`Portal ID: 52233447`, `Form GUID: 6114781f-3d32-4e9f-9b6b-a13950523a54`) to record inquiry leads directly in the CRM on Cloudflare Pages.
-- Integrates directly with **Web3Forms** (`access_key: 3bcd3db7-8782-4818-b789-b8f5e90e1b10`) for immediate email dispatch to admissions administrators at `sunflowerpreschool@gci.net`.
-- Dispatches via `Promise.allSettled` in parallel for high reliability and zero single-point-of-failure.
+- Integrates directly and exclusively with **Web3Forms** (`access_key: 3bcd3db7-8782-4818-b789-b8f5e90e1b10`, endpoint `https://api.web3forms.com/submit`) as the exclusive processor for immediate email notification dispatch to admissions administrators at `sunflowerpreschool@gci.net`.
+- Validates Cloudflare Turnstile challenge tokens before dispatching inquiries.
 - Maintains local development `/api/enrollment` and `/api/contact` mirroring when run on localhost.
-- Provides a guaranteed contract `{ ok: true, status: 201, data: { success: true, id, submittedAt } }` with graceful fallback and offline/test runner compatibility.
+- Provides a guaranteed contract `{ ok: true, status: 201, data: { success: true, id, submittedAt } }` with graceful error handling and offline/test runner compatibility.
 - Contains **ZERO DOM manipulation or CSS** — Frontend authors connect it directly to form submit event handlers.
 
 ### Frontend Integration Example

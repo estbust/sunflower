@@ -142,9 +142,22 @@
   }
 
   function renderFieldErrors(form, errors) {
-    if (!Array.isArray(errors)) return;
+    if (!errors) return;
 
-    errors.forEach(function (err) {
+    var errorArray = [];
+    if (Array.isArray(errors)) {
+      errorArray = errors;
+    } else if (typeof errors === 'object') {
+      Object.keys(errors).forEach(function (k) {
+        if (k !== 'form') {
+          errorArray.push({ field: k, reason: errors[k] });
+        }
+      });
+    }
+
+    if (!errorArray.length) return;
+
+    errorArray.forEach(function (err) {
       var fieldName = err.field;
       var reason = err.reason || 'Invalid input.';
 
@@ -228,9 +241,20 @@
       html += '<p>' + escapeHtml(message) + '</p>';
     }
 
-    if (errorList && errorList.length > 0) {
+    var errors = [];
+    if (Array.isArray(errorList)) {
+      errors = errorList;
+    } else if (errorList && typeof errorList === 'object') {
+      Object.keys(errorList).forEach(function (k) {
+        if (k !== 'form') {
+          errors.push({ field: k, reason: errorList[k] });
+        }
+      });
+    }
+
+    if (errors && errors.length > 0) {
       html += '<ul>';
-      errorList.forEach(function (err) {
+      errors.forEach(function (err) {
         var msg = err.reason || err.message || (typeof err === 'string' ? err : 'Please check this field.');
         html += '<li>' + escapeHtml(msg) + '</li>';
       });

@@ -401,16 +401,10 @@
   }
 
   // ---------------------------------------------------------------------------
-  // External Integration Endpoints (HubSpot CRM & Web3Forms Email)
+  // External Integration Endpoints (Web3Forms Email Processor)
   // ---------------------------------------------------------------------------
-  var HUBSPOT_CONFIG = {
-    portalId: '52233447',
-    formGuid: '6114781f-3d32-4e9f-9b6b-a13950523a54',
-    endpoint: 'https://api.hsforms.com/submissions/v3/integration/submit/52233447/6114781f-3d32-4e9f-9b6b-a13950523a54'
-  };
-
   var WEB3FORMS_CONFIG = {
-    accessKey: '3bcd3db7-8782-4818-b789-b8f5e90e1b10',
+    accessKey: (typeof process !== 'undefined' && process.env && process.env.WEB3FORMS_ACCESS_KEY) || '3bcd3db7-8782-4818-b789-b8f5e90e1b10',
     endpoint: 'https://api.web3forms.com/submit'
   };
 
@@ -472,76 +466,10 @@
     return lines.join('\n');
   }
 
-  async function sendToHubSpot(type, payload, turnstileToken) {
-    try {
-      var pageUri = typeof window !== 'undefined' && window.location && window.location.href
-        ? window.location.href
-        : 'https://sunflowerpreschoolak.com/' + (type === 'enrollment' ? 'enrollment/' : 'contact/');
-      var pageName = typeof document !== 'undefined' && document.title
-        ? document.title
-        : (type === 'enrollment' ? 'Enrollment - Sunflower Preschool' : 'Contact Us - Sunflower Preschool');
-
-      var summary = type === 'enrollment'
-        ? buildEnrollmentSummary(payload)
-        : buildContactSummary(payload);
-
-      var nameVal = type === 'enrollment' ? payload.parentName : payload.name;
-
-      var fields = [
-        { name: 'email', value: payload.email || '' },
-        { name: 'firstname', value: nameVal || '' },
-        { name: 'phone', value: payload.phone || '' },
-        { name: 'message', value: summary }
-      ];
-
-      if (type === 'enrollment') {
-        if (payload.childFirstName) fields.push({ name: 'child_first_name', value: payload.childFirstName });
-        if (payload.program) fields.push({ name: 'program', value: payload.program });
-        if (payload.childAgeGroup) fields.push({ name: 'child_age_group', value: payload.childAgeGroup });
-        if (payload.preferredStart) fields.push({ name: 'preferred_start_date', value: payload.preferredStart });
-        if (payload.schedulePreference) fields.push({ name: 'schedule_preference', value: payload.schedulePreference });
-      } else {
-        if (payload.topic) fields.push({ name: 'topic', value: payload.topic });
-      }
-
-      var token = turnstileToken || (payload && (payload['cf-turnstile-response'] || payload.turnstileResponse || payload.turnstile_token));
-      if (token) {
-        fields.push({ name: 'turnstile_token', value: token });
-      }
-
-      var hsBody = {
-        fields: fields,
-        context: {
-          pageUri: pageUri,
-          pageName: pageName
-        }
-      };
-
-      var response = await fetch(HUBSPOT_CONFIG.endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(hsBody)
-      });
-
-      return {
-        ok: response.ok,
-        status: response.status
-      };
-    } catch (err) {
-      return {
-        ok: false,
-        status: 0,
-        error: (err && err.message) || 'HubSpot connection failed'
-      };
-    }
-  }
-
   async function sendToWeb3Forms(type, payload, turnstileToken) {
     try {
       var isEnrollment = type === 'enrollment';
-      var nameVal = isEnrollment ? payload.parentName : payload.name;
+      var nameVal = isEnrollment ? (payload.parentName || payload.name || '') : (payload.name || '');
       var subject = isEnrollment
         ? 'New Enrollment Inquiry - ' + (nameVal || 'Parent') + ' (' + (payload.program || 'Preschool') + ')'
         : 'New Contact Inquiry - ' + (nameVal || 'Visitor') + ' (' + (payload.topic || 'General') + ')';
@@ -550,6 +478,8 @@
         ? buildEnrollmentSummary(payload)
         : buildContactSummary(payload);
 
+      var consent = (payload.privacyConsent === true || payload.privacyConsent === 'true' || payload.privacy_consent === true || payload.privacy_consent === 'true');
+
       var bodyData = {
         access_key: WEB3FORMS_CONFIG.accessKey,
         subject: subject,
@@ -557,15 +487,17 @@
         name: nameVal || '',
         email: payload.email || '',
         phone: payload.phone || '',
-        message: summary
+        message: summary,
+        privacy_consent: consent ? 'true' : 'false'
       };
 
       if (isEnrollment) {
-        bodyData.child_first_name = payload.childFirstName || '';
+        bodyData.parent_name = nameVal || '';
+        bodyData.child_first_name = payload.childFirstName || payload.child_first_name || '';
         bodyData.program = payload.program || '';
-        bodyData.child_age_group = payload.childAgeGroup || '';
-        bodyData.preferred_start_date = payload.preferredStart || '';
-        bodyData.schedule_preference = payload.schedulePreference || '';
+        bodyData.child_age_group = payload.childAgeGroup || payload.child_age_group || '';
+        bodyData.preferred_start_date = payload.preferredStart || payload.preferred_start_date || '';
+        bodyData.schedule_preference = payload.schedulePreference || payload.schedule_preference || '';
       } else {
         bodyData.topic = payload.topic || '';
       }
@@ -590,8 +522,10 @@
         resData = await response.json();
       } catch (_) {}
 
+      var isSuccess = response.ok && (!resData || resData.success !== false);
+
       return {
-        ok: response.ok && (!resData || resData.success !== false),
+        ok: isSuccess,
         status: response.status,
         data: resData
       };
@@ -652,7 +586,7 @@
       submittedAt: time,
       timestamp: time,
       mode: 'cloud-integration',
-      integrations: integrationStatus || { hubspot: true, web3forms: true },
+      integrations: integrationStatus || { web3forms: true },
       message: message
     };
 
@@ -667,7 +601,7 @@
       submittedAt: time,
       timestamp: time,
       mode: 'cloud-integration',
-      integrations: integrationStatus || { hubspot: true, web3forms: true },
+      integrations: integrationStatus || { web3forms: true },
       message: message
     };
   }
@@ -681,7 +615,7 @@
   }
 
   /**
-   * Submits Enrollment inquiry to HubSpot CRM & Web3Forms with automatic client validation and robust fallback.
+   * Submits Enrollment inquiry to Web3Forms with automatic client validation and robust fallback.
    * @param {Object} payload
    * @returns {Promise<Object>}
    */
@@ -736,7 +670,7 @@
       };
     }
 
-    // 5. Browser runtime: Dispatch to HubSpot CRM and Web3Forms in parallel
+    // 5. Browser runtime: Dispatch exclusively to Web3Forms
     var inquiryId = 'enr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
     var submittedAt = new Date().toISOString();
 
@@ -757,28 +691,57 @@
         }
       }
 
-      var results = await Promise.allSettled([
-        sendToHubSpot('enrollment', payload, turnstileResponse),
-        sendToWeb3Forms('enrollment', payload, turnstileResponse)
-      ]);
+      var w3Res = await sendToWeb3Forms('enrollment', payload, turnstileResponse);
 
-      var hsRes = results[0];
-      var w3Res = results[1];
-
-      var integrationStatus = {
-        hubspot: hsRes.status === 'fulfilled' && hsRes.value && hsRes.value.ok,
-        web3forms: w3Res.status === 'fulfilled' && w3Res.value && w3Res.value.ok
-      };
-
-      return createIntegrationConfirmation('enrollment', inquiryId, submittedAt, integrationStatus);
+      if (w3Res.ok) {
+        return createIntegrationConfirmation('enrollment', inquiryId, submittedAt, { web3forms: true });
+      } else {
+        var errorMsg = (w3Res.data && w3Res.data.message) || w3Res.error || 'Submission to email service failed. Please try again.';
+        var failData = {
+          success: false,
+          code: 'SUBMISSION_FAILED',
+          message: errorMsg,
+          errors: {
+            form: errorMsg
+          }
+        };
+        return {
+          ok: false,
+          status: (w3Res.status && w3Res.status >= 400) ? w3Res.status : 400,
+          success: false,
+          code: 'SUBMISSION_FAILED',
+          message: errorMsg,
+          errors: {
+            form: errorMsg
+          },
+          data: failData
+        };
+      }
     } catch (err) {
-      // Graceful fallback if unexpected browser runtime exception occurs
-      return createIntegrationConfirmation('enrollment', inquiryId, submittedAt, { hubspot: false, web3forms: false });
+      var netErrorMsg = (err && err.message) || 'Network error occurred while submitting inquiry. Please try again.';
+      return {
+        ok: false,
+        status: 400,
+        success: false,
+        code: 'NETWORK_ERROR',
+        message: netErrorMsg,
+        errors: {
+          form: netErrorMsg
+        },
+        data: {
+          success: false,
+          code: 'NETWORK_ERROR',
+          message: netErrorMsg,
+          errors: {
+            form: netErrorMsg
+          }
+        }
+      };
     }
   }
 
   /**
-   * Submits Contact inquiry to HubSpot CRM & Web3Forms with automatic client validation and robust fallback.
+   * Submits Contact inquiry to Web3Forms with automatic client validation and robust fallback.
    * @param {Object} payload
    * @returns {Promise<Object>}
    */
@@ -833,7 +796,7 @@
       };
     }
 
-    // 5. Browser runtime: Dispatch to HubSpot CRM and Web3Forms in parallel
+    // 5. Browser runtime: Dispatch exclusively to Web3Forms
     var inquiryId = 'cnt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
     var submittedAt = new Date().toISOString();
 
@@ -854,23 +817,52 @@
         }
       }
 
-      var results = await Promise.allSettled([
-        sendToHubSpot('contact', payload, turnstileResponse),
-        sendToWeb3Forms('contact', payload, turnstileResponse)
-      ]);
+      var w3Res = await sendToWeb3Forms('contact', payload, turnstileResponse);
 
-      var hsRes = results[0];
-      var w3Res = results[1];
-
-      var integrationStatus = {
-        hubspot: hsRes.status === 'fulfilled' && hsRes.value && hsRes.value.ok,
-        web3forms: w3Res.status === 'fulfilled' && w3Res.value && w3Res.value.ok
-      };
-
-      return createIntegrationConfirmation('contact', inquiryId, submittedAt, integrationStatus);
+      if (w3Res.ok) {
+        return createIntegrationConfirmation('contact', inquiryId, submittedAt, { web3forms: true });
+      } else {
+        var errorMsg = (w3Res.data && w3Res.data.message) || w3Res.error || 'Unable to submit contact message. Please try again.';
+        var failData = {
+          success: false,
+          code: 'SUBMISSION_FAILED',
+          message: errorMsg,
+          errors: {
+            form: errorMsg
+          }
+        };
+        return {
+          ok: false,
+          status: (w3Res.status && w3Res.status >= 400) ? w3Res.status : 400,
+          success: false,
+          code: 'SUBMISSION_FAILED',
+          message: errorMsg,
+          errors: {
+            form: errorMsg
+          },
+          data: failData
+        };
+      }
     } catch (err) {
-      // Graceful fallback if unexpected browser runtime exception occurs
-      return createIntegrationConfirmation('contact', inquiryId, submittedAt, { hubspot: false, web3forms: false });
+      var netErrorMsg = (err && err.message) || 'Network error occurred while submitting contact message. Please try again.';
+      return {
+        ok: false,
+        status: 400,
+        success: false,
+        code: 'NETWORK_ERROR',
+        message: netErrorMsg,
+        errors: {
+          form: netErrorMsg
+        },
+        data: {
+          success: false,
+          code: 'NETWORK_ERROR',
+          message: netErrorMsg,
+          errors: {
+            form: netErrorMsg
+          }
+        }
+      };
     }
   }
 
@@ -882,11 +874,9 @@
     detectSensitive: detectSensitive,
     detectSpam: detectSpam,
     extractTurnstileToken: extractTurnstileToken,
-    sendToHubSpot: sendToHubSpot,
     sendToWeb3Forms: sendToWeb3Forms,
     buildEnrollmentSummary: buildEnrollmentSummary,
     buildContactSummary: buildContactSummary,
-    HUBSPOT_CONFIG: HUBSPOT_CONFIG,
     WEB3FORMS_CONFIG: WEB3FORMS_CONFIG
   };
 });
