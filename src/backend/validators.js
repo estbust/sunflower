@@ -346,7 +346,7 @@ const CONTACT_ALLOWED_FIELDS = new Set([
 
 // Enum value sets
 const VALID_PROGRAMS = new Set(['toddler-care', 'preschool', 'school-age-care']);
-const VALID_AGE_GROUPS = new Set(['18-36-months', '3-5-years', '5-10-years']);
+const VALID_AGE_GROUPS = new Set(['18-36-months', '19-36-months', '3-5-years', '5-10-years']);
 const VALID_SCHEDULES = new Set(['full-time', 'part-time', 'after-school', '']);
 const VALID_CONTACT_TOPICS = new Set([
   'general-inquiry',

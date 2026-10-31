@@ -61,7 +61,7 @@ Sunflower Preschool enforces an **absolute prohibition** against submitting sens
   - Written dates: `Month Day, Year` (e.g., `January 15, 2021`, `15 Jan 2021`, `March 3rd 2022`).
   - Explicit phrases: `dob`, `date of birth`, `born on`, `birthday is`.
 - **Permitted Formats**:
-  - General age group selections: `"18-36-months"`, `"3-5-years"`, `"5-10-years"`.
+  - General age group selections: `"18-36-months"`, `"19-36-months"`, `"3-5-years"`, `"5-10-years"`.
   - General preferred start timeframes: `"Fall 2026"`, `"Next Month"`, `"Summer"`, or month/year without day (`"2026-09"`).
 
 ### 2.3 Other Sensitive Personal Identifiers (PII)
@@ -92,7 +92,7 @@ Content-Type: application/json
 | `phone` | String | **Yes** | 7–20 digits/chars | Primary phone number (e.g. `(555) 234-5678`) |
 | `childFirstName` | String | **Yes** | 1–60 chars, trimmed | First name or nickname only (no legal full ID) |
 | `program` | String | **Yes** | Enum: `"toddler-care"`, `"preschool"`, `"school-age-care"` | Target learning program |
-| `childAgeGroup` | String | **Yes** | Enum: `"18-36-months"`, `"3-5-years"`, `"5-10-years"` | General age developmental cohort |
+| `childAgeGroup` | String | **Yes** | Enum: `"18-36-months"`, `"19-36-months"`, `"3-5-years"`, `"5-10-years"` | General age developmental cohort |
 | `preferredStart` | String | No | Max 60 chars (NO full birthdates) | e.g. `"Fall 2026"`, `"Next Month"` |
 | `schedulePreference` | String | No | Enum: `"full-time"`, `"part-time"`, `"after-school"`, `""` | Desired weekly schedule |
 | `message` | String | No | Max 600 chars (passes privacy scan) | General questions or notes |

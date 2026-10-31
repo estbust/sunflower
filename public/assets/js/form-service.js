@@ -274,9 +274,9 @@
       errors.push({ field: 'program', reason: 'Program must be toddler-care, preschool, or school-age-care.' });
     }
 
-    var validAges = ['18-36-months', '3-5-years', '5-10-years'];
+    var validAges = ['18-36-months', '19-36-months', '3-5-years', '5-10-years'];
     if (validAges.indexOf(payload.childAgeGroup) === -1) {
-      errors.push({ field: 'childAgeGroup', reason: 'Age group must be 18-36-months, 3-5-years, or 5-10-years.' });
+      errors.push({ field: 'childAgeGroup', reason: 'Age group must be 18-36-months, 19-36-months, 3-5-years, or 5-10-years.' });
     }
 
     if (payload.preferredStart !== undefined && payload.preferredStart !== null) {
