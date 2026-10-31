@@ -2,7 +2,7 @@
  * Sunflower Preschool - Build & Backend Verification Script
  *
  * Verifies backend modules, persistence storage, asset integrity,
- * and reports the readiness status of all 8 application route endpoints.
+ * and reports the readiness status of all 9 application route endpoints.
  */
 
 const fs = require('fs');
@@ -88,8 +88,8 @@ for (const logo of requiredLogos) {
   }
 }
 
-// 4. Verify 8 Required Route Files
-console.log('\n[4/4] Verifying 8 Required Route Files...');
+// 4. Verify 9 Required Route Files
+console.log('\n[4/4] Verifying 9 Required Route Files...');
 const routes = [
   { name: 'Home / Landing Page', path: '/', file: 'index.html' },
   { name: 'About Us', path: '/about/', file: 'about/index.html', altFile: 'about.html' },
@@ -98,7 +98,8 @@ const routes = [
   { name: 'Preschool Program', path: '/programs/preschool/', file: 'programs/preschool/index.html', altFile: 'programs/preschool.html' },
   { name: 'School-Age Care Program', path: '/programs/school-age-care/', file: 'programs/school-age-care/index.html', altFile: 'programs/school-age-care.html' },
   { name: 'Enrollment / Admissions', path: '/enrollment/', file: 'enrollment/index.html', altFile: 'enrollment.html' },
-  { name: 'Contact & Tour Scheduling', path: '/contact/', file: 'contact/index.html', altFile: 'contact.html' }
+  { name: 'Contact & Tour Scheduling', path: '/contact/', file: 'contact/index.html', altFile: 'contact.html' },
+  { name: 'Privacy Policy & Legal', path: '/privacy/', file: 'privacy/index.html', altFile: 'privacy.html' }
 ];
 
 let existingRoutesCount = 0;
@@ -120,7 +121,7 @@ console.log(`  Backend Engine:      ✅ READY (100% native Node.js)`);
 console.log(`  API Endpoints:       ✅ POST /api/enrollment, POST /api/contact, GET /api/health`);
 console.log(`  Sensitive Data Scan: ✅ ENFORCED (Medical, Birthdates, PII rejection active)`);
 console.log(`  Spam & Rate Limiter: ✅ ENFORCED (Honeypot + IP rate limiter active)`);
-console.log(`  Routes Discovered:   ${existingRoutesCount}/8 routes present in public/`);
+console.log(`  Routes Discovered:   ${existingRoutesCount}/9 routes present in public/`);
 console.log('='.repeat(70) + '\n');
 
 if (hasErrors) {

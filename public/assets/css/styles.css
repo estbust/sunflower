@@ -3970,6 +3970,186 @@ footer a,
 }
 
 /* --------------------------------------------------------------------------
+   19b. Legal & Privacy Policy Dedicated Styles
+   -------------------------------------------------------------------------- */
+.legal-main-container {
+  max-width: 920px;
+  margin: 0 auto;
+  background-color: #FFFFFF;
+  padding: 3.5rem 4rem;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 6px 24px rgba(24, 27, 44, 0.05);
+  border: 1px solid var(--color-border);
+}
+
+.legal-section {
+  margin-bottom: 3.5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.legal-section:last-of-type {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.legal-section-header {
+  margin-bottom: 1.5rem;
+}
+
+.legal-section-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  color: var(--color-ink);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  line-height: 1.3;
+}
+
+.legal-section-header .legal-section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  background-color: #FFF9E6;
+  color: #B28900;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 800;
+  border: 1.5px solid #FFCC21;
+  flex-shrink: 0;
+}
+
+.legal-section p {
+  color: var(--color-ink-secondary);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  margin-bottom: 1.25rem;
+}
+
+.legal-section ul {
+  margin: 1rem 0 1.5rem 1.5rem;
+  color: var(--color-ink-secondary);
+}
+
+.legal-section li {
+  margin-bottom: 0.65rem;
+  line-height: 1.65;
+  font-size: 1.025rem;
+}
+
+.legal-section li strong {
+  color: var(--color-ink);
+}
+
+.legal-notice-box {
+  background-color: #FFFDF4;
+  border: 2px solid #FFCC21;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  margin: 2rem 0;
+  box-shadow: 4px 4px 0 rgba(255, 204, 33, 0.35);
+}
+
+.legal-notice-box-coral {
+  background-color: #FFF7F5;
+  border: 2px solid #FF6845;
+  box-shadow: 4px 4px 0 rgba(255, 104, 69, 0.25);
+}
+
+.legal-notice-box-blue {
+  background-color: #F6F8FE;
+  border: 2px solid #5665D8;
+  box-shadow: 4px 4px 0 rgba(86, 101, 216, 0.2);
+}
+
+.legal-statement-box {
+  background: linear-gradient(135deg, #FFFDF5 0%, #FFF9E6 100%);
+  border: 2px solid #FFCC21;
+  border-left: 6px solid #FF6845;
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.75rem;
+  margin: 1.75rem 0;
+}
+
+.legal-statement-box p {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.legal-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.legal-contact-card {
+  background: var(--color-bg-page);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.legal-contact-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.legal-contact-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.legal-contact-details h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+  color: var(--color-ink);
+}
+
+.legal-contact-details p {
+  font-size: 0.95rem;
+  color: var(--color-ink-secondary);
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.legal-contact-details a {
+  color: var(--color-blue-violet);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .legal-main-container {
+    padding: 2rem 1.25rem;
+    border-radius: var(--radius-lg);
+  }
+  .legal-section-header h2 {
+    font-size: 1.45rem;
+  }
+  .legal-notice-box {
+    padding: 1.25rem 1.25rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
    20. Print Styles
    -------------------------------------------------------------------------- */
 
@@ -3994,9 +4174,10 @@ footer a,
     color: #000 !important;
   }
 
-  .card, .form-card, .form-card-overhaul, .privacy-notice-box {
+  .card, .form-card, .form-card-overhaul, .privacy-notice-box, .legal-notice-box, .legal-main-container {
     box-shadow: none !important;
     border: 1px solid #000 !important;
   }
 }
+
 
