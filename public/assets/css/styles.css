@@ -4237,12 +4237,19 @@ footer a,
   }
 }
 
+/* --------------------------------------------------------------------------
+   Monthly Learning Themes / Year at a Glance (v17.43)
+   -------------------------------------------------------------------------- */
+.section-learning-themes {
+  position: relative;
+  background-color: var(--color-cream);
+  padding: 4rem 0;
+}
 
-/* Monthly Learning Themes Section (v17.43) */
 .monthly-themes-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 @media (max-width: 992px) {
@@ -4260,10 +4267,10 @@ footer a,
 }
 
 .monthly-theme-card {
-  background: #FFFFFF;
+  background: var(--color-white);
   border: 1px solid rgba(24, 27, 44, 0.08);
-  border-radius: 20px;
-  padding: 1.5rem 1.25rem;
+  border-radius: 16px;
+  padding: 1.25rem;
   text-align: center;
   box-shadow: 0 4px 14px rgba(24, 27, 44, 0.04);
   transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
@@ -4272,33 +4279,45 @@ footer a,
   align-items: center;
   justify-content: flex-start;
   position: relative;
+  box-sizing: border-box;
 }
 
 .monthly-theme-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(24, 27, 44, 0.09);
-  border-color: rgba(255, 104, 69, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(24, 27, 44, 0.09);
+  border-color: rgba(255, 104, 69, 0.4);
 }
 
+.theme-month-name,
 .theme-month-badge {
   display: inline-block;
-  font-family: var(--font-heading);
+  font-family: var(--font-display), var(--font-heading), sans-serif;
   font-size: 0.8125rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--color-blue-violet);
   background: #EDF3FB;
   padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  margin-bottom: 1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(86, 101, 216, 0.2);
+  margin-bottom: 0.85rem;
+  line-height: 1.2;
 }
 
 .theme-month-icon {
-  font-size: 2.5rem;
+  font-size: 2.75rem;
   line-height: 1;
   margin-bottom: 0.75rem;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06));
+  transition: transform 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.monthly-theme-card:hover .theme-month-icon {
+  transform: scale(1.12);
 }
 
 .theme-month-title {
@@ -4308,4 +4327,5 @@ footer a,
   color: var(--color-ink);
   margin: 0;
   line-height: 1.35;
+  text-align: center;
 }
