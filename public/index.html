@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=17.45">
+  <link rel="stylesheet" href="assets/css/styles.css?v=17.46">
 </head>
 <body>
   <!-- Accessible Skip Link -->
@@ -157,7 +157,7 @@
           <!-- Large Rounded Visual Container (border-radius: 28px) -->
           <div class="hero-photo-container">
             <img
-              src="assets/img/building-banner.webp?v=17.45"
+              src="assets/img/building-banner.webp?v=17.46"
               alt="Sunflower Preschool building and campus in Anchorage, Alaska"
               width="1600"
               height="769"
@@ -181,100 +181,108 @@
       </div>
     </section>
 
-    <!-- Temporary Event Highlights Section (Halloween Celebration - v17.45) -->
-    <section class="section section-white section-recent-events" id="recent-events" aria-labelledby="recent-events-heading">
+    <!-- Temporary Event Highlights Section (Halloween Celebration - v17.46) -->
+    <section class="section section-recent-events" id="recent-events" aria-labelledby="recent-events-heading" style="background-color: #FFF7ED; border-top: 1px solid #FED7AA; border-bottom: 1px solid #FED7AA;">
       <div class="container">
         <header class="section-header reveal-on-scroll">
           <span class="badge badge-coral">Recent Highlights</span>
-          <h2 id="recent-events-heading" class="heading-with-sparkle" style="justify-content: center; margin-top: 0.5rem;">
-            <span>Recent Highlights: Halloween at Sunflower</span>
-            <svg class="sun-sparkle-svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="12" cy="12" r="5" fill="#FFCC21"/>
-              <path d="M12 2V5M12 19V22M2 12H5M19 12H22" stroke="#FFCC21" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-          </h2>
+          <h2 id="recent-events-heading" class="heading-with-sparkle" style="justify-content: center; margin-top: 0.5rem;"><span>Recent Highlights: Halloween at Sunflower 🎃👻🦇</span></h2>
           <p>
             Take a peek at the smiles, creative costumes, and festive joy from our recent Halloween celebration with our children, teachers, and families!
           </p>
         </header>
 
-        <div class="events-gallery-grid">
-          <figure class="event-photo-card reveal-on-scroll">
-            <img
-              src="assets/img/events/halloween-1.jpg?v=17.45"
-              alt="Sunflower Preschool children enjoying Halloween festivities"
-              width="600"
-              height="450"
-              loading="lazy"
-              class="event-photo-img"
-            />
-          </figure>
-          <figure class="event-photo-card reveal-on-scroll">
-            <img
-              src="assets/img/events/halloween-2.jpg?v=17.45"
-              alt="Halloween celebration fun and activities at Sunflower Preschool"
-              width="600"
-              height="450"
-              loading="lazy"
-              class="event-photo-img"
-            />
-          </figure>
-          <figure class="event-photo-card reveal-on-scroll">
-            <img
-              src="assets/img/events/halloween-3.jpg?v=17.45"
-              alt="Festive Halloween decorations and costume fun"
-              width="600"
-              height="450"
-              loading="lazy"
-              class="event-photo-img"
-            />
-          </figure>
-          <figure class="event-photo-card reveal-on-scroll">
-            <img
-              src="assets/img/events/halloween-4.jpg?v=17.45"
-              alt="Smiles and creative costumes at Sunflower Preschool Halloween party"
-              width="600"
-              height="450"
-              loading="lazy"
-              class="event-photo-img"
-            />
-          </figure>
-          <figure class="event-photo-card reveal-on-scroll">
-            <img
-              src="assets/img/events/halloween-5.jpg?v=17.45"
-              alt="Classroom Halloween exploration and festive treats"
-              width="600"
-              height="450"
-              loading="lazy"
-              class="event-photo-img"
-            />
-          </figure>
-          <figure class="event-photo-card reveal-on-scroll">
-            <img
-              src="assets/img/events/halloween-6.jpg?v=17.45"
-              alt="Preschoolers sharing Halloween joy and friendship"
-              width="600"
-              height="450"
-              loading="lazy"
-              class="event-photo-img"
-            />
-          </figure>
-          <figure class="event-photo-card reveal-on-scroll">
-            <img
-              src="assets/img/events/halloween-7.jpg?v=17.45"
-              alt="Sunflower Preschool community Halloween event memories"
-              width="600"
-              height="450"
-              loading="lazy"
-              class="event-photo-img"
-            />
-          </figure>
+        <div class="halloween-carousel-wrapper">
+          <button type="button" class="carousel-arrow carousel-arrow-prev" id="halloween-prev" aria-label="Previous Halloween photo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+
+          <div class="halloween-carousel-track" id="halloween-carousel" tabindex="0" role="region" aria-label="Halloween photo carousel">
+            <figure class="event-photo-card halloween-slide">
+              <img
+                src="assets/img/events/halloween-1.jpg?v=17.46"
+                alt="Sunflower Preschool children enjoying Halloween festivities"
+                width="600"
+                height="450"
+                loading="lazy"
+                class="event-photo-img"
+              />
+            </figure>
+            <figure class="event-photo-card halloween-slide">
+              <img
+                src="assets/img/events/halloween-2.jpg?v=17.46"
+                alt="Halloween celebration fun and activities at Sunflower Preschool"
+                width="600"
+                height="450"
+                loading="lazy"
+                class="event-photo-img"
+              />
+            </figure>
+            <figure class="event-photo-card halloween-slide">
+              <img
+                src="assets/img/events/halloween-3.jpg?v=17.46"
+                alt="Festive Halloween decorations and costume fun"
+                width="600"
+                height="450"
+                loading="lazy"
+                class="event-photo-img"
+              />
+            </figure>
+            <figure class="event-photo-card halloween-slide">
+              <img
+                src="assets/img/events/halloween-4.jpg?v=17.46"
+                alt="Smiles and creative costumes at Sunflower Preschool Halloween party"
+                width="600"
+                height="450"
+                loading="lazy"
+                class="event-photo-img"
+              />
+            </figure>
+            <figure class="event-photo-card halloween-slide">
+              <img
+                src="assets/img/events/halloween-5.jpg?v=17.46"
+                alt="Classroom Halloween exploration and festive treats"
+                width="600"
+                height="450"
+                loading="lazy"
+                class="event-photo-img"
+              />
+            </figure>
+            <figure class="event-photo-card halloween-slide">
+              <img
+                src="assets/img/events/halloween-6.jpg?v=17.46"
+                alt="Preschoolers sharing Halloween joy and friendship"
+                width="600"
+                height="450"
+                loading="lazy"
+                class="event-photo-img"
+              />
+            </figure>
+            <figure class="event-photo-card halloween-slide">
+              <img
+                src="assets/img/events/halloween-7.jpg?v=17.46"
+                alt="Sunflower Preschool community Halloween event memories"
+                width="600"
+                height="450"
+                loading="lazy"
+                class="event-photo-img"
+              />
+            </figure>
+          </div>
+
+          <button type="button" class="carousel-arrow carousel-arrow-next" id="halloween-next" aria-label="Next Halloween photo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- Smooth Inline SVG Wave Divider (White to Cream) -->
-    <div class="section-wave-divider" aria-hidden="true">
+    <!-- Smooth Inline SVG Wave Divider (Halloween Peach to Cream) -->
+    <div class="section-wave-divider" aria-hidden="true" style="background: #FFF7ED;">
       <svg width="1440" height="48" style="width: 100%; height: 48px; display: block;" viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none">
         <path d="M0,0 C320,40 540,8 780,28 C1020,48 1260,12 1440,32 L1440,48 L0,48 Z" fill="#FFFBEB"/>
       </svg>
@@ -376,52 +384,52 @@
       <div class="photo-marquee-container" aria-label="Classroom photo gallery">
         <div class="photo-marquee-track">
           <!-- Set 1 (real-1.webp to real-22.webp) -->
-          <img src="assets/img/real-1.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 1" width="800" height="600" loading="eager" fetchpriority="high" class="marquee-photo" />
-          <img src="assets/img/real-2.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 2" width="800" height="450" loading="eager" fetchpriority="high" class="marquee-photo" />
-          <img src="assets/img/real-3.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 3" width="800" height="600" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-4.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 4" width="800" height="1067" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-5.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 5" width="800" height="1067" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-6.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 6" width="800" height="1067" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-7.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 7" width="800" height="933" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-8.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 8" width="800" height="1057" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-9.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 9" width="800" height="1067" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-10.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 10" width="800" height="600" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-11.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 11" width="800" height="800" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-12.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 12" width="600" height="800" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-13.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 13" width="540" height="709" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-14.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 14" width="800" height="1067" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-15.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 15" width="621" height="1104" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-16.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 16" width="800" height="1067" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-17.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 17" width="800" height="800" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-18.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 18" width="800" height="800" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-19.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 19" width="800" height="1067" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-20.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 20" width="800" height="1067" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-21.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 21" width="800" height="600" loading="lazy" class="marquee-photo" />
-          <img src="assets/img/real-22.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 22" width="800" height="600" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-1.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 1" width="800" height="600" loading="eager" fetchpriority="high" class="marquee-photo" />
+          <img src="assets/img/real-2.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 2" width="800" height="450" loading="eager" fetchpriority="high" class="marquee-photo" />
+          <img src="assets/img/real-3.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 3" width="800" height="600" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-4.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 4" width="800" height="1067" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-5.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 5" width="800" height="1067" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-6.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 6" width="800" height="1067" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-7.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 7" width="800" height="933" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-8.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 8" width="800" height="1057" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-9.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 9" width="800" height="1067" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-10.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 10" width="800" height="600" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-11.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 11" width="800" height="800" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-12.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 12" width="600" height="800" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-13.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 13" width="540" height="709" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-14.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 14" width="800" height="1067" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-15.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 15" width="621" height="1104" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-16.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 16" width="800" height="1067" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-17.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 17" width="800" height="800" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-18.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 18" width="800" height="800" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-19.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 19" width="800" height="1067" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-20.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 20" width="800" height="1067" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-21.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 21" width="800" height="600" loading="lazy" class="marquee-photo" />
+          <img src="assets/img/real-22.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 22" width="800" height="600" loading="lazy" class="marquee-photo" />
 
           <!-- Duplicate Set 2 for seamless infinite loop (real-1.webp to real-22.webp) -->
-          <img src="assets/img/real-1.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 1" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-2.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 2" width="800" height="450" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-3.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 3" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-4.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 4" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-5.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 5" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-6.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 6" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-7.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 7" width="800" height="933" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-8.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 8" width="800" height="1057" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-9.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 9" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-10.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 10" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-11.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 11" width="800" height="800" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-12.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 12" width="600" height="800" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-13.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 13" width="540" height="709" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-14.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 14" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-15.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 15" width="621" height="1104" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-16.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 16" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-17.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 17" width="800" height="800" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-18.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 18" width="800" height="800" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-19.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 19" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-20.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 20" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-21.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 21" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
-          <img src="assets/img/real-22.webp?v=17.45" alt="Sunflower Preschool classroom learning activity 22" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-1.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 1" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-2.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 2" width="800" height="450" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-3.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 3" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-4.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 4" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-5.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 5" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-6.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 6" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-7.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 7" width="800" height="933" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-8.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 8" width="800" height="1057" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-9.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 9" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-10.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 10" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-11.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 11" width="800" height="800" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-12.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 12" width="600" height="800" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-13.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 13" width="540" height="709" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-14.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 14" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-15.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 15" width="621" height="1104" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-16.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 16" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-17.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 17" width="800" height="800" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-18.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 18" width="800" height="800" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-19.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 19" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-20.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 20" width="800" height="1067" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-21.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 21" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
+          <img src="assets/img/real-22.webp?v=17.46" alt="Sunflower Preschool classroom learning activity 22" width="800" height="600" loading="lazy" class="marquee-photo" aria-hidden="true" />
         </div>
       </div>
     </section>
@@ -449,7 +457,7 @@
           <article class="program-card program-card-overhaul card-toddler reveal-on-scroll reveal-stagger-1">
             <div class="program-card-image program-card-media">
               <img
-                src="assets/img/real-1.webp?v=17.45"
+                src="assets/img/real-1.webp?v=17.46"
                 alt="Toddler exploring wooden sensory toys in Sunflower Preschool classroom"
                 width="400"
                 height="220"
@@ -492,7 +500,7 @@
           <article class="program-card program-card-overhaul card-preschool reveal-on-scroll reveal-stagger-2">
             <div class="program-card-image program-card-media">
               <img
-                src="assets/img/real-2.webp?v=17.45"
+                src="assets/img/real-2.webp?v=17.46"
                 alt="Preschool children engaged in hands-on creative learning at Sunflower Preschool"
                 width="400"
                 height="220"
@@ -537,7 +545,7 @@
           <article class="program-card program-card-overhaul card-schoolage reveal-on-scroll reveal-stagger-3">
             <div class="program-card-image program-card-media">
               <img
-                src="assets/img/real-3.webp?v=17.45"
+                src="assets/img/real-3.webp?v=17.46"
                 alt="School-age children collaborating on learning projects at Sunflower Preschool"
                 width="400"
                 height="220"
@@ -786,7 +794,7 @@
       <div class="campus-banner-card reveal-on-scroll">
         <div class="campus-banner-media">
           <img
-            src="assets/img/building-banner.webp?v=17.45"
+            src="assets/img/building-banner.webp?v=17.46"
             alt="Sunflower Preschool modern campus and safe learning facility in Anchorage, Alaska"
             width="1600"
             height="769"
@@ -990,7 +998,29 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="assets/js/form-service.js?v=17.45"></script>
-  <script src="assets/js/main.js?v=17.45"></script>
+  <script src="assets/js/form-service.js?v=17.46"></script>
+  <script src="assets/js/main.js?v=17.46"></script>
+  <!-- Halloween Carousel Interactive Controls (v17.46) -->
+  <script>
+    (function() {
+      var track = document.getElementById('halloween-carousel');
+      var prevBtn = document.getElementById('halloween-prev');
+      var nextBtn = document.getElementById('halloween-next');
+      if (!track || !prevBtn || !nextBtn) return;
+
+      function getScrollAmount() {
+        var slide = track.querySelector('.halloween-slide');
+        return slide ? slide.offsetWidth + 20 : 360;
+      }
+
+      prevBtn.addEventListener('click', function() {
+        track.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener('click', function() {
+        track.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+      });
+    })();
+  </script>
 </body>
 </html>
