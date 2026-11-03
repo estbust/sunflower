@@ -4288,15 +4288,22 @@ footer a,
 }
 
 /* --------------------------------------------------------------------------
-   Recent Highlights / Halloween Thematic Carousel (v17.46)
+   Recent Highlights / Halloween Thematic Carousel (v17.47)
    -------------------------------------------------------------------------- */
 .section-recent-events {
-  background-color: #FFF7ED;
-  border-top: 1px solid #FED7AA;
-  border-bottom: 1px solid #FED7AA;
+  background-color: #2a144c;
   padding: 3.5rem 0 3rem;
   position: relative;
   overflow: hidden;
+}
+
+.section-recent-events .section-header h2 {
+  color: #FFFFFF !important;
+}
+
+.section-recent-events .section-header p {
+  color: #FED7AA;
+  opacity: 0.95;
 }
 
 .halloween-carousel-wrapper {
@@ -4315,7 +4322,7 @@ footer a,
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
-  padding: 1rem 0.5rem 1.5rem;
+  padding: 1.25rem 0.5rem 1.75rem;
   width: 100%;
 }
 
@@ -4332,17 +4339,17 @@ footer a,
   position: relative;
   border-radius: 20px;
   overflow: hidden;
-  border: 2.5px solid #FED7AA; /* Warm pumpkin orange accent border */
-  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.16); /* Playful orange-tinted shadow */
-  background: var(--color-white);
+  border: 2.5px solid rgba(251, 146, 60, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 25px rgba(249, 115, 22, 0.35); /* Subtle warm glowing shadow */
+  background: #1e0d37;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
   aspect-ratio: 4 / 3;
 }
 
 .event-photo-card.halloween-slide:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 14px 32px rgba(234, 88, 12, 0.28);
-  border-color: #EA580C;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 35px rgba(249, 115, 22, 0.55);
+  border-color: #FB923C;
 }
 
 .event-photo-img {
@@ -4367,22 +4374,22 @@ footer a,
   height: 48px;
   border-radius: 50%;
   background: #FFFFFF;
-  border: 2px solid #FED7AA;
-  color: #EA580C;
+  border: 2px solid #FB923C;
+  color: #2a144c;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 12px rgba(249, 115, 22, 0.3);
   transition: all 0.2s ease;
 }
 
 .carousel-arrow:hover {
-  background: #EA580C;
+  background: #FB923C;
   color: #FFFFFF;
-  border-color: #EA580C;
+  border-color: #FB923C;
   transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.35);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 18px rgba(249, 115, 22, 0.5);
 }
 
 .carousel-arrow-prev {
