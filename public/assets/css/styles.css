@@ -4286,3 +4286,55 @@ footer a,
   transform: scale(1.03);
   color: #B45309;
 }
+
+/* --------------------------------------------------------------------------
+   Recent Highlights / Events Photo Gallery (v17.45)
+   -------------------------------------------------------------------------- */
+.section-recent-events {
+  padding: 3.5rem 0 2.5rem;
+}
+
+.events-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.event-photo-card {
+  margin: 0;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(24, 27, 44, 0.08);
+  border: 1px solid rgba(24, 27, 44, 0.06);
+  background: var(--color-white);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  aspect-ratio: 4 / 3;
+}
+
+.event-photo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(24, 27, 44, 0.12);
+  border-color: rgba(255, 104, 69, 0.3);
+}
+
+.event-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.event-photo-card:hover .event-photo-img {
+  transform: scale(1.03);
+}
+
+@media (max-width: 576px) {
+  .events-gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
