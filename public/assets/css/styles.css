@@ -1710,20 +1710,20 @@ header.site-header.header-scrolled,
 .hero-accent-card-stacked {
   background-color: #FFCC21;
   border-radius: 20px;
-  padding: 18px 16px;
+  padding: 15px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   position: absolute;
-  top: -16px;
-  right: -16px;
+  top: -36px;
+  right: -28px;
   z-index: 3;
   box-shadow: 0 10px 28px rgba(24, 27, 44, 0.15);
   border: 3px solid #FFFFFF;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   color: var(--color-ink);
   text-align: center;
   line-height: 1.25;
@@ -3209,8 +3209,8 @@ footer a,
   .hero-accent-card-stacked {
     padding: 12px 16px;
     font-size: 0.9rem;
-    right: 12px;
-    top: -16px;
+    right: 4px;
+    top: -24px;
   }
 
   /* Tablet Grids: 2 columns on tablet (641px–1024px, including 820px iPad Air) */
@@ -3493,10 +3493,10 @@ footer a,
   }
 
   .hero-accent-card-stacked {
-    padding: 10px 14px;
-    font-size: 0.85rem;
-    right: 8px;
-    top: -14px;
+    padding: 9px 12px;
+    font-size: 0.82rem;
+    right: 10px;
+    top: -18px;
   }
 
   .hero-leaf-accent {
@@ -4005,7 +4005,7 @@ footer a,
     padding: 8px 12px;
     font-size: 0.78rem;
     right: 6px;
-    top: -12px;
+    top: -14px;
   }
   .leadership-card-media {
     height: 240px;
