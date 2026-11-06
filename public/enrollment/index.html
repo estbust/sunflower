@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../assets/css/styles.css?v=17.47">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=17.48">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
@@ -100,14 +100,20 @@
       <div class="container page-header-inner">
         <span class="badge badge-yellow">Admissions &amp; Placement</span>
         <h1 id="enrollment-h1" class="heading-with-sparkle">
-          <span>Admissions &amp; Enrollment Inquiries</span>
+          <span>Let’s talk about your family’s needs</span>
           <svg class="sun-sparkle-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 2V5M12 19V22M2 12H5M19 12H22M4.93 4.93L7.05 7.05M16.95 16.95L19.07 19.07M4.93 19.07L7.05 16.95M16.95 7.05L19.07 4.93" stroke="#FFCC21" stroke-width="2.5" stroke-linecap="round"/>
             <circle cx="12" cy="12" r="3.5" fill="#FFCC21"/>
           </svg>
         </h1>
         <p class="page-lead">
-          We welcome families interested in discovering our play-based early learning community. Submitting an inquiry initiates a personalized conversation with our admissions team to explore program fit, discuss schedules, and determine availability.
+          If you’re interested in Sunflower Preschool, we invite you to reach out and tell us about your family’s schedule, your child’s age, and what you’re looking for in child care.
+        </p>
+        <p style="max-width: 760px; margin: 0.5rem auto 0; font-size: 1.05rem; color: var(--color-ink-secondary); line-height: 1.6;">
+          We’ll let you know about current openings, answer any questions you have, and set up a time for you to visit our campus and meet our team.
+        </p>
+        <p style="max-width: 760px; margin: 0.5rem auto 0; font-size: 1.05rem; color: var(--color-ink-secondary); line-height: 1.6;">
+          Submitting an inquiry begins a conversation with our team. It doesn’t reserve a space or guarantee enrollment.
         </p>
       </div>
     </section>
@@ -303,6 +309,9 @@
               <p class="form-subtitle-overhaul">
                 Complete this form to explore placement options. Our admissions team will reach out within 1 to 2 business days.
               </p>
+              <p class="form-privacy-disclaimer" style="margin-top: 0.5rem; font-size: 0.9rem; color: #b91c1c; font-weight: 500;">
+                For online forms, please don’t include private health information or your child’s full birthdate.
+              </p>
             </div>
 
             <!-- Accessible Live Alert Banner -->
@@ -384,7 +393,7 @@
                     <option value="" disabled selected>Select a program</option>
                     <option value="toddler-care">Toddler Care (19–36 months)</option>
                     <option value="preschool">Preschool Program (3–5 years)</option>
-                    <option value="school-age-care">School-Age Care (5–10 years)</option>
+                    <option value="school-age-care">School-Age Care (5–8 years)</option>
                   </select>
                   <span id="err-program" class="field-error-msg" role="alert"></span>
                 </div>
@@ -418,7 +427,7 @@
                     <option value="" disabled selected>Select general age cohort</option>
                     <option value="19-36-months">19 to 36 Months (Toddlers)</option>
                     <option value="3-5-years">3 to 5 Years (Preschoolers)</option>
-                    <option value="5-10-years">5 to 10 Years (School-Age)</option>
+                    <option value="5-10-years">5 to 8 Years (School-Age)</option>
                   </select>
                   <span id="age-helper" class="form-helper warning-helper">Select a cohort. Do NOT enter a birthdate.</span>
                   <span id="err-childAgeGroup" class="field-error-msg" role="alert"></span>
@@ -697,7 +706,7 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="../assets/js/form-service.js?v=17.47"></script>
-  <script src="../assets/js/main.js?v=17.47"></script>
+  <script src="../assets/js/form-service.js?v=17.48"></script>
+  <script src="../assets/js/main.js?v=17.48"></script>
 </body>
 </html>
