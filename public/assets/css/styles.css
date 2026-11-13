@@ -320,14 +320,13 @@ header.site-header.header-scrolled,
 .brand-logo-header,
 .brand-link img,
 .brand-logo img {
-  height: 88px !important;
-  max-height: 92px !important;
+  height: auto !important;
+  max-height: 52px !important;
   width: auto !important;
-  max-width: 310px !important;
+  max-width: 220px !important;
   object-fit: contain;
   display: block;
-  transform: scale(1.12);
-  transform-origin: left center;
+  transform: none;
 }
 
 /* Navigation Links in Nunito bold & Dark Ink */
@@ -2799,10 +2798,10 @@ footer a,
 
 .footer-logo-card-alaskan img,
 .brand-logo-footer {
-  height: 76px !important;
+  height: auto !important;
   max-height: 80px !important;
   width: auto !important;
-  max-width: 260px !important;
+  max-width: 100% !important;
   object-fit: contain;
   display: block;
 }
@@ -2987,11 +2986,11 @@ footer a,
   .brand-logo-header,
   .brand-link img,
   .brand-logo img {
-    height: 72px !important;
-    max-height: 76px !important;
+    height: auto !important;
+    max-height: 48px !important;
     width: auto !important;
-    transform: scale(1.08);
-    transform-origin: left center;
+    max-width: 200px !important;
+    transform: none;
   }
 
   .header-actions {
@@ -3403,11 +3402,11 @@ footer a,
   .brand-logo-header,
   .brand-link img,
   .brand-logo img {
-    height: 62px !important;
-    max-height: 66px !important;
+    height: auto !important;
+    max-height: 44px !important;
     width: auto !important;
-    transform: scale(1.05);
-    transform-origin: left center;
+    max-width: 180px !important;
+    transform: none;
   }
 
   /* Grids collapse to single-column stack on mobile */
