@@ -1,6 +1,6 @@
 /* ==========================================================================
    Sunflower Preschool - Modern Responsive Stylesheet
-   Color Palette (v17.73): Forest Green (#496D50), Leaf Green (#5F833D),
+   Color Palette (v17.74): Forest Green (#496D50), Leaf Green (#5F833D),
                           Earth Brown (#622B15), Sunflower Yellow (#FAD515),
                           Mint Cream (#EDF3E8), Pure White (#FFFFFF)
    Typography: Fredoka (Headings/Display), Nunito (Body/Copy), DM Sans (UI/Forms/Nav)
@@ -12,7 +12,7 @@
    -------------------------------------------------------------------------- */
 :root {
   /* ========================================================================
-     Brand Visual Identity Tokens (v17.73 - Sunflower Preschool)
+     Brand Visual Identity Tokens (v17.74 - Sunflower Preschool)
      ======================================================================== */
   --sf-forest: #496D50;
   --sf-leaf: #5F833D;
