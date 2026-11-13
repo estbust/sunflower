@@ -2789,9 +2789,9 @@ footer a,
   background-color: #FFFFFF;
   border: 1px solid rgba(24, 27, 44, 0.1);
   border-radius: 16px;
-  padding: 1.25rem 1.15rem;
-  min-width: 170px;
-  max-width: 200px;
+  padding: 0.85rem 0.95rem;
+  min-width: 115px;
+  max-width: 135px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2801,10 +2801,10 @@ footer a,
 
 .footer-logo-card-alaskan img,
 .brand-logo-footer {
-  width: 160px !important;
-  max-width: 180px !important;
+  width: 105px !important;
+  max-width: 110px !important;
   height: auto !important;
-  max-height: 220px !important;
+  max-height: 145px !important;
   object-fit: contain;
   display: block;
 }
