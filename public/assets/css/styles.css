@@ -1,6 +1,6 @@
 /* ==========================================================================
    Sunflower Preschool - Modern Responsive Stylesheet
-   Color Palette (v17.71): Forest Green (#496D50), Leaf Green (#5F833D),
+   Color Palette (v17.72): Forest Green (#496D50), Leaf Green (#5F833D),
                           Earth Brown (#622B15), Sunflower Yellow (#FAD515),
                           Mint Cream (#EDF3E8), Pure White (#FFFFFF)
    Typography: Fredoka (Headings/Display), Nunito (Body/Copy), DM Sans (UI/Forms/Nav)
@@ -12,7 +12,7 @@
    -------------------------------------------------------------------------- */
 :root {
   /* ========================================================================
-     Brand Visual Identity Tokens (v17.71 - Sunflower Preschool)
+     Brand Visual Identity Tokens (v17.72 - Sunflower Preschool)
      ======================================================================== */
   --sf-forest: #496D50;
   --sf-leaf: #5F833D;
@@ -2813,11 +2813,44 @@ footer.site-footer-alaskan,
 footer.site-footer,
 .site-footer {
   background-color: var(--sf-forest);
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   border-top: 4px solid var(--sf-sun);
   padding: 4.5rem 0 2rem;
   position: relative;
   margin-top: auto;
+}
+
+.site-footer-alaskan,
+footer.site-footer-alaskan,
+.site-footer-alaskan p,
+.site-footer-alaskan span,
+.site-footer-alaskan a,
+.site-footer-alaskan li,
+.site-footer-alaskan strong,
+.site-footer-alaskan small,
+.site-footer-alaskan em,
+.alaskan-footer-col,
+.alaskan-footer-col p,
+.alaskan-footer-col span,
+.alaskan-footer-col strong,
+.alaskan-footer-col a,
+.alaskan-footer-bottom,
+.alaskan-footer-bottom p,
+.alaskan-footer-bottom span,
+.alaskan-footer-bottom strong,
+.alaskan-footer-bottom a {
+  color: #FFFFFF !important;
+}
+
+.site-footer-alaskan a:hover,
+.alaskan-footer-col a:hover,
+.alaskan-footer-bottom a:hover {
+  color: var(--sf-sun) !important;
+  text-decoration: underline !important;
+}
+
+.site-footer-alaskan .alaskan-tagline {
+  color: var(--sf-sun) !important;
 }
 
 footer ul,
@@ -2834,12 +2867,6 @@ footer a,
 .site-footer a {
   text-decoration: none !important;
   color: #FFFFFF !important;
-}
-
-.site-footer-alaskan a:hover,
-.site-footer a:hover {
-  color: var(--sf-sun) !important;
-  text-decoration: underline !important;
 }
 
 .alaskan-footer-grid {
@@ -2937,6 +2964,15 @@ footer a,
   flex-shrink: 0;
   margin-top: 0.15rem;
   color: var(--sf-sun);
+}
+
+.site-footer-alaskan .alaskan-nap-icon,
+.site-footer-alaskan .alaskan-nap-icon path,
+.site-footer-alaskan .alaskan-nap-icon circle,
+.site-footer-alaskan .alaskan-nap-icon rect,
+.site-footer-alaskan .alaskan-nap-icon line {
+  stroke: var(--sf-sun) !important;
+  color: var(--sf-sun) !important;
 }
 
 /* Social Links Group in Footer (v17.41) */
@@ -3053,15 +3089,16 @@ footer a,
   flex-wrap: wrap;
   gap: 1rem;
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.82);
+  color: #FFFFFF !important;
 }
 
 .alaskan-footer-bottom p {
   margin: 0;
+  color: #FFFFFF !important;
 }
 
 .alaskan-footer-bottom a {
-  color: rgba(255, 255, 255, 0.82) !important;
+  color: #FFFFFF !important;
 }
 
 .alaskan-footer-bottom a:hover {
