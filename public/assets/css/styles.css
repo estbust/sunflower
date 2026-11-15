@@ -1,6 +1,6 @@
 /* ==========================================================================
    Sunflower Preschool - Modern Responsive Stylesheet
-   Color Palette (v17.75): Forest Green (#496D50), Leaf Green (#5F833D),
+   Color Palette (v17.76): Forest Green (#496D50), Leaf Green (#5F833D),
                           Earth Brown (#622B15), Sunflower Yellow (#FAD515),
                           Mint Cream (#EDF3E8), Pure White (#FFFFFF)
    Typography: Fredoka (Headings/Display), Nunito (Body/Copy), DM Sans (UI/Forms/Nav)
@@ -12,7 +12,7 @@
    -------------------------------------------------------------------------- */
 :root {
   /* ========================================================================
-     Brand Visual Identity Tokens (v17.75 - Sunflower Preschool)
+     Brand Visual Identity Tokens (v17.76 - Sunflower Preschool)
      ======================================================================== */
   --sf-forest: #496D50;
   --sf-leaf: #5F833D;
@@ -1929,24 +1929,32 @@ header.site-header.header-scrolled,
 }
 
 .program-card-features,
-.program-feature-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.program-feature-list,
+.program-card-body ul {
+  list-style: disc;
+  margin: 0.85rem 0 1.25rem 0;
+  padding-left: 1.25rem;
 }
 
 .program-card-feature-item,
-.program-feature-list li {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.92rem;
+.program-feature-list li,
+.program-card-body ul li {
+  font-family: var(--font-body, 'Nunito', sans-serif);
+  font-size: 0.95rem;
+  line-height: 1.45;
   color: var(--sf-earth);
   font-weight: 600;
-  margin: 0;
+  margin-bottom: 0.35rem;
+}
+
+.program-feature-list li:last-child,
+.program-card-body ul li:last-child {
+  margin-bottom: 0;
+}
+
+.program-feature-list li::marker,
+.program-card-body ul li::marker {
+  color: var(--sf-forest);
 }
 
 .program-feature-dot {
