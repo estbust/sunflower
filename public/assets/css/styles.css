@@ -2410,8 +2410,10 @@ header.site-header.header-scrolled,
   padding: 3.5rem 3.5rem;
   box-shadow: 0 16px 40px rgba(73, 109, 80, 0.28) !important;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  text-align: left;
   gap: 2.5rem;
   position: relative;
   overflow: hidden;
@@ -2421,7 +2423,9 @@ header.site-header.header-scrolled,
 
 .pre-footer-left {
   display: flex;
+  flex-direction: row;
   align-items: center;
+  text-align: left;
   gap: 1.75rem;
   flex: 1;
 }
@@ -2430,6 +2434,7 @@ header.site-header.header-scrolled,
   width: 110px;
   height: 110px;
   flex-shrink: 0;
+  margin: 0;
 }
 
 .prefooter-isotipo-img {
@@ -2439,8 +2444,13 @@ header.site-header.header-scrolled,
   object-fit: contain;
   flex-shrink: 0;
   display: block;
+  margin: 0;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.18));
   animation: gentleFloat 5s ease-in-out infinite;
+}
+
+.pre-footer-content {
+  text-align: left;
 }
 
 .pre-footer-content h2 {
@@ -2450,6 +2460,7 @@ header.site-header.header-scrolled,
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 0.5rem;
+  text-align: left;
 }
 
 .pre-footer-content p {
@@ -2458,14 +2469,28 @@ header.site-header.header-scrolled,
   color: #FFFFFF !important;
   opacity: 0.95;
   margin: 0;
+  text-align: left;
+}
+
+.pre-footer-content .badge,
+.pre-footer-content .badge-yellow {
+  display: inline-block;
+  margin: 0 0 0.65rem 0;
 }
 
 .pre-footer-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 1rem;
   flex-shrink: 0;
   flex-wrap: wrap;
+  margin: 0;
+}
+
+.pre-footer-actions .btn-pill-coral,
+.pre-footer-actions .btn-pill-white {
+  margin: 0;
 }
 
 .pre-footer-banner .btn-pill-coral {
@@ -3383,9 +3408,7 @@ footer a,
   }
 
   .pre-footer-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 2.5rem 2rem;
+    padding: 3rem 2.25rem;
     gap: 2rem;
   }
 }
@@ -3532,6 +3555,65 @@ footer a,
   .advantage-card {
     padding: 1.35rem 1.25rem;
   }
+
+  /* Pre-Footer CTA Banner Mobile Centering (<=768px, v17.78) */
+  .pre-footer-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    gap: 1.75rem;
+  }
+
+  .pre-footer-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    gap: 1.25rem;
+  }
+
+  .prefooter-isotipo-img,
+  .pre-footer-sunflower {
+    margin: 0 auto;
+    align-self: center;
+  }
+
+  .pre-footer-content {
+    text-align: center;
+    width: 100%;
+  }
+
+  .pre-footer-content h2,
+  .pre-footer-content p,
+  .pre-footer-text,
+  .pre-footer-text h2,
+  .pre-footer-text p {
+    text-align: center;
+  }
+
+  .pre-footer-content .badge,
+  .badge-yellow {
+    display: inline-block;
+    margin: 0 auto 0.65rem auto;
+  }
+
+  .pre-footer-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .pre-footer-actions .btn-pill-coral,
+  .pre-footer-actions .btn-pill-white {
+    margin: 0 auto;
+  }
 }
 
 /* Mobile Screen Layout & 1-Column Stacking (<= 640px, e.g. 430px iPhone) */
@@ -3588,10 +3670,63 @@ footer a,
     gap: 6px;
   }
 
-  .pre-footer-left {
+  /* Pre-Footer CTA Banner Mobile Centering (<=640px, v17.78) */
+  .pre-footer-banner {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
+    padding: 2.5rem 1.25rem;
+    gap: 1.75rem;
+  }
+
+  .pre-footer-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
     gap: 1.25rem;
+  }
+
+  .prefooter-isotipo-img,
+  .pre-footer-sunflower {
+    margin: 0 auto;
+    align-self: center;
+  }
+
+  .pre-footer-content {
+    text-align: center;
+    width: 100%;
+  }
+
+  .pre-footer-content h2,
+  .pre-footer-content p,
+  .pre-footer-text,
+  .pre-footer-text h2,
+  .pre-footer-text p {
+    text-align: center;
+  }
+
+  .pre-footer-content .badge,
+  .badge-yellow {
+    display: inline-block;
+    margin: 0 auto 0.65rem auto;
+  }
+
+  .pre-footer-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .pre-footer-actions .btn-pill-coral,
+  .pre-footer-actions .btn-pill-white {
+    margin: 0 auto;
   }
 
   /* Grids collapse to single-column stack on mobile */
@@ -3936,6 +4071,68 @@ footer a,
 @media (min-width: 769px) {
   .col-span-2 {
     grid-column: span 2;
+  }
+
+  /* Pre-Footer CTA Banner Desktop Split Layout (v17.78) */
+  .pre-footer-banner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    padding: 3.5rem 3.5rem;
+    gap: 2.5rem;
+  }
+
+  .pre-footer-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    width: auto;
+    gap: 1.75rem;
+    flex: 1;
+  }
+
+  .prefooter-isotipo-img,
+  .pre-footer-sunflower {
+    margin: 0;
+    align-self: center;
+  }
+
+  .pre-footer-content {
+    text-align: left;
+    width: auto;
+  }
+
+  .pre-footer-content h2,
+  .pre-footer-content p,
+  .pre-footer-text,
+  .pre-footer-text h2,
+  .pre-footer-text p {
+    text-align: left;
+  }
+
+  .pre-footer-content .badge,
+  .badge-yellow {
+    display: inline-block;
+    margin: 0 0 0.65rem 0;
+  }
+
+  .pre-footer-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: auto;
+    margin: 0;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .pre-footer-actions .btn-pill-coral,
+  .pre-footer-actions .btn-pill-white {
+    margin: 0;
   }
 }
 
