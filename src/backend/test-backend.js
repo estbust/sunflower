@@ -17,6 +17,11 @@ const path = require('path');
 const { validateEnrollment, validateContact } = require('./validators');
 const { RateLimiter } = require('./rateLimiter');
 const storage = require('./storage');
+const {
+  isTurnstileEnforced,
+  extractTurnstileToken,
+  verifyTurnstileToken
+} = require('./turnstile');
 const { startServer } = require('../../server');
 const enrollmentHandler = require('../../api/enrollment');
 const contactHandler = require('../../api/contact');
@@ -962,6 +967,380 @@ async function runAllTests() {
     assert.strictEqual(submitRes.status, 201);
     assert.ok(submitRes.data.success);
     assert.ok(submitRes.data.id);
+  });
+
+  // =========================================================================
+  // 8. CLOUDFLARE TURNSTILE SITEVERIFY & TOKEN SAFEGUARDS
+  // =========================================================================
+  console.log('\n[Suite 8] Cloudflare Turnstile Siteverify & Token Safeguards');
+
+  function createMockFetch({ status = 200, ok = true, jsonResult = {} } = {}) {
+    return async (url, init) => {
+      return {
+        ok,
+        status,
+        json: async () => jsonResult
+      };
+    };
+  }
+
+  // 1. Rechaza token vacío / faltante (403, TURNSTILE_FAILED)
+  await asyncTest('turnstile: rejects empty or missing token with 403 TURNSTILE_FAILED', async () => {
+    const resEmpty = await verifyTurnstileToken({
+      token: '',
+      secret: 'test-secret-key',
+      allowedHostnames: 'example.com',
+      fetchImpl: createMockFetch({ jsonResult: { success: true, hostname: 'example.com' } })
+    });
+    assert.strictEqual(resEmpty.ok, false);
+    assert.strictEqual(resEmpty.status, 403);
+    assert.strictEqual(resEmpty.code, 'TURNSTILE_FAILED');
+
+    const resNull = await verifyTurnstileToken({
+      token: null,
+      secret: 'test-secret-key',
+      allowedHostnames: 'example.com',
+      fetchImpl: createMockFetch()
+    });
+    assert.strictEqual(resNull.ok, false);
+    assert.strictEqual(resNull.status, 403);
+    assert.strictEqual(resNull.code, 'TURNSTILE_FAILED');
+
+    const resUndefined = await verifyTurnstileToken({
+      token: undefined,
+      secret: 'test-secret-key',
+      allowedHostnames: 'example.com',
+      fetchImpl: createMockFetch()
+    });
+    assert.strictEqual(resUndefined.ok, false);
+    assert.strictEqual(resUndefined.status, 403);
+    assert.strictEqual(resUndefined.code, 'TURNSTILE_FAILED');
+  });
+
+  // 2. Rechaza token > 2048 caracteres (403)
+  await asyncTest('turnstile: rejects token exceeding 2048 characters with 403', async () => {
+    const hugeToken = 'X'.repeat(2049);
+    const resHuge = await verifyTurnstileToken({
+      token: hugeToken,
+      secret: 'test-secret-key',
+      allowedHostnames: 'example.com',
+      fetchImpl: createMockFetch({ jsonResult: { success: true, hostname: 'example.com' } })
+    });
+    assert.strictEqual(resHuge.ok, false);
+    assert.strictEqual(resHuge.status, 403);
+    assert.strictEqual(resHuge.code, 'TURNSTILE_FAILED');
+  });
+
+  // 3. Falla cerrado (403) cuando allowedHostnames / TURNSTILE_HOSTNAMES está vacío
+  await asyncTest('turnstile: fails closed (403) when allowedHostnames is empty or whitespace', async () => {
+    const resNoHostnames = await verifyTurnstileToken({
+      token: 'valid-test-token-12345',
+      secret: 'test-secret-key',
+      allowedHostnames: '   ',
+      fetchImpl: createMockFetch({ jsonResult: { success: true, hostname: 'example.com' } })
+    });
+    assert.strictEqual(resNoHostnames.ok, false);
+    assert.strictEqual(resNoHostnames.status, 403);
+    assert.strictEqual(resNoHostnames.code, 'TURNSTILE_FAILED');
+
+    const resEmptyArray = await verifyTurnstileToken({
+      token: 'valid-test-token-12345',
+      secret: 'test-secret-key',
+      allowedHostnames: [],
+      fetchImpl: createMockFetch({ jsonResult: { success: true, hostname: 'example.com' } })
+    });
+    assert.strictEqual(resEmptyArray.ok, false);
+    assert.strictEqual(resEmptyArray.status, 403);
+    assert.strictEqual(resEmptyArray.code, 'TURNSTILE_FAILED');
+
+    // Also fail-closed if secret is missing or empty
+    const resNoSecret = await verifyTurnstileToken({
+      token: 'valid-test-token-12345',
+      secret: '  ',
+      allowedHostnames: 'example.com',
+      fetchImpl: createMockFetch({ jsonResult: { success: true, hostname: 'example.com' } })
+    });
+    assert.strictEqual(resNoSecret.ok, false);
+    assert.strictEqual(resNoSecret.status, 403);
+    assert.strictEqual(resNoSecret.code, 'TURNSTILE_FAILED');
+  });
+
+  // 4. Rechaza cuando siteverify responde { success: false } (403)
+  await asyncTest('turnstile: rejects when siteverify responds with { success: false } (403)', async () => {
+    const resSiteverifyFail = await verifyTurnstileToken({
+      token: 'valid-test-token-12345',
+      secret: 'test-secret-key',
+      allowedHostnames: 'example.com',
+      fetchImpl: createMockFetch({
+        status: 200,
+        ok: true,
+        jsonResult: { success: false, 'error-codes': ['invalid-input-response'] }
+      })
+    });
+    assert.strictEqual(resSiteverifyFail.ok, false);
+    assert.strictEqual(resSiteverifyFail.status, 403);
+    assert.strictEqual(resSiteverifyFail.code, 'TURNSTILE_FAILED');
+
+    // Also handles HTTP error (e.g. 500 or network failure)
+    const resHttpFail = await verifyTurnstileToken({
+      token: 'valid-test-token-12345',
+      secret: 'test-secret-key',
+      allowedHostnames: 'example.com',
+      fetchImpl: createMockFetch({
+        status: 500,
+        ok: false,
+        jsonResult: {}
+      })
+    });
+    assert.strictEqual(resHttpFail.ok, false);
+    assert.strictEqual(resHttpFail.status, 403);
+    assert.strictEqual(resHttpFail.code, 'TURNSTILE_FAILED');
+  });
+
+  // 5. Rechaza cuando result.action no coincide con expectedAction (403)
+  await asyncTest('turnstile: rejects when result.action does not match expectedAction (403)', async () => {
+    const resActionMismatch = await verifyTurnstileToken({
+      token: 'valid-test-token-12345',
+      secret: 'test-secret-key',
+      expectedAction: 'enrollment',
+      allowedHostnames: 'example.com',
+      fetchImpl: createMockFetch({
+        jsonResult: {
+          success: true,
+          action: 'contact',
+          hostname: 'example.com'
+        }
+      })
+    });
+    assert.strictEqual(resActionMismatch.ok, false);
+    assert.strictEqual(resActionMismatch.status, 403);
+    assert.strictEqual(resActionMismatch.code, 'TURNSTILE_FAILED');
+  });
+
+  // 6. Rechaza cuando result.hostname no está en la allowlist (403)
+  await asyncTest('turnstile: rejects when result.hostname is not in allowlist (403)', async () => {
+    const resHostnameMismatch = await verifyTurnstileToken({
+      token: 'valid-test-token-12345',
+      secret: 'test-secret-key',
+      expectedAction: 'enrollment',
+      allowedHostnames: 'sunflowerpreschoolak.com, localhost',
+      fetchImpl: createMockFetch({
+        jsonResult: {
+          success: true,
+          action: 'enrollment',
+          hostname: 'unauthorized-domain.com'
+        }
+      })
+    });
+    assert.strictEqual(resHostnameMismatch.ok, false);
+    assert.strictEqual(resHostnameMismatch.status, 403);
+    assert.strictEqual(resHostnameMismatch.code, 'TURNSTILE_FAILED');
+  });
+
+  // 7. Acepta cuando success === true, action coincide y hostname está en la allowlist (ok: true)
+  await asyncTest('turnstile: accepts when verification succeeds with matching action and allowed hostname', async () => {
+    const resSuccess = await verifyTurnstileToken({
+      token: 'valid-test-token-12345',
+      remoteip: '192.168.1.100',
+      secret: 'test-secret-key',
+      expectedAction: 'enrollment',
+      allowedHostnames: 'sunflowerpreschoolak.com, localhost',
+      fetchImpl: createMockFetch({
+        jsonResult: {
+          success: true,
+          action: 'enrollment',
+          hostname: 'localhost',
+          challenge_ts: new Date().toISOString()
+        }
+      })
+    });
+    assert.strictEqual(resSuccess.ok, true);
+    assert.strictEqual(resSuccess.result.success, true);
+    assert.strictEqual(resSuccess.result.action, 'enrollment');
+    assert.strictEqual(resSuccess.result.hostname, 'localhost');
+  });
+
+  // 8. Verifica que validateEnrollment y validateContact NO producen falsos positivos con tokens realistas de Turnstile
+  await asyncTest('turnstile: validators do not trigger false positives on realistic opaque Turnstile tokens', () => {
+    // Realistic Turnstile token containing long digit runs, hex chunks, and random alphanumeric sequences
+    const realisticTurnstileToken =
+      '0.4Xw8K9_dZ8M7qP123456789012345678-abcdef0123456789-ABCDEF-token_payload_part1.' +
+      '2026-09-15_not_a_birthdate_simulated_hash_run_9876543210987654321.' +
+      'extra_alphanumeric_sequence_simulating_turnstile_response_value_length_approx_500_chars_long';
+
+    // 1. Enrollment with cf-turnstile-response
+    const enrollmentWithTurnstile = {
+      parentName: 'Sarah Jenkins',
+      email: 'sarah.jenkins@example.com',
+      phone: '(555) 789-0123',
+      childFirstName: 'Lucas',
+      program: 'preschool',
+      childAgeGroup: '3-5-years',
+      preferredStart: 'Fall 2026',
+      message: 'Looking forward to our upcoming tour.',
+      privacyConsent: true,
+      'cf-turnstile-response': realisticTurnstileToken
+    };
+    const enrRes1 = validateEnrollment(enrollmentWithTurnstile);
+    assert.strictEqual(enrRes1.isValid, true, `Unexpected enrollment validation failure: ${JSON.stringify(enrRes1.errors)}`);
+
+    // 2. Enrollment with turnstileResponse and turnstile_token
+    const enrollmentAlt1 = { ...enrollmentWithTurnstile };
+    delete enrollmentAlt1['cf-turnstile-response'];
+    enrollmentAlt1.turnstileResponse = realisticTurnstileToken;
+    const enrRes2 = validateEnrollment(enrollmentAlt1);
+    assert.strictEqual(enrRes2.isValid, true);
+
+    const enrollmentAlt2 = { ...enrollmentWithTurnstile };
+    delete enrollmentAlt2['cf-turnstile-response'];
+    enrollmentAlt2.turnstile_token = realisticTurnstileToken;
+    const enrRes3 = validateEnrollment(enrollmentAlt2);
+    assert.strictEqual(enrRes3.isValid, true);
+
+    // 3. Contact with cf-turnstile-response
+    const contactWithTurnstile = {
+      name: 'Michael Chang',
+      email: 'michael.chang@example.com',
+      phone: '555-321-7654',
+      topic: 'general-inquiry',
+      message: 'Hello, we would love to learn more about the curriculum schedule.',
+      privacyConsent: true,
+      'cf-turnstile-response': realisticTurnstileToken
+    };
+    const cntRes1 = validateContact(contactWithTurnstile);
+    assert.strictEqual(cntRes1.isValid, true, `Unexpected contact validation failure: ${JSON.stringify(cntRes1.errors)}`);
+
+    // 4. Contact with turnstileResponse and turnstile_token
+    const contactAlt1 = { ...contactWithTurnstile };
+    delete contactAlt1['cf-turnstile-response'];
+    contactAlt1.turnstileResponse = realisticTurnstileToken;
+    const cntRes2 = validateContact(contactAlt1);
+    assert.strictEqual(cntRes2.isValid, true);
+
+    const contactAlt2 = { ...contactWithTurnstile };
+    delete contactAlt2['cf-turnstile-response'];
+    contactAlt2.turnstile_token = realisticTurnstileToken;
+    const cntRes3 = validateContact(contactAlt2);
+    assert.strictEqual(cntRes3.isValid, true);
+
+    // 5. Verify token extraction helpers
+    assert.strictEqual(extractTurnstileToken(enrollmentWithTurnstile), realisticTurnstileToken);
+    assert.strictEqual(extractTurnstileToken(enrollmentAlt1), realisticTurnstileToken);
+    assert.strictEqual(extractTurnstileToken(enrollmentAlt2), realisticTurnstileToken);
+    assert.strictEqual(formService.extractTurnstileToken(enrollmentWithTurnstile), realisticTurnstileToken);
+
+    // 6. Verify formService validation does not flag sensitive data or spam on token
+    const clientEnrCheck = formService.validateEnrollment(enrollmentWithTurnstile);
+    assert.strictEqual(clientEnrCheck.isValid, true);
+    const clientCntCheck = formService.validateContact(contactWithTurnstile);
+    assert.strictEqual(clientCntCheck.isValid, true);
+  });
+
+  // 9. Verifica que el gate en los handlers serverless rechaza con 403 cuando Turnstile está activo y falta token
+  await asyncTest('turnstile gate: enrollment & contact handlers reject with 403 TURNSTILE_FAILED when enforced and token missing', async () => {
+    const prevSecret = process.env.TURNSTILE_SECRET;
+    const prevHostnames = process.env.TURNSTILE_HOSTNAMES;
+    try {
+      process.env.TURNSTILE_SECRET = 'test-secret-env';
+      process.env.TURNSTILE_HOSTNAMES = 'localhost,example.com';
+      assert.strictEqual(isTurnstileEnforced(), true);
+
+      // Enrollment Handler Test
+      let enrStatus = 0;
+      let enrBody = null;
+      const mockEnrRes = {
+        setHeader: () => {},
+        writeHead: (code) => { enrStatus = code; },
+        end: (payload) => { enrBody = JSON.parse(payload); }
+      };
+      const mockEnrReq = {
+        method: 'POST',
+        headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+        body: {
+          parentName: 'Test Parent',
+          email: 'test@example.com',
+          phone: '555-123-4567',
+          childFirstName: 'TestChild',
+          program: 'preschool',
+          childAgeGroup: '3-5-years',
+          privacyConsent: true
+        }
+      };
+      await enrollmentHandler(mockEnrReq, mockEnrRes);
+      assert.strictEqual(enrStatus, 403);
+      assert.strictEqual(enrBody.code, 'TURNSTILE_FAILED');
+
+      // Contact Handler Test
+      let cntStatus = 0;
+      let cntBody = null;
+      const mockCntRes = {
+        setHeader: () => {},
+        writeHead: (code) => { cntStatus = code; },
+        end: (payload) => { cntBody = JSON.parse(payload); }
+      };
+      const mockCntReq = {
+        method: 'POST',
+        headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+        body: {
+          name: 'Contact Parent',
+          email: 'contact@example.com',
+          topic: 'general-inquiry',
+          message: 'Interested in scheduling an in-person tour.',
+          privacyConsent: true
+        }
+      };
+      await contactHandler(mockCntReq, mockCntRes);
+      assert.strictEqual(cntStatus, 403);
+      assert.strictEqual(cntBody.code, 'TURNSTILE_FAILED');
+    } finally {
+      process.env.TURNSTILE_SECRET = prevSecret;
+      process.env.TURNSTILE_HOSTNAMES = prevHostnames;
+    }
+  });
+
+  // 10. Verifica que el gate en los handlers permite pasar cuando siteverify responde éxito
+  await asyncTest('turnstile gate: handler succeeds with 201 when Turnstile token verifies successfully', async () => {
+    const prevSecret = process.env.TURNSTILE_SECRET;
+    const prevHostnames = process.env.TURNSTILE_HOSTNAMES;
+    const originalFetch = globalThis.fetch;
+    try {
+      process.env.TURNSTILE_SECRET = 'test-secret-env';
+      process.env.TURNSTILE_HOSTNAMES = 'localhost,example.com';
+      globalThis.fetch = createMockFetch({
+        jsonResult: { success: true, action: 'enrollment', hostname: 'localhost' }
+      });
+
+      let statusCode = 0;
+      let responseBody = null;
+      const mockRes = {
+        setHeader: () => {},
+        writeHead: (code) => { statusCode = code; },
+        end: (payload) => { responseBody = JSON.parse(payload); }
+      };
+      const mockReq = {
+        method: 'POST',
+        headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
+        body: {
+          parentName: 'Gated Parent',
+          email: 'gated.parent@example.com',
+          phone: '555-987-6543',
+          childFirstName: 'Leo',
+          program: 'preschool',
+          childAgeGroup: '3-5-years',
+          privacyConsent: true,
+          'cf-turnstile-response': 'valid-mock-token-xyz'
+        }
+      };
+
+      await enrollmentHandler(mockReq, mockRes);
+      assert.strictEqual(statusCode, 201);
+      assert.strictEqual(responseBody.success, true);
+      assert.ok(responseBody.id);
+    } finally {
+      process.env.TURNSTILE_SECRET = prevSecret;
+      process.env.TURNSTILE_HOSTNAMES = prevHostnames;
+      globalThis.fetch = originalFetch;
+    }
   });
 
   // Gracefully close server and clear test data

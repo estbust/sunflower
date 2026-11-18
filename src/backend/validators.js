@@ -74,6 +74,13 @@ const FORBIDDEN_PII_FIELDS = new Set([
   'street_address'
 ]);
 
+// Cloudflare Turnstile token fields excluded from sensitive/spam text scans
+const TURNSTILE_TOKEN_FIELDS = new Set([
+  'cf-turnstile-response',
+  'turnstileResponse',
+  'turnstile_token'
+]);
+
 // Medical keywords and phrases (case-insensitive)
 const MEDICAL_REGEX_PATTERNS = [
   /\ballerg\w*\b/i,           // allergy, allergic, allergies, allergen
@@ -210,6 +217,7 @@ function detectSensitiveData(payload) {
 
   // 2. Scan Text Values for Sensitive Patterns
   for (const [key, rawValue] of Object.entries(payload)) {
+    if (TURNSTILE_TOKEN_FIELDS.has(key)) continue;
     if (typeof rawValue !== 'string') continue;
     const value = rawValue.trim();
     if (!value) continue;
@@ -289,6 +297,7 @@ function detectSpam(payload) {
 
   // Check URL / Link Spam in text fields
   for (const [key, val] of Object.entries(payload)) {
+    if (TURNSTILE_TOKEN_FIELDS.has(key)) continue;
     if (typeof val === 'string') {
       const urls = val.match(/https?:\/\/[^\s]+/gi);
       if (urls && urls.length >= 2) {
@@ -649,6 +658,7 @@ module.exports = {
   FORBIDDEN_MEDICAL_FIELDS,
   FORBIDDEN_BIRTHDATE_FIELDS,
   FORBIDDEN_PII_FIELDS,
+  TURNSTILE_TOKEN_FIELDS,
   ENROLLMENT_ALLOWED_FIELDS,
   CONTACT_ALLOWED_FIELDS
 };

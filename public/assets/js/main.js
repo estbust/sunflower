@@ -186,6 +186,10 @@
                          form.querySelector('#err-privacyConsent');
       }
 
+      if (!errorContainer && (fieldName === 'turnstile' || fieldName === 'cf-turnstile-response' || fieldName === 'turnstileResponse' || fieldName === 'turnstile_token')) {
+        errorContainer = form.querySelector('#err-turnstile');
+      }
+
       if (errorContainer) {
         errorContainer.textContent = reason;
         errorContainer.classList.add('visible');
@@ -277,6 +281,166 @@
   }
 
   // ---------------------------------------------------------------------------
+  // Cloudflare Turnstile Explicit Lifecycle Manager
+  // ---------------------------------------------------------------------------
+  var turnstileWidgets = new Map();
+
+  function renderTurnstileWidgets() {
+    if (!window.turnstile || typeof window.turnstile.render !== 'function') {
+      return;
+    }
+
+    var widgetContainers = document.querySelectorAll('.cf-turnstile[data-sitekey]');
+    if (!widgetContainers.length) return;
+
+    widgetContainers.forEach(function (el) {
+      if (el.dataset.turnstileRendered === 'true') {
+        return;
+      }
+
+      var sitekey = el.dataset.sitekey;
+      var action = el.dataset.action || '';
+      var theme = el.dataset.theme || 'light';
+      var form = el.closest('form');
+      var errSpan = form ? form.querySelector('#err-turnstile') : (el.parentElement ? el.parentElement.querySelector('#err-turnstile') : null);
+
+      var widgetEntry = {
+        element: el,
+        form: form,
+        errSpan: errSpan,
+        widgetId: null,
+        token: ''
+      };
+
+      var renderOptions = {
+        sitekey: sitekey,
+        theme: theme,
+        callback: function (token) {
+          widgetEntry.token = typeof token === 'string' ? token.trim() : '';
+          if (widgetEntry.errSpan) {
+            widgetEntry.errSpan.textContent = '';
+            widgetEntry.errSpan.classList.remove('visible');
+          }
+        },
+        'expired-callback': function () {
+          widgetEntry.token = '';
+          if (widgetEntry.widgetId !== null && window.turnstile && typeof window.turnstile.reset === 'function') {
+            try {
+              window.turnstile.reset(widgetEntry.widgetId);
+            } catch (ignore) {}
+          }
+        },
+        'error-callback': function () {
+          widgetEntry.token = '';
+          if (widgetEntry.errSpan) {
+            widgetEntry.errSpan.textContent = 'Security verification failed to load. Please refresh the page or try again.';
+            widgetEntry.errSpan.classList.add('visible');
+          }
+        }
+      };
+
+      if (action) {
+        renderOptions.action = action;
+      }
+
+      try {
+        var widgetId = window.turnstile.render(el, renderOptions);
+        widgetEntry.widgetId = widgetId;
+        el.dataset.turnstileRendered = 'true';
+        el.dataset.turnstileWidgetId = String(widgetId);
+        turnstileWidgets.set(el, widgetEntry);
+        if (form) {
+          turnstileWidgets.set(form, widgetEntry);
+        }
+      } catch (err) {
+        console.error('Error rendering Turnstile widget:', err);
+      }
+    });
+  }
+
+  // Register global onload callback for explicit render mode immediately
+  window.onSunflowerTurnstileLoad = renderTurnstileWidgets;
+
+  // Immediate check if Turnstile already ready before DOMContentLoaded
+  if (typeof document !== 'undefined' && document.readyState !== 'loading' && window.turnstile) {
+    renderTurnstileWidgets();
+  }
+
+  function getTurnstileTokenForForm(form) {
+    if (!form) return '';
+    var token = '';
+
+    // 1. Check FormData response
+    try {
+      var formData = new FormData(form);
+      var formVal = formData.get('cf-turnstile-response');
+      if (typeof formVal === 'string' && formVal.trim()) {
+        token = formVal.trim();
+      }
+    } catch (ignore) {}
+
+    // 2. Lookup widget entry
+    var entry = turnstileWidgets.get(form);
+    if (!entry) {
+      var container = form.querySelector('.cf-turnstile');
+      if (container) {
+        entry = turnstileWidgets.get(container);
+      }
+    }
+
+    // 3. Check window.turnstile.getResponse
+    if (!token && window.turnstile && typeof window.turnstile.getResponse === 'function') {
+      try {
+        var widgetId = entry && entry.widgetId !== null && entry.widgetId !== undefined ? entry.widgetId : undefined;
+        var resp = widgetId !== undefined ? window.turnstile.getResponse(widgetId) : window.turnstile.getResponse();
+        if (typeof resp === 'string' && resp.trim()) {
+          token = resp.trim();
+        }
+      } catch (ignore) {}
+    }
+
+    // 4. Check retained token from callback
+    if (!token && entry && typeof entry.token === 'string' && entry.token.trim()) {
+      token = entry.token.trim();
+    }
+
+    // 5. Validate trimmed non-empty string <= 2048 chars
+    if (typeof token === 'string') {
+      var trimmed = token.trim();
+      if (trimmed.length > 0 && trimmed.length <= 2048) {
+        return trimmed;
+      }
+    }
+    return '';
+  }
+
+  function resetTurnstileForForm(form) {
+    if (!form) return;
+
+    var entry = turnstileWidgets.get(form);
+    if (!entry) {
+      var container = form.querySelector('.cf-turnstile');
+      if (container) {
+        entry = turnstileWidgets.get(container);
+      }
+    }
+
+    if (entry) {
+      entry.token = '';
+    }
+
+    if (window.turnstile && typeof window.turnstile.reset === 'function') {
+      try {
+        if (entry && entry.widgetId !== null && entry.widgetId !== undefined) {
+          window.turnstile.reset(entry.widgetId);
+        } else {
+          window.turnstile.reset();
+        }
+      } catch (ignore) {}
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // 4. Enrollment Form Integration (#enrollment-form)
   // ---------------------------------------------------------------------------
   function initEnrollmentForm() {
@@ -306,20 +470,26 @@
         submitBtn.dataset.originalText = (submitBtn.textContent || '').trim();
       }
 
-      var formData = new FormData(form);
-      var turnstileResponse = formData.get('cf-turnstile-response');
+      var turnstileResponse = getTurnstileTokenForForm(form);
 
       if (!turnstileResponse) {
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = submitBtn.dataset.originalText || 'Submit Enrollment Inquiry';
         }
+        var verificationMsg = 'Please complete the security verification challenge before submitting your inquiry.';
         renderSummaryAlert(
           alertBanner,
           'error',
           'Verification Required',
-          'Please complete the security verification challenge before submitting your inquiry.'
+          verificationMsg
         );
+        var errTurnstile = form.querySelector('#err-turnstile');
+        if (errTurnstile) {
+          errTurnstile.textContent = verificationMsg;
+          errTurnstile.classList.add('visible');
+          errTurnstile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         return;
       }
 
@@ -337,7 +507,8 @@
         privacy_consent: (form.querySelector('#privacy_consent') || form.querySelector('#privacyConsent') || form.querySelector('[name="privacy_consent"]') || form.querySelector('[name="privacyConsent"]') || {}).checked === true,
         website: (form.querySelector('#website') || {}).value || '',
         'cf-turnstile-response': turnstileResponse,
-        turnstileResponse: turnstileResponse
+        turnstileResponse: turnstileResponse,
+        turnstile_token: turnstileResponse
       };
 
       if (submitBtn) {
@@ -366,11 +537,6 @@
           alertBanner.focus();
 
           form.reset();
-          if (window.turnstile && typeof window.turnstile.reset === 'function') {
-            try {
-              window.turnstile.reset();
-            } catch (ignore) {}
-          }
         } else {
           // Failure Response (Sensitive Data, Validation, Spam, Rate Limit, or Turnstile Required)
           var title = 'Submission Review Required';
@@ -385,19 +551,18 @@
           } else if (result.code === 'RATE_LIMIT_EXCEEDED') {
             title = '⚠️ Submission Limit Reached';
             explanatoryMsg = 'Too many submissions have been received from this connection. Please wait a few moments before trying again.';
-          } else if (result.code === 'TURNSTILE_REQUIRED') {
+          } else if (result.code === 'TURNSTILE_REQUIRED' || result.code === 'TURNSTILE_FAILED') {
             title = '⚠️ Verification Required';
-            explanatoryMsg = 'Please complete the security verification challenge before submitting your inquiry.';
+            explanatoryMsg = result.message || 'Please complete the security verification challenge before submitting your inquiry.';
+            var errTurnstile = form.querySelector('#err-turnstile');
+            if (errTurnstile) {
+              errTurnstile.textContent = explanatoryMsg;
+              errTurnstile.classList.add('visible');
+            }
           }
 
           renderSummaryAlert(alertBanner, 'error', title, explanatoryMsg, result.errors);
           renderFieldErrors(form, result.errors);
-
-          if (window.turnstile && typeof window.turnstile.reset === 'function') {
-            try {
-              window.turnstile.reset();
-            } catch (ignore) {}
-          }
         }
       } catch (err) {
         renderSummaryAlert(
@@ -406,12 +571,8 @@
           'Network Transmission Error',
           'We were unable to connect to our servers to transmit your inquiry. Please check your internet connection and try again. Your information has been preserved below so you do not have to re-enter it.'
         );
-        if (window.turnstile && typeof window.turnstile.reset === 'function') {
-          try {
-            window.turnstile.reset();
-          } catch (ignore) {}
-        }
       } finally {
+        resetTurnstileForForm(form);
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = submitBtn.dataset.originalText || 'Submit Enrollment Inquiry';
@@ -450,20 +611,26 @@
         submitBtn.dataset.originalText = (submitBtn.textContent || '').trim();
       }
 
-      var formData = new FormData(form);
-      var turnstileResponse = formData.get('cf-turnstile-response');
+      var turnstileResponse = getTurnstileTokenForForm(form);
 
       if (!turnstileResponse) {
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = submitBtn.dataset.originalText || 'Send Message';
         }
+        var verificationMsg = 'Please complete the security verification challenge before submitting your inquiry.';
         renderSummaryAlert(
           alertBanner,
           'error',
           'Verification Required',
-          'Please complete the security verification challenge before submitting your inquiry.'
+          verificationMsg
         );
+        var errTurnstile = form.querySelector('#err-turnstile');
+        if (errTurnstile) {
+          errTurnstile.textContent = verificationMsg;
+          errTurnstile.classList.add('visible');
+          errTurnstile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         return;
       }
 
@@ -477,7 +644,8 @@
         privacy_consent: (form.querySelector('#privacy_consent') || form.querySelector('#privacyConsent') || form.querySelector('[name="privacy_consent"]') || form.querySelector('[name="privacyConsent"]') || {}).checked === true,
         website: (form.querySelector('#website') || {}).value || '',
         'cf-turnstile-response': turnstileResponse,
-        turnstileResponse: turnstileResponse
+        turnstileResponse: turnstileResponse,
+        turnstile_token: turnstileResponse
       };
 
       if (submitBtn) {
@@ -505,11 +673,6 @@
           alertBanner.focus();
 
           form.reset();
-          if (window.turnstile && typeof window.turnstile.reset === 'function') {
-            try {
-              window.turnstile.reset();
-            } catch (ignore) {}
-          }
         } else {
           var title = 'Submission Review Required';
           var explanatoryMsg = result.message || 'Please correct the highlighted fields and resubmit.';
@@ -523,19 +686,18 @@
           } else if (result.code === 'RATE_LIMIT_EXCEEDED') {
             title = '⚠️ Submission Limit Reached';
             explanatoryMsg = 'Too many submissions have been received from this connection. Please wait a few moments before trying again.';
-          } else if (result.code === 'TURNSTILE_REQUIRED') {
+          } else if (result.code === 'TURNSTILE_REQUIRED' || result.code === 'TURNSTILE_FAILED') {
             title = '⚠️ Verification Required';
-            explanatoryMsg = 'Please complete the security verification challenge before submitting your inquiry.';
+            explanatoryMsg = result.message || 'Please complete the security verification challenge before submitting your inquiry.';
+            var errTurnstile = form.querySelector('#err-turnstile');
+            if (errTurnstile) {
+              errTurnstile.textContent = explanatoryMsg;
+              errTurnstile.classList.add('visible');
+            }
           }
 
           renderSummaryAlert(alertBanner, 'error', title, explanatoryMsg, result.errors);
           renderFieldErrors(form, result.errors);
-
-          if (window.turnstile && typeof window.turnstile.reset === 'function') {
-            try {
-              window.turnstile.reset();
-            } catch (ignore) {}
-          }
         }
       } catch (err) {
         renderSummaryAlert(
@@ -544,12 +706,8 @@
           'Network Transmission Error',
           'We were unable to connect to our servers to transmit your message. Please check your internet connection and try again. Your information has been preserved below so you do not have to re-enter it.'
         );
-        if (window.turnstile && typeof window.turnstile.reset === 'function') {
-          try {
-            window.turnstile.reset();
-          } catch (ignore) {}
-        }
       } finally {
+        resetTurnstileForForm(form);
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = submitBtn.dataset.originalText || 'Send Message';
@@ -656,6 +814,9 @@
   // 9. DOM Initialization
   // ---------------------------------------------------------------------------
   document.addEventListener('DOMContentLoaded', function () {
+    if (window.turnstile && typeof window.turnstile.render === 'function') {
+      renderTurnstileWidgets();
+    }
     initNavigation();
     initStickyHeader();
     initScrollReveal();

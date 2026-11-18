@@ -6,6 +6,11 @@
 const { validateContactPayload, validateContact } = require('../src/backend/validators');
 const { defaultLimiter } = require('../src/backend/rateLimiter');
 const storage = require('../src/backend/storage');
+const {
+  isTurnstileEnforced,
+  extractTurnstileToken,
+  verifyTurnstileToken
+} = require('../src/backend/turnstile');
 
 const validateFn = validateContactPayload || validateContact;
 
@@ -161,7 +166,23 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  // 5. Validation & Privacy Safeguards
+  // 5. Turnstile Gate ("gate, don't replace")
+  if (isTurnstileEnforced()) {
+    const verification = await verifyTurnstileToken({
+      token: extractTurnstileToken(body),
+      remoteip: clientIp,
+      expectedAction: 'contact'
+    });
+    if (!verification.ok) {
+      return sendJson(res, 403, {
+        success: false,
+        code: 'TURNSTILE_FAILED',
+        message: verification.message
+      });
+    }
+  }
+
+  // 6. Validation & Privacy Safeguards
   const validation = validateFn(body);
   if (!validation.isValid) {
     return sendJson(res, 400, {

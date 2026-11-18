@@ -114,6 +114,8 @@
     'cf-turnstile-response', 'turnstileResponse', 'turnstile_token'
   ];
 
+  var TURNSTILE_TOKEN_KEYS = ['cf-turnstile-response', 'turnstileResponse', 'turnstile_token'];
+
   var EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   var PHONE_RE = /^\+?[0-9\s\-().]{7,20}$/;
 
@@ -151,6 +153,7 @@
 
     for (var j = 0; j < keys.length; j++) {
       var fieldKey = keys[j];
+      if (TURNSTILE_TOKEN_KEYS.indexOf(fieldKey) !== -1) continue;
       var val = payload[fieldKey];
       if (typeof val !== 'string') continue;
       var str = val.trim();
@@ -195,6 +198,7 @@
     }
     var keys = Object.keys(payload);
     for (var i = 0; i < keys.length; i++) {
+      if (TURNSTILE_TOKEN_KEYS.indexOf(keys[i]) !== -1) continue;
       var val = payload[keys[i]];
       if (typeof val === 'string') {
         var urls = val.match(/https?:\/\/[^\s]+/gi);
@@ -608,11 +612,32 @@
   }
 
   function extractTurnstileToken(payload) {
-    return (payload && payload['cf-turnstile-response']) ||
-      (payload && payload.turnstileResponse) ||
-      (typeof document !== 'undefined' && document.querySelector ? (document.querySelector('[name="cf-turnstile-response"]') || {}).value : '') ||
-      (typeof window !== 'undefined' && window.turnstile && typeof window.turnstile.getResponse === 'function' ? window.turnstile.getResponse() : '') ||
-      '';
+    var raw = '';
+    if (payload && typeof payload === 'object') {
+      if (typeof payload['cf-turnstile-response'] === 'string' && payload['cf-turnstile-response'].trim()) {
+        raw = payload['cf-turnstile-response'].trim();
+      } else if (typeof payload.turnstileResponse === 'string' && payload.turnstileResponse.trim()) {
+        raw = payload.turnstileResponse.trim();
+      } else if (typeof payload.turnstile_token === 'string' && payload.turnstile_token.trim()) {
+        raw = payload.turnstile_token.trim();
+      }
+    }
+    if (!raw && typeof document !== 'undefined' && document.querySelector) {
+      var el = document.querySelector('[name="cf-turnstile-response"]');
+      if (el && typeof el.value === 'string' && el.value.trim()) {
+        raw = el.value.trim();
+      }
+    }
+    if (!raw && typeof window !== 'undefined' && window.turnstile && typeof window.turnstile.getResponse === 'function') {
+      var resp = window.turnstile.getResponse();
+      if (typeof resp === 'string' && resp.trim()) {
+        raw = resp.trim();
+      }
+    }
+    if (typeof raw === 'string' && raw.length > 0 && raw.length <= 2048) {
+      return raw;
+    }
+    return '';
   }
 
   /**
@@ -878,6 +903,7 @@
     sendToWeb3Forms: sendToWeb3Forms,
     buildEnrollmentSummary: buildEnrollmentSummary,
     buildContactSummary: buildContactSummary,
+    TURNSTILE_TOKEN_KEYS: TURNSTILE_TOKEN_KEYS,
     WEB3FORMS_CONFIG: WEB3FORMS_CONFIG
   };
 });

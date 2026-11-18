@@ -23,7 +23,8 @@ const backendModules = [
   'server.js',
   'src/backend/validators.js',
   'src/backend/rateLimiter.js',
-  'src/backend/storage.js'
+  'src/backend/storage.js',
+  'src/backend/turnstile.js'
 ];
 
 for (const mod of backendModules) {

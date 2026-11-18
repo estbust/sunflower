@@ -12,6 +12,11 @@ const url = require('url');
 const { validateEnrollment, validateContact } = require('./src/backend/validators');
 const { defaultLimiter } = require('./src/backend/rateLimiter');
 const storage = require('./src/backend/storage');
+const {
+  isTurnstileEnforced,
+  extractTurnstileToken,
+  verifyTurnstileToken
+} = require('./src/backend/turnstile');
 
 const PUBLIC_DIR = path.resolve(__dirname, 'public');
 const DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
@@ -226,6 +231,23 @@ async function handleRequest(req, res) {
 
     try {
       const body = await parseJsonBody(req);
+
+      if (isTurnstileEnforced()) {
+        const verification = await verifyTurnstileToken({
+          token: extractTurnstileToken(body),
+          remoteip: clientIp,
+          expectedAction: 'enrollment'
+        });
+        if (!verification.ok) {
+          sendJson(res, 403, {
+            success: false,
+            code: 'TURNSTILE_FAILED',
+            message: verification.message
+          });
+          return;
+        }
+      }
+
       const validation = validateEnrollment(body);
 
       if (!validation.isValid) {
@@ -288,6 +310,23 @@ async function handleRequest(req, res) {
 
     try {
       const body = await parseJsonBody(req);
+
+      if (isTurnstileEnforced()) {
+        const verification = await verifyTurnstileToken({
+          token: extractTurnstileToken(body),
+          remoteip: clientIp,
+          expectedAction: 'contact'
+        });
+        if (!verification.ok) {
+          sendJson(res, 403, {
+            success: false,
+            code: 'TURNSTILE_FAILED',
+            message: verification.message
+          });
+          return;
+        }
+      }
+
       const validation = validateContact(body);
 
       if (!validation.isValid) {
