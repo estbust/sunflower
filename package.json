@@ -16,5 +16,8 @@
     "inquiry-api"
   ],
   "author": "Sunflower Preschool Development Team",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "sharp": "^0.32.6"
+  }
 }
