@@ -18,7 +18,7 @@ console.log('='.repeat(70));
 let hasErrors = false;
 
 // 1. Verify Backend Modules
-console.log('\n[1/4] Verifying Backend Modules...');
+console.log('\n[1/5] Verifying Backend Modules...');
 const backendModules = [
   'server.js',
   'src/backend/validators.js',
@@ -44,7 +44,7 @@ for (const mod of backendModules) {
 }
 
 // 2. Verify Storage Integrity
-console.log('\n[2/4] Verifying Storage & Persistence...');
+console.log('\n[2/5] Verifying Storage & Persistence...');
 try {
   const storage = require('../src/backend/storage');
   const data = storage.getAllSubmissions();
@@ -60,7 +60,7 @@ try {
 }
 
 // 3. Verify Client API Bridge & Assets
-console.log('\n[3/4] Verifying Client API Bridge & Core Assets...');
+console.log('\n[3/5] Verifying Client API Bridge & Core Assets...');
 const formServicePath = path.join(PUBLIC_DIR, 'assets', 'js', 'form-service.js');
 if (fs.existsSync(formServicePath)) {
   console.log('  ✅ form-service.js client bridge is ready');
@@ -90,7 +90,7 @@ for (const logo of requiredLogos) {
 }
 
 // 4. Verify 9 Required Route Files
-console.log('\n[4/4] Verifying 9 Required Route Files...');
+console.log('\n[4/5] Verifying 9 Required Route Files...');
 const routes = [
   { name: 'Home / Landing Page', path: '/', file: 'index.html' },
   { name: 'About Us', path: '/about/', file: 'about/index.html', altFile: 'about.html' },
@@ -116,6 +116,29 @@ for (const r of routes) {
   }
 }
 
+// 5. Verify SEO & Discoverability Files (sitemap.xml, robots.txt)
+console.log('\n[5/5] Verifying SEO & Discoverability Files...');
+const seoFiles = ['sitemap.xml', 'robots.txt'];
+let allSeoFilesValid = true;
+
+for (const file of seoFiles) {
+  const filePath = path.join(PUBLIC_DIR, file);
+  if (!fs.existsSync(filePath)) {
+    console.error(`  ❌ Missing SEO file: public/${file}`);
+    hasErrors = true;
+    allSeoFilesValid = false;
+  } else {
+    const stat = fs.statSync(filePath);
+    if (stat.size === 0) {
+      console.error(`  ❌ Empty SEO file (0 bytes): public/${file}`);
+      hasErrors = true;
+      allSeoFilesValid = false;
+    } else {
+      console.log(`  ✅ SEO file verified: public/${file} (${stat.size} bytes)`);
+    }
+  }
+}
+
 console.log('\n' + '='.repeat(70));
 console.log('BUILD & VERIFICATION SUMMARY:');
 console.log(`  Backend Engine:      ✅ READY (100% native Node.js)`);
@@ -123,6 +146,7 @@ console.log(`  API Endpoints:       ✅ POST /api/enrollment, POST /api/contact,
 console.log(`  Sensitive Data Scan: ✅ ENFORCED (Medical, Birthdates, PII rejection active)`);
 console.log(`  Spam & Rate Limiter: ✅ ENFORCED (Honeypot + IP rate limiter active)`);
 console.log(`  Routes Discovered:   ${existingRoutesCount}/9 routes present in public/`);
+console.log(`  SEO Integrity:       ${allSeoFilesValid ? '✅ ENFORCED (sitemap.xml & robots.txt present)' : '❌ FAILED (missing or empty SEO files)'}`);
 console.log('='.repeat(70) + '\n');
 
 if (hasErrors) {
