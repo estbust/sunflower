@@ -18,7 +18,7 @@ console.log('='.repeat(70));
 let hasErrors = false;
 
 // 1. Verify Backend Modules
-console.log('\n[1/5] Verifying Backend Modules...');
+console.log('\n[1/6] Verifying Backend Modules...');
 const backendModules = [
   'server.js',
   'src/backend/validators.js',
@@ -44,7 +44,7 @@ for (const mod of backendModules) {
 }
 
 // 2. Verify Storage Integrity
-console.log('\n[2/5] Verifying Storage & Persistence...');
+console.log('\n[2/6] Verifying Storage & Persistence...');
 try {
   const storage = require('../src/backend/storage');
   const data = storage.getAllSubmissions();
@@ -60,7 +60,7 @@ try {
 }
 
 // 3. Verify Client API Bridge & Assets
-console.log('\n[3/5] Verifying Client API Bridge & Core Assets...');
+console.log('\n[3/6] Verifying Client API Bridge & Core Assets...');
 const formServicePath = path.join(PUBLIC_DIR, 'assets', 'js', 'form-service.js');
 if (fs.existsSync(formServicePath)) {
   console.log('  ✅ form-service.js client bridge is ready');
@@ -71,8 +71,11 @@ if (fs.existsSync(formServicePath)) {
 
 const requiredLogos = [
   'Horizontal Sunflower Preschool logo.png',
+  'Horizontal Sunflower Preschool logo.webp',
   'Sunflower Preschool vertical logo.png',
+  'Sunflower Preschool vertical logo.webp',
   'ISotipo.png',
+  'ISotipo.webp',
   'SVG vertical sunflower preschool.svg'
 ];
 
@@ -90,7 +93,7 @@ for (const logo of requiredLogos) {
 }
 
 // 4. Verify 9 Required Route Files
-console.log('\n[4/5] Verifying 9 Required Route Files...');
+console.log('\n[4/6] Verifying 9 Required Route Files...');
 const routes = [
   { name: 'Home / Landing Page', path: '/', file: 'index.html' },
   { name: 'About Us', path: '/about/', file: 'about/index.html', altFile: 'about.html' },
@@ -117,7 +120,7 @@ for (const r of routes) {
 }
 
 // 5. Verify SEO & Discoverability Files (sitemap.xml, robots.txt)
-console.log('\n[5/5] Verifying SEO & Discoverability Files...');
+console.log('\n[5/6] Verifying SEO & Discoverability Files...');
 const seoFiles = ['sitemap.xml', 'robots.txt'];
 let allSeoFilesValid = true;
 
@@ -139,6 +142,26 @@ for (const file of seoFiles) {
   }
 }
 
+// 6. Verify Cloudflare Pages & Cache Headers (_headers)
+console.log('\n[6/6] Verifying Cloudflare Pages & Cache Headers (_headers)...');
+const headersPath = path.join(PUBLIC_DIR, '_headers');
+let headersFileValid = true;
+
+if (!fs.existsSync(headersPath)) {
+  console.error('  ❌ Missing configuration file: public/_headers');
+  hasErrors = true;
+  headersFileValid = false;
+} else {
+  const stat = fs.statSync(headersPath);
+  if (stat.size === 0) {
+    console.error('  ❌ Empty configuration file (0 bytes): public/_headers');
+    hasErrors = true;
+    headersFileValid = false;
+  } else {
+    console.log(`  ✅ Headers file verified: public/_headers (${stat.size} bytes)`);
+  }
+}
+
 console.log('\n' + '='.repeat(70));
 console.log('BUILD & VERIFICATION SUMMARY:');
 console.log(`  Backend Engine:      ✅ READY (100% native Node.js)`);
@@ -147,6 +170,7 @@ console.log(`  Sensitive Data Scan: ✅ ENFORCED (Medical, Birthdates, PII rejec
 console.log(`  Spam & Rate Limiter: ✅ ENFORCED (Honeypot + IP rate limiter active)`);
 console.log(`  Routes Discovered:   ${existingRoutesCount}/9 routes present in public/`);
 console.log(`  SEO Integrity:       ${allSeoFilesValid ? '✅ ENFORCED (sitemap.xml & robots.txt present)' : '❌ FAILED (missing or empty SEO files)'}`);
+console.log(`  Cache & Headers:     ${headersFileValid ? '✅ ENFORCED (public/_headers present)' : '❌ FAILED (missing or empty _headers)'}`);
 console.log('='.repeat(70) + '\n');
 
 if (hasErrors) {
