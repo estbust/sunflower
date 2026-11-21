@@ -59,7 +59,7 @@ try {
   hasErrors = true;
 }
 
-// 3. Verify Client API Bridge & Assets
+// 3. Verify Client API Bridge & Approved Core Assets
 console.log('\n[3/6] Verifying Client API Bridge & Core Assets...');
 const formServicePath = path.join(PUBLIC_DIR, 'assets', 'js', 'form-service.js');
 if (fs.existsSync(formServicePath)) {
@@ -69,26 +69,32 @@ if (fs.existsSync(formServicePath)) {
   hasErrors = true;
 }
 
+// Approved Paola Brand Assets ("Where Little Minds Bloom." with brown center)
 const requiredLogos = [
-  'Horizontal Sunflower Preschool logo.png',
-  'Horizontal Sunflower Preschool logo.webp',
-  'Sunflower Preschool vertical logo.png',
-  'Sunflower Preschool vertical logo.webp',
-  'ISotipo.png',
-  'ISotipo.webp',
-  'SVG vertical sunflower preschool.svg'
+  'sunflower-logo.png',
+  'sunflower-vertical.png',
+  'sunflower-favicon.png',
+  'sunflower-logo.webp',
+  'sunflower-vertical.webp',
+  'sunflower-favicon.webp'
 ];
 
-const imgDir = path.join(PUBLIC_DIR, 'assets', 'img');
+const imagesDir = path.join(PUBLIC_DIR, 'assets', 'images');
 let allLogosPresent = true;
 for (const logo of requiredLogos) {
-  const logoPath = path.join(imgDir, logo);
+  const logoPath = path.join(imagesDir, logo);
   if (fs.existsSync(logoPath)) {
     const stat = fs.statSync(logoPath);
-    console.log(`  ✅ Asset verified: ${logo} (${stat.size} bytes)`);
+    console.log(`  ✅ Approved asset verified: ${logo} (${stat.size} bytes)`);
   } else {
-    console.warn(`  ⚠️ Asset missing: ${logo}`);
-    allLogosPresent = false;
+    const isWebP = logo.endsWith('.webp');
+    if (isWebP) {
+      console.log(`  ℹ️ WebP asset pending generation: ${logo} (Awaiting Frontend Phase)`);
+    } else {
+      console.error(`  ❌ Required approved logo missing: ${logo} in public/assets/images/`);
+      hasErrors = true;
+      allLogosPresent = false;
+    }
   }
 }
 
@@ -171,6 +177,7 @@ console.log(`  Spam & Rate Limiter: ✅ ENFORCED (Honeypot + IP rate limiter act
 console.log(`  Routes Discovered:   ${existingRoutesCount}/9 routes present in public/`);
 console.log(`  SEO Integrity:       ${allSeoFilesValid ? '✅ ENFORCED (sitemap.xml & robots.txt present)' : '❌ FAILED (missing or empty SEO files)'}`);
 console.log(`  Cache & Headers:     ${headersFileValid ? '✅ ENFORCED (public/_headers present)' : '❌ FAILED (missing or empty _headers)'}`);
+console.log(`  Approved Logos:      ${allLogosPresent ? '✅ ENFORCED (Paola approved brand assets in public/assets/images/)' : '❌ FAILED (Missing approved brand assets)'}`);
 console.log('='.repeat(70) + '\n');
 
 if (hasErrors) {

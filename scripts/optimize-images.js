@@ -1,9 +1,16 @@
 /**
- * Sunflower Preschool - Image Optimization Script (v17.85)
+ * Sunflower Preschool - Image Optimization Script (v17.86 Hotfix)
  *
- * Compresses and resizes all oversized images to modern WebP format
- * ensuring strict budget limits (< 25 KB for logos, < 65 KB for photos).
- * Keeps original PNG/SVG/JPEG files on disk for build integrity and social tags.
+ * Compresses and resizes brand logos strictly from Paola's approved source assets
+ * located in public/assets/images/ ("Where Little Minds Bloom." with brown center).
+ *
+ * Targets:
+ * - sunflower-logo.webp:      < 25 KB (width 400px, quality 85, effort 6)
+ * - sunflower-vertical.webp:  < 25 KB (width 220px, quality 82, effort 6)
+ * - sunflower-favicon.webp:   < 15 KB (width 270px, quality 80, effort 6, smartSubsample)
+ * - sunflower-favicon.png:    < 10 KB (96x96 px, png palette, quality 85, compression 9)
+ *
+ * Keeps original high-res sunflower-logo.png and sunflower-vertical.png intact.
  */
 
 const fs = require('fs');
@@ -17,7 +24,7 @@ const IMAGES_DIR = path.join(ROOT_DIR, 'public', 'assets', 'images');
 
 async function optimizeImages() {
   console.log('='.repeat(70));
-  console.log('🌻 Sunflower Preschool - Image Optimization Pipeline (v17.85)');
+  console.log('🌻 Sunflower Preschool - Image Optimization Pipeline (v17.86 Hotfix)');
   console.log('='.repeat(70));
 
   const auditReport = [];
@@ -40,133 +47,132 @@ async function optimizeImages() {
     console.log(`  ${pass ? '✅' : '❌'} [${category}] ${name}: ${origKb} KB -> ${newKb} KB (-${saved}%) [${dims.width}x${dims.height}]`);
   }
 
-  // 1. Core Brand Logos (< 25 KB target)
-  console.log('\n[1/5] Optimizing Brand Logos...');
+  // 1. Paola Approved Core Brand Assets in public/assets/images/
+  console.log('\n[1/5] Optimizing Paola Approved Brand Assets (public/assets/images/)...');
 
-  // 1a. Horizontal Logo
-  {
-    const srcPng = path.join(IMG_DIR, 'Horizontal Sunflower Preschool logo.png');
-    const outWebp = path.join(IMG_DIR, 'Horizontal Sunflower Preschool logo.webp');
-    const origStat = fs.statSync(srcPng);
-    const buf = await sharp(srcPng)
-      .resize({ width: 360, withoutEnlargement: true })
-      .webp({ quality: 80, effort: 6 })
-      .toBuffer();
-    fs.writeFileSync(outWebp, buf);
-    const meta = await sharp(buf).metadata();
-    record('Logo', 'Horizontal Sunflower Preschool logo.webp', origStat.size, buf.length, 25 * 1024, meta);
+  // Ensure high-resolution master backup of favicon exists for idempotency
+  const favMasterPath = path.join(IMAGES_DIR, 'sunflower-favicon-original.png');
+  const favPngPath = path.join(IMAGES_DIR, 'sunflower-favicon.png');
+  if (!fs.existsSync(favMasterPath) && fs.existsSync(favPngPath)) {
+    const stat = fs.statSync(favPngPath);
+    if (stat.size > 50000) {
+      fs.copyFileSync(favPngPath, favMasterPath);
+    }
   }
 
-  // 1b. Vertical Logo
+  // 1a. sunflower-logo.webp (from high-res sunflower-logo.png: 2170x725)
   {
-    const srcPng = path.join(IMG_DIR, 'Sunflower Preschool vertical logo.png');
-    const outWebp = path.join(IMG_DIR, 'Sunflower Preschool vertical logo.webp');
-    const origStat = fs.statSync(srcPng);
-    const buf = await sharp(srcPng)
-      .resize({ width: 220, withoutEnlargement: true })
-      .webp({ quality: 80, effort: 6 })
-      .toBuffer();
-    fs.writeFileSync(outWebp, buf);
-    const meta = await sharp(buf).metadata();
-    record('Logo', 'Sunflower Preschool vertical logo.webp', origStat.size, buf.length, 25 * 1024, meta);
+    const srcPng = path.join(IMAGES_DIR, 'sunflower-logo.png');
+    const outWebp = path.join(IMAGES_DIR, 'sunflower-logo.webp');
+    if (fs.existsSync(srcPng)) {
+      const origStat = fs.statSync(srcPng);
+      const buf = await sharp(srcPng)
+        .resize({ width: 400, withoutEnlargement: true })
+        .webp({ quality: 85, effort: 6 })
+        .toBuffer();
+      fs.writeFileSync(outWebp, buf);
+      const meta = await sharp(buf).metadata();
+      record('Approved Logo', 'sunflower-logo.webp', origStat.size, buf.length, 25 * 1024, meta);
+    } else {
+      console.error('  ❌ Missing source image: public/assets/images/sunflower-logo.png');
+    }
   }
 
-  // 1c. ISotipo
+  // 1b. sunflower-vertical.webp (from high-res sunflower-vertical.png: 1086x1448)
   {
-    const srcPng = path.join(IMG_DIR, 'ISotipo.png');
-    const outWebp = path.join(IMG_DIR, 'ISotipo.webp');
-    const origStat = fs.statSync(srcPng);
-    const buf = await sharp(srcPng)
-      .resize({ width: 240, withoutEnlargement: true })
-      .webp({ quality: 80, effort: 6 })
-      .toBuffer();
-    fs.writeFileSync(outWebp, buf);
-    const meta = await sharp(buf).metadata();
-    record('Logo', 'ISotipo.webp', origStat.size, buf.length, 25 * 1024, meta);
+    const srcPng = path.join(IMAGES_DIR, 'sunflower-vertical.png');
+    const outWebp = path.join(IMAGES_DIR, 'sunflower-vertical.webp');
+    if (fs.existsSync(srcPng)) {
+      const origStat = fs.statSync(srcPng);
+      const buf = await sharp(srcPng)
+        .resize({ width: 220, withoutEnlargement: true })
+        .webp({ quality: 82, effort: 6 })
+        .toBuffer();
+      fs.writeFileSync(outWebp, buf);
+      const meta = await sharp(buf).metadata();
+      record('Approved Logo', 'sunflower-vertical.webp', origStat.size, buf.length, 25 * 1024, meta);
+    } else {
+      console.error('  ❌ Missing source image: public/assets/images/sunflower-vertical.png');
+    }
   }
 
-  // 2. Favicons in assets/images/ (Fixing 1 MB favicon issue)
-  console.log('\n[2/5] Optimizing Favicons and Legacy Image Assets...');
-  if (fs.existsSync(IMAGES_DIR)) {
-    // 2a. sunflower-favicon.png (1024 KB -> 96x96 PNG < 10 KB)
-    const favPng = path.join(IMAGES_DIR, 'sunflower-favicon.png');
-    if (fs.existsSync(favPng)) {
-      const origSize = fs.statSync(favPng).size;
-      const buf = await sharp(favPng)
-        .resize(96, 96)
+  // Source for favicon & prefooter isotipo (read from master if available)
+  const favSource = fs.existsSync(favMasterPath) ? favMasterPath : favPngPath;
+
+  // 1c. sunflower-favicon.webp for Pre-footer Isotipo ("COME SAY HELLO")
+  // Display size is 135x135 -> 2x retina width 270px, budget < 15 KB
+  {
+    const outWebp = path.join(IMAGES_DIR, 'sunflower-favicon.webp');
+    if (fs.existsSync(favSource)) {
+      const origStat = fs.statSync(favSource);
+      const buf = await sharp(favSource)
+        .resize({ width: 270, height: 270, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .webp({ quality: 80, effort: 6, smartSubsample: true, alphaQuality: 80 })
+        .toBuffer();
+      fs.writeFileSync(outWebp, buf);
+      const meta = await sharp(buf).metadata();
+      record('Approved Isotype', 'sunflower-favicon.webp (270x270)', origStat.size, buf.length, 15 * 1024, meta);
+    } else {
+      console.error('  ❌ Missing source image for sunflower-favicon.webp');
+    }
+  }
+
+  // 1d. sunflower-favicon.png (96x96 PNG favicon < 10 KB)
+  {
+    if (fs.existsSync(favSource)) {
+      const origStat = fs.statSync(favSource);
+      const buf = await sharp(favSource)
+        .resize(96, 96, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
         .png({ palette: true, quality: 85, compressionLevel: 9 })
         .toBuffer();
-      fs.writeFileSync(favPng, buf);
+      fs.writeFileSync(favPngPath, buf);
       const meta = await sharp(buf).metadata();
-      record('Favicon', 'sunflower-favicon.png (96x96)', origSize, buf.length, 15 * 1024, meta);
-    }
-
-    // 2b. sunflower-logo.png (398 KB -> 360w PNG < 35 KB)
-    const logoPng = path.join(IMAGES_DIR, 'sunflower-logo.png');
-    if (fs.existsSync(logoPng)) {
-      const origSize = fs.statSync(logoPng).size;
-      const buf = await sharp(logoPng)
-        .resize({ width: 360, withoutEnlargement: true })
-        .png({ compressionLevel: 9 })
-        .toBuffer();
-      fs.writeFileSync(logoPng, buf);
-      const meta = await sharp(buf).metadata();
-      record('Logo', 'sunflower-logo.png (360w)', origSize, buf.length, 40 * 1024, meta);
-    }
-
-    // 2c. sunflower-vertical.png (782 KB -> 200w PNG < 25 KB)
-    const vertPng = path.join(IMAGES_DIR, 'sunflower-vertical.png');
-    if (fs.existsSync(vertPng)) {
-      const origSize = fs.statSync(vertPng).size;
-      const buf = await sharp(vertPng)
-        .resize({ width: 200, withoutEnlargement: true })
-        .png({ palette: true, quality: 80, compressionLevel: 9 })
-        .toBuffer();
-      fs.writeFileSync(vertPng, buf);
-      const meta = await sharp(buf).metadata();
-      record('Logo', 'sunflower-vertical.png (200w)', origSize, buf.length, 30 * 1024, meta);
+      record('Approved Favicon', 'sunflower-favicon.png (96x96)', origStat.size, buf.length, 10 * 1024, meta);
+    } else {
+      console.error('  ❌ Missing source image for sunflower-favicon.png');
     }
   }
 
-  // 3. Below-the-fold Campus Banner (building-banner.webp)
-  console.log('\n[3/5] Optimizing Campus Banner & Leadership Photos...');
+  // 2. Below-the-fold Campus Banner (building-banner.webp)
+  console.log('\n[2/5] Optimizing Campus Banner & Leadership Photos...');
   {
     const bannerPath = path.join(IMG_DIR, 'building-banner.webp');
-    const origStat = fs.statSync(bannerPath);
-    const buf = await sharp(bannerPath)
-      .resize({ width: 900, withoutEnlargement: true })
-      .webp({ quality: 75, effort: 6 })
-      .toBuffer();
-    fs.writeFileSync(bannerPath, buf);
-    const meta = await sharp(buf).metadata();
-    record('Banner', 'building-banner.webp', origStat.size, buf.length, 65 * 1024, meta);
+    if (fs.existsSync(bannerPath)) {
+      const origStat = fs.statSync(bannerPath);
+      const buf = await sharp(bannerPath)
+        .resize({ width: 900, withoutEnlargement: true })
+        .webp({ quality: 75, effort: 6 })
+        .toBuffer();
+      fs.writeFileSync(bannerPath, buf);
+      const meta = await sharp(buf).metadata();
+      record('Banner', 'building-banner.webp', origStat.size, buf.length, 65 * 1024, meta);
+    }
   }
 
-  // 3b. Paola CEO Profile
+  // 2b. Paola CEO Profile
   {
     const paolaSrc = path.join(IMG_DIR, 'paola-ceo.jpeg');
     const paolaOut = path.join(IMG_DIR, 'paola-ceo.webp');
-    const origStat = fs.statSync(paolaOut);
-    // Leadership card height is 350px. 2x retina height = 700px.
-    const buf = await sharp(paolaSrc)
-      .resize({ height: 700, withoutEnlargement: true })
-      .webp({ quality: 75, effort: 6 })
-      .toBuffer();
-    fs.writeFileSync(paolaOut, buf);
-    const meta = await sharp(buf).metadata();
-    record('Leadership', 'paola-ceo.webp', origStat.size, buf.length, 65 * 1024, meta);
+    if (fs.existsSync(paolaSrc)) {
+      const origStat = fs.existsSync(paolaOut) ? fs.statSync(paolaOut) : fs.statSync(paolaSrc);
+      const buf = await sharp(paolaSrc)
+        .resize({ height: 700, withoutEnlargement: true })
+        .webp({ quality: 75, effort: 6 })
+        .toBuffer();
+      fs.writeFileSync(paolaOut, buf);
+      const meta = await sharp(buf).metadata();
+      record('Leadership', 'paola-ceo.webp', origStat.size, buf.length, 65 * 1024, meta);
+    }
   }
 
-  // 4. Halloween Events Carousel Photos (converting JPGs to WebP < 65 KB each)
-  console.log('\n[4/5] Optimizing Events Halloween Photos to WebP...');
+  // 3. Halloween Events Carousel Photos (converting JPGs to WebP < 65 KB each)
+  console.log('\n[3/5] Optimizing Events Halloween Photos to WebP...');
   for (let i = 1; i <= 7; i++) {
     const jpgFile = path.join(EVENTS_DIR, `halloween-${i}.jpg`);
     const webpFile = path.join(EVENTS_DIR, `halloween-${i}.webp`);
     if (fs.existsSync(jpgFile)) {
       const origStat = fs.statSync(jpgFile);
       const meta = await sharp(jpgFile).metadata();
-      // Carousel displays at 350px x 262px (4:3 aspect ratio).
-      // Max 480px width or height gives crisp 1.5x-2x retina.
       const buf = await sharp(jpgFile)
         .resize({
           width: meta.width > meta.height ? 500 : undefined,
@@ -181,17 +187,14 @@ async function optimizeImages() {
     }
   }
 
-  // 5. Marquee & Gallery Photos (real-1.webp to real-22.webp)
-  console.log('\n[5/5] Optimizing Real Classroom / Marquee Photos (real-*.webp)...');
+  // 4. Marquee & Gallery Photos (real-1.webp to real-22.webp)
+  console.log('\n[4/5] Optimizing Real Classroom / Marquee Photos (real-*.webp)...');
   for (let i = 1; i <= 22; i++) {
     const realFile = path.join(IMG_DIR, `real-${i}.webp`);
     if (fs.existsSync(realFile)) {
       const origStat = fs.statSync(realFile);
       const meta = await sharp(realFile).metadata();
 
-      // Only resize/compress if oversized (> 65 KB) or optimize all for lightweight marquee
-      // Marquee photos display at height 260px (mobile 200px).
-      // 2x retina height = 520px. Landscape 2x retina width = ~600px.
       const isLandscape = meta.width > meta.height;
       const buf = await sharp(realFile)
         .resize({
@@ -202,7 +205,6 @@ async function optimizeImages() {
         .webp({ quality: 75, effort: 6 })
         .toBuffer();
 
-      // Only write if it actually reduced the size or kept it below target
       if (buf.length < origStat.size || origStat.size > 65 * 1024) {
         fs.writeFileSync(realFile, buf);
         const newMeta = await sharp(buf).metadata();
