@@ -3,7 +3,7 @@
 **Specification Version**: 1.0.0  
 **Phase**: Phase 1 (Backend, Logic & Persistence)  
 **Base URL**: `http://localhost:3000` (configurable via `process.env.PORT`)  
-**Architecture**: Multi-Platform (Native Node.js `server.js` + Vercel Serverless Functions in `api/` + GitHub Pages static fallback)  
+**Architecture**: Production: Cloudflare Pages (with Web3Forms and Cloudflare Turnstile) | Local Development: Native Node.js HTTP Server (`server.js`)  
 
 ---
 
@@ -331,21 +331,22 @@ Run the following commands from the project root (`/home/estbust/proyectos-antig
 ```bash
 npm run test:backend
 ```
-Executes 48 automated unit and integration tests covering:
+Executes 48 automated unit and integration tests across 7 test suites covering:
 - Enrollment and Contact validation schemas
 - Rejection of medical keywords (allergies, medications, asthma, autism, IEP, epipen)
 - Rejection of calendar birthdates (`YYYY-MM-DD`, `MM/DD/YYYY`, `Month Day, Year`)
 - Rejection of sensitive PII (SSN, credit card, passport #)
+- Persistence storage integrity and defensive checks
 - Rate limiting flood abuse protection
-- Live HTTP REST endpoints (`/api/health`, `/api/enrollment`, `/api/contact`)
-- Vercel Serverless Function handlers (`api/enrollment.js`, `api/contact.js`, `api/health.js`)
+- Live native HTTP REST endpoints (`/api/health`, `/api/enrollment`, `/api/contact`)
 - Browser form service (`form-service.js`) with smart static hosting / offline simulated confirmations
+- Cloudflare Turnstile siteverify, token safeguards, and endpoint security gate enforcement
 
 ### 2. Execute Build & Asset Verification
 ```bash
 npm run build
 ```
-Validates all backend modules, persistence storage, core logo assets, and checks status of all 8 route pages.
+Validates all backend modules, persistence storage, core logo assets, and checks status of all 9 route pages.
 
 ### 3. Start Production Server
 ```bash

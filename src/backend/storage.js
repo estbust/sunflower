@@ -37,7 +37,7 @@ function resolveStorageFile() {
     activeStoragePath = SUBMISSIONS_FILE;
     return activeStoragePath;
   } catch (localErr) {
-    // Local directory is read-only (e.g. Vercel serverless /var/task)
+    // Local directory is read-only in restricted environments
   }
 
   // 2. Try /tmp directory

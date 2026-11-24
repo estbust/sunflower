@@ -23,9 +23,6 @@ const {
   verifyTurnstileToken
 } = require('./turnstile');
 const { startServer } = require('../../server');
-const enrollmentHandler = require('../../api/enrollment');
-const contactHandler = require('../../api/contact');
-const healthHandler = require('../../api/health');
 const formService = require('../../public/assets/js/form-service');
 
 const TEST_PORT = 3456;
@@ -606,260 +603,9 @@ async function runAllTests() {
   });
 
   // =========================================================================
-  // 6. SERVERLESS FUNCTION HANDLERS (api/enrollment.js, api/contact.js, api/health.js)
+  // 6. FORM SERVICE & STATIC HOSTING FALLBACK
   // =========================================================================
-  console.log('\n[Suite 6] Vercel Serverless Function Handlers');
-
-  function mockReqRes(options = {}) {
-    const { method = 'POST', headers = {}, body = null } = options;
-    const req = {
-      method,
-      headers: { ...headers },
-      body,
-      socket: { remoteAddress: '127.0.0.1' },
-      on: (event, cb) => {
-        if (event === 'end') cb();
-      }
-    };
-    let statusCode = 200;
-    const respHeaders = {};
-    let respBody = null;
-
-    const res = {
-      setHeader(k, v) {
-        respHeaders[k.toLowerCase()] = v;
-      },
-      getHeader(k) {
-        return respHeaders[k.toLowerCase()];
-      },
-      writeHead(code, h) {
-        statusCode = code;
-        if (h) Object.assign(respHeaders, h);
-      },
-      status(code) {
-        statusCode = code;
-        return this;
-      },
-      json(d) {
-        respBody = d;
-        return this;
-      },
-      end(d) {
-        if (d && !respBody) {
-          try {
-            respBody = JSON.parse(d);
-          } catch (_) {
-            respBody = d;
-          }
-        }
-        return this;
-      },
-      getStatusCode() { return statusCode; },
-      getBody() { return respBody; },
-      getHeaders() { return respHeaders; }
-    };
-
-    return { req, res };
-  }
-
-  await asyncTest('api/health: GET returns 200 with ok status', async () => {
-    const { req, res } = mockReqRes({ method: 'GET' });
-    await healthHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 200);
-    assert.strictEqual(res.getBody().status, 'ok');
-    assert.strictEqual(res.getBody().service, 'Sunflower Preschool API');
-  });
-
-  await asyncTest('api/health: OPTIONS returns 204 preflight', async () => {
-    const { req, res } = mockReqRes({ method: 'OPTIONS' });
-    await healthHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 204);
-  });
-
-  await asyncTest('api/health: POST is rejected with 405 METHOD_NOT_ALLOWED', async () => {
-    const { req, res } = mockReqRes({ method: 'POST' });
-    await healthHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 405);
-    assert.strictEqual(res.getBody().code, 'METHOD_NOT_ALLOWED');
-  });
-
-  await asyncTest('api/enrollment: OPTIONS returns 204 preflight', async () => {
-    const { req, res } = mockReqRes({ method: 'OPTIONS' });
-    await enrollmentHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 204);
-  });
-
-  await asyncTest('api/enrollment: GET is rejected with 405 METHOD_NOT_ALLOWED', async () => {
-    const { req, res } = mockReqRes({ method: 'GET' });
-    await enrollmentHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 405);
-    assert.strictEqual(res.getBody().code, 'METHOD_NOT_ALLOWED');
-  });
-
-  await asyncTest('api/enrollment: POST succeeds with 201 for valid submission', async () => {
-    const valid = {
-      parentName: 'Sarah Jenkins',
-      email: 'sarah.jenkins@example.com',
-      phone: '555-234-5678',
-      childFirstName: 'Leo',
-      program: 'preschool',
-      childAgeGroup: '3-5-years',
-      preferredStart: 'Fall 2026',
-      schedulePreference: 'full-time',
-      message: 'Looking forward to touring your nature program.',
-      privacyConsent: true
-    };
-    const { req, res } = mockReqRes({
-      method: 'POST',
-      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
-      body: valid
-    });
-    await enrollmentHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 201);
-    assert.strictEqual(res.getBody().success, true);
-    assert.ok(res.getBody().id);
-    assert.ok(res.getBody().submittedAt);
-  });
-
-  await asyncTest('api/enrollment: POST blocks medical details with 400 SENSITIVE_DATA_DETECTED', async () => {
-    const medical = {
-      parentName: 'Sarah Jenkins',
-      email: 'sarah.jenkins@example.com',
-      phone: '555-234-5678',
-      childFirstName: 'Leo',
-      program: 'preschool',
-      childAgeGroup: '3-5-years',
-      message: 'Leo has severe asthma and an inhaler.',
-      privacyConsent: true
-    };
-    const { req, res } = mockReqRes({
-      method: 'POST',
-      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
-      body: medical
-    });
-    await enrollmentHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 400);
-    assert.strictEqual(res.getBody().code, 'SENSITIVE_DATA_DETECTED');
-  });
-
-  await asyncTest('api/enrollment: POST blocks full birthdate with 400 SENSITIVE_DATA_DETECTED', async () => {
-    const dob = {
-      parentName: 'Sarah Jenkins',
-      email: 'sarah.jenkins@example.com',
-      phone: '555-234-5678',
-      childFirstName: 'Leo',
-      program: 'preschool',
-      childAgeGroup: '3-5-years',
-      preferredStart: '2022-04-18',
-      privacyConsent: true
-    };
-    const { req, res } = mockReqRes({
-      method: 'POST',
-      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
-      body: dob
-    });
-    await enrollmentHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 400);
-    assert.strictEqual(res.getBody().code, 'SENSITIVE_DATA_DETECTED');
-  });
-
-  await asyncTest('api/enrollment: POST blocks honeypot spam with 400 SPAM_DETECTED', async () => {
-    const spam = {
-      parentName: 'Spam Bot',
-      email: 'spam@bot.com',
-      phone: '555-000-1111',
-      childFirstName: 'Bot',
-      program: 'preschool',
-      childAgeGroup: '3-5-years',
-      website: 'https://spamsite.xyz',
-      privacyConsent: true
-    };
-    const { req, res } = mockReqRes({
-      method: 'POST',
-      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
-      body: spam
-    });
-    await enrollmentHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 400);
-    assert.strictEqual(res.getBody().code, 'SPAM_DETECTED');
-  });
-
-  await asyncTest('api/contact: OPTIONS returns 204 preflight', async () => {
-    const { req, res } = mockReqRes({ method: 'OPTIONS' });
-    await contactHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 204);
-  });
-
-  await asyncTest('api/contact: GET is rejected with 405 METHOD_NOT_ALLOWED', async () => {
-    const { req, res } = mockReqRes({ method: 'GET' });
-    await contactHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 405);
-    assert.strictEqual(res.getBody().code, 'METHOD_NOT_ALLOWED');
-  });
-
-  await asyncTest('api/contact: POST succeeds with 201 for valid inquiry', async () => {
-    const validContact = {
-      name: 'James Rodriguez',
-      email: 'james.r@example.com',
-      phone: '555-987-6543',
-      topic: 'schedule-tour',
-      message: 'We would love to visit the campus next Tuesday morning.',
-      privacyConsent: true
-    };
-    const { req, res } = mockReqRes({
-      method: 'POST',
-      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
-      body: validContact
-    });
-    await contactHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 201);
-    assert.strictEqual(res.getBody().success, true);
-    assert.ok(res.getBody().id);
-    assert.ok(res.getBody().submittedAt);
-  });
-
-  await asyncTest('api/contact: POST succeeds with 201 for Careers / Job Application topic', async () => {
-    const careerContact = {
-      name: 'Maria Gomez',
-      email: 'maria.gomez@example.com',
-      phone: '555-432-1098',
-      topic: 'Careers / Job Application',
-      message: 'Submitting resume and application for early childhood educator.',
-      privacyConsent: true
-    };
-    const { req, res } = mockReqRes({
-      method: 'POST',
-      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
-      body: careerContact
-    });
-    await contactHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 201);
-    assert.strictEqual(res.getBody().success, true);
-    assert.ok(res.getBody().id);
-    assert.ok(res.getBody().submittedAt);
-  });
-
-  await asyncTest('api/contact: POST rejects missing required fields with 400 VALIDATION_ERROR', async () => {
-    const invalidContact = {
-      name: '',
-      email: 'not-an-email',
-      topic: 'invalid-topic',
-      privacyConsent: false
-    };
-    const { req, res } = mockReqRes({
-      method: 'POST',
-      headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
-      body: invalidContact
-    });
-    await contactHandler(req, res);
-    assert.strictEqual(res.getStatusCode(), 400);
-    assert.strictEqual(res.getBody().code, 'VALIDATION_ERROR');
-  });
-
-  // =========================================================================
-  // 7. FORM SERVICE & STATIC HOSTING FALLBACK
-  // =========================================================================
-  console.log('\n[Suite 7] Browser Form Service & Static Hosting Fallback');
+  console.log('\n[Suite 6] Browser Form Service & Static Hosting Fallback');
 
   await asyncTest('form-service: validateEnrollment blocks sensitive medical data', () => {
     const res = formService.validateEnrollment({
@@ -970,9 +716,9 @@ async function runAllTests() {
   });
 
   // =========================================================================
-  // 8. CLOUDFLARE TURNSTILE SITEVERIFY & TOKEN SAFEGUARDS
+  // 7. CLOUDFLARE TURNSTILE SITEVERIFY & TOKEN SAFEGUARDS
   // =========================================================================
-  console.log('\n[Suite 8] Cloudflare Turnstile Siteverify & Token Safeguards');
+  console.log('\n[Suite 7] Cloudflare Turnstile Siteverify & Token Safeguards');
 
   function createMockFetch({ status = 200, ok = true, jsonResult = {} } = {}) {
     return async (url, init) => {
@@ -1236,7 +982,7 @@ async function runAllTests() {
     assert.strictEqual(clientCntCheck.isValid, true);
   });
 
-  // 9. Verifica que el gate en los handlers serverless rechaza con 403 cuando Turnstile está activo y falta token
+  // 9. Verifica que el gate en los endpoints rechaza con 403 cuando Turnstile está activo y falta token
   await asyncTest('turnstile gate: enrollment & contact handlers reject with 403 TURNSTILE_FAILED when enforced and token missing', async () => {
     const prevSecret = process.env.TURNSTILE_SECRET;
     const prevHostnames = process.env.TURNSTILE_HOSTNAMES;
@@ -1245,15 +991,9 @@ async function runAllTests() {
       process.env.TURNSTILE_HOSTNAMES = 'localhost,example.com';
       assert.strictEqual(isTurnstileEnforced(), true);
 
-      // Enrollment Handler Test
-      let enrStatus = 0;
-      let enrBody = null;
-      const mockEnrRes = {
-        setHeader: () => {},
-        writeHead: (code) => { enrStatus = code; },
-        end: (payload) => { enrBody = JSON.parse(payload); }
-      };
-      const mockEnrReq = {
+      // Enrollment Endpoint Test
+      const enrRes = await makeHttpRequest({
+        path: '/api/enrollment',
         method: 'POST',
         headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
         body: {
@@ -1265,20 +1005,13 @@ async function runAllTests() {
           childAgeGroup: '3-5-years',
           privacyConsent: true
         }
-      };
-      await enrollmentHandler(mockEnrReq, mockEnrRes);
-      assert.strictEqual(enrStatus, 403);
-      assert.strictEqual(enrBody.code, 'TURNSTILE_FAILED');
+      });
+      assert.strictEqual(enrRes.status, 403);
+      assert.strictEqual(enrRes.body.code, 'TURNSTILE_FAILED');
 
-      // Contact Handler Test
-      let cntStatus = 0;
-      let cntBody = null;
-      const mockCntRes = {
-        setHeader: () => {},
-        writeHead: (code) => { cntStatus = code; },
-        end: (payload) => { cntBody = JSON.parse(payload); }
-      };
-      const mockCntReq = {
+      // Contact Endpoint Test
+      const cntRes = await makeHttpRequest({
+        path: '/api/contact',
         method: 'POST',
         headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
         body: {
@@ -1288,17 +1021,16 @@ async function runAllTests() {
           message: 'Interested in scheduling an in-person tour.',
           privacyConsent: true
         }
-      };
-      await contactHandler(mockCntReq, mockCntRes);
-      assert.strictEqual(cntStatus, 403);
-      assert.strictEqual(cntBody.code, 'TURNSTILE_FAILED');
+      });
+      assert.strictEqual(cntRes.status, 403);
+      assert.strictEqual(cntRes.body.code, 'TURNSTILE_FAILED');
     } finally {
       process.env.TURNSTILE_SECRET = prevSecret;
       process.env.TURNSTILE_HOSTNAMES = prevHostnames;
     }
   });
 
-  // 10. Verifica que el gate en los handlers permite pasar cuando siteverify responde éxito
+  // 10. Verifica que el gate en los endpoints permite pasar cuando siteverify responde éxito
   await asyncTest('turnstile gate: handler succeeds with 201 when Turnstile token verifies successfully', async () => {
     const prevSecret = process.env.TURNSTILE_SECRET;
     const prevHostnames = process.env.TURNSTILE_HOSTNAMES;
@@ -1310,14 +1042,8 @@ async function runAllTests() {
         jsonResult: { success: true, action: 'enrollment', hostname: 'localhost' }
       });
 
-      let statusCode = 0;
-      let responseBody = null;
-      const mockRes = {
-        setHeader: () => {},
-        writeHead: (code) => { statusCode = code; },
-        end: (payload) => { responseBody = JSON.parse(payload); }
-      };
-      const mockReq = {
+      const enrRes = await makeHttpRequest({
+        path: '/api/enrollment',
         method: 'POST',
         headers: { 'x-test-bypass-rate-limit': 'sunflower-test' },
         body: {
@@ -1330,12 +1056,11 @@ async function runAllTests() {
           privacyConsent: true,
           'cf-turnstile-response': 'valid-mock-token-xyz'
         }
-      };
+      });
 
-      await enrollmentHandler(mockReq, mockRes);
-      assert.strictEqual(statusCode, 201);
-      assert.strictEqual(responseBody.success, true);
-      assert.ok(responseBody.id);
+      assert.strictEqual(enrRes.status, 201);
+      assert.strictEqual(enrRes.body.success, true);
+      assert.ok(enrRes.body.id);
     } finally {
       process.env.TURNSTILE_SECRET = prevSecret;
       process.env.TURNSTILE_HOSTNAMES = prevHostnames;
