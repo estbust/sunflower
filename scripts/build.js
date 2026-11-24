@@ -69,7 +69,7 @@ if (fs.existsSync(formServicePath)) {
   hasErrors = true;
 }
 
-// Approved Paola Brand Assets ("Where Little Minds Bloom." with brown center)
+// Approved Brand Assets ("Where Little Minds Bloom." with brown center)
 const requiredLogos = [
   'sunflower-logo.png',
   'sunflower-vertical.png',
@@ -177,7 +177,7 @@ console.log(`  Spam & Rate Limiter: ✅ ENFORCED (Honeypot + IP rate limiter act
 console.log(`  Routes Discovered:   ${existingRoutesCount}/9 routes present in public/`);
 console.log(`  SEO Integrity:       ${allSeoFilesValid ? '✅ ENFORCED (sitemap.xml & robots.txt present)' : '❌ FAILED (missing or empty SEO files)'}`);
 console.log(`  Cache & Headers:     ${headersFileValid ? '✅ ENFORCED (public/_headers present)' : '❌ FAILED (missing or empty _headers)'}`);
-console.log(`  Approved Logos:      ${allLogosPresent ? '✅ ENFORCED (Paola approved brand assets in public/assets/images/)' : '❌ FAILED (Missing approved brand assets)'}`);
+console.log(`  Approved Logos:      ${allLogosPresent ? '✅ ENFORCED (Approved brand assets in public/assets/images/)' : '❌ FAILED (Missing approved brand assets)'}`);
 console.log('='.repeat(70) + '\n');
 
 if (hasErrors) {

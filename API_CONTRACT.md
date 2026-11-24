@@ -234,7 +234,7 @@ Located at: [`public/assets/js/form-service.js`](file:///home/estbust/proyectos-
 
 The client script exposes a universal API on `window.SunflowerAPI` that:
 - Executes strict client-side validation immediately before dispatch (blocking medical details, full birthdates, and sensitive PII).
-- Integrates directly and exclusively with **Web3Forms** (`access_key: 3bcd3db7-8782-4818-b789-b8f5e90e1b10`, endpoint `https://api.web3forms.com/submit`) as the exclusive processor for immediate email notification dispatch to admissions administrators at `sunflowerpreschool@gci.net`.
+- Integrates directly and exclusively with **Web3Forms** (`access_key: 9a8707f5-4fd2-4b19-90c4-445f16484ff4`, endpoint `https://api.web3forms.com/submit`) as the exclusive processor for immediate email notification dispatch to admissions administrators at `sunflowerpreschool@gci.net`.
 - Validates Cloudflare Turnstile challenge tokens before dispatching inquiries.
 - Maintains local development `/api/enrollment` and `/api/contact` mirroring when run on localhost.
 - Provides a guaranteed contract `{ ok: true, status: 201, data: { success: true, id, submittedAt } }` with graceful error handling and offline/test runner compatibility.

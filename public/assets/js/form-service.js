@@ -408,7 +408,7 @@
   // External Integration Endpoints (Web3Forms Email Processor)
   // ---------------------------------------------------------------------------
   var WEB3FORMS_CONFIG = {
-    accessKey: (typeof process !== 'undefined' && process.env && process.env.WEB3FORMS_ACCESS_KEY) || '3bcd3db7-8782-4818-b789-b8f5e90e1b10',
+    accessKey: (typeof process !== 'undefined' && process.env && process.env.WEB3FORMS_ACCESS_KEY) || '9a8707f5-4fd2-4b19-90c4-445f16484ff4',
     endpoint: 'https://api.web3forms.com/submit'
   };
 
